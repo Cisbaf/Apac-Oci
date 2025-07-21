@@ -1,0 +1,78 @@
+<canvas id="apacChart" height="80"></canvas>
+
+<!-- Chart.js + Plugin de datalabels (opcional) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+  const ctx = document.getElementById('apacChart').getContext('2d');
+
+  const data = {
+    labels: {{ labels|safe }},
+    datasets: [
+      {% for ds in datasets %}
+      {
+        label: "{{ ds.label }}",
+        data: {{ ds.data|safe }},
+        backgroundColor: "{{ ds.backgroundColor }}",
+        borderWidth: 1
+      },
+      {% endfor %}
+    ]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        datalabels: {
+          color: '#fff',
+          anchor: 'end',
+          align: 'start',
+          formatter: function(value, context) {
+            const label = context.dataset.label;
+            return value > 0 ? `${label}\n${value}` : '';
+          }
+        },
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Solicitações por Município e Estabelecimento'
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.raw} solicitações`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: false,
+          title: {
+            display: true,
+            text: 'Municípios'
+          }
+        },
+        y: {
+          stacked: false,
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Quantidade de Solicitações'
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  };
+
+  new Chart(ctx, config);
+</script>

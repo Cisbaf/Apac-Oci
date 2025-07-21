@@ -1,0 +1,24 @@
+{% extends "admin/index.html" %}  {# Usa o template padrão do adminlte3 como base #}
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_staff %}
+        <div class="row">
+            <div class="card card-widget col-md-12">
+                <div class="card-body">
+                    <iframe 
+                        width="100%" 
+                        style="height: 50vh;"
+                        src="{% url 'apac-dashboard' %}" 
+                        title="APAC Dashboard"
+                    ></iframe>      
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% block sidebar %}
+    {{ block.super }}
+{% endblock %}
+{% endblock %}

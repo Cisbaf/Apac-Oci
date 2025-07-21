@@ -1,0 +1,6 @@
+SUCCESSFULLY_REGISTERED="Apac Registrada com sucesso!"
+NO_BATCH_AVAILABLE="Nenhuma faixa APAC foi encontrada para essa solicitação!"
+UNRESTRAINED="Para solicitar uma APAC você deverá ter a permissão de solicitante"
+APAC_REQUEST_NOT_PENDING="Não foi possível obter pois não está pendente"
+USER_IS_NOT_AUTHORIZER="O usuário não tem a permissão de autorizador!"
+USER_IS_NOT_REQUESTER="O usuário não tem a permissão de solicitante!"

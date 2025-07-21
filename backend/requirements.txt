@@ -1,0 +1,15 @@
+annotated-types==0.7.0
+# Editable install with no version control (apac_core==0.1.0)
+-e /home/daniel/Desenvolvimento/cisbaf/apac/core
+asgiref==3.8.1
+Django==5.2.1
+django-adminlte-3==0.1.6
+django-cors-headers==4.7.0
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
+pydantic==2.11.5
+pydantic_core==2.33.2
+PyJWT==2.9.0
+sqlparse==0.5.3
+typing-inspection==0.4.1
+typing_extensions==4.14.0

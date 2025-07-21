@@ -1,0 +1,128 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import IdentifyEstablishmentForm from '@/apacRequest/components/forms/identifyEstablishmentForm';
+import {  createRef } from 'react';
+import { FormRepository } from '@/shared/repositories/formRepository';
+import { MESSAGENOTCHECKVALIDITY } from '@/apacRequest/utils/messages';
+import userEvent from '@testing-library/user-event';
+import { ApacRequestDataBackendProvider } from '@/apacRequest/contexts/ApacRequestContext';
+import { FormApacRequestProvider } from '@/apacRequest/contexts/FormApacRequest';
+import { emptyRequestForm } from '@/apacRequest/utils/formDataApacRequest';
+import GetApacRequestData from '@/apacRequest/controllers/apacRequestApi';
+
+const data = GetApacRequestData();
+
+test('Erro, formulário não preenchido', async () => {
+    const ref = createRef<FormRepository>();
+
+    render(
+        <ApacRequestDataBackendProvider dataRequest={data}>
+            <FormApacRequestProvider initialData={emptyRequestForm}>
+                <IdentifyEstablishmentForm ref={ref}/>
+            </FormApacRequestProvider>
+        </ApacRequestDataBackendProvider>
+    );
+
+    await waitFor(() => {
+        expect(ref.current).not.toBeNull();
+    });
+    
+    const response = ref.current?.validate();
+    expect(response?.success).toEqual(false);
+    expect(response?.message).toEqual(MESSAGENOTCHECKVALIDITY);
+});
+
+test('Success Filling Changed Establishment', async () => {
+    const ref = createRef<FormRepository>();
+    const establishmentName = "Tals";
+    const establishmentCnes = "3000";
+
+    render(
+        <ApacRequestDataBackendProvider dataRequest={data}>
+            <FormApacRequestProvider initialData={emptyRequestForm}>
+                <IdentifyEstablishmentForm ref={ref}/>
+            </FormApacRequestProvider>
+        </ApacRequestDataBackendProvider>
+    );
+
+    await waitFor(() => {
+        expect(ref.current).not.toBeNull();
+    });
+    const selectEstablishment = screen.getByTestId('select-establishment');
+    await userEvent.type(selectEstablishment, establishmentName);
+    expect(selectEstablishment).toHaveValue(establishmentName);
+    const response = ref.current?.validate();
+    expect(response?.success).toEqual(true);
+});
+
+// test('Success for selected first establishement', async () => {
+//     const ref = createRef<FormRepository>();
+//     const establishmentName = "Tals";
+//     const establishmentCnes = "3000";
+
+//     render(
+//         <ApacRequestDataBackendProvider>
+//             <FormApacRequestProvider initialData={emptyRequestForm}>
+//                 <IdentifyEstablishmentForm ref={ref}/>
+//             </FormApacRequestProvider>
+//         </ApacRequestDataBackendProvider>
+//     );
+
+//     await waitFor(() => {
+//         expect(ref.current).not.toBeNull();
+//     });
+//     const selectEstablishment = screen.getByTestId('select-establishment');
+//     expect(selectEstablishment).toHaveValue(establishmentName);
+// });
+
+
+
+
+
+
+// import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// import userEvent from '@testing-library/user-event';
+// import { RequestFormProvider } from '@/apacRequest/contexts/RequestFormContext';
+// import { emptyInitialData } from '@/apacRequest/utils/apacRequetDatas';
+// import { createRef } from 'react';
+// import { FormRepository } from '@/shared/repositories/formRepository';
+// import { MESSAGENOTCHECKVALIDITY, MESSAGECPFINVALIDITY } from '@/apacRequest/utils/messages';
+// import IdentifyPatientForm from '@/apacRequest/components/forms/identifyPatientForm';
+
+// test('Erro, formulário não preenchido', async () => {
+//     const ref = createRef<FormRepository>();
+
+//     render(
+//         <RequestFormProvider initialData={emptyInitialData}>
+//             <IdentifyPatientForm ref={ref} />
+//         </RequestFormProvider>
+//     );
+
+//     await waitFor(() => {
+//         expect(ref.current).not.toBeNull();
+//     });
+
+//     const response = ref.current?.validate();
+//     expect(response?.success).toEqual(false);
+//     expect(response?.message).toEqual(MESSAGENOTCHECKVALIDITY);
+// });
+
+// test('Erro, CPF invalido', async () => {
+//     const ref = createRef<FormRepository>();
+
+//     render(
+//         <RequestFormProvider initialData={emptyInitialData}>
+//             <IdentifyPatientForm ref={ref} />
+//         </RequestFormProvider>
+//     );
+
+//     await waitFor(() => {
+//         expect(ref.current).not.toBeNull();
+//     });
+
+//     const inputCpf = screen.getByLabelText(/CPF do paciente/i);
+//     await userEvent.type(inputCpf, "18714933747");
+
+//     const response = ref.current?.validate(true);
+//     expect(response?.success).toEqual(false);
+//     expect(response?.message).toEqual(MESSAGECPFINVALIDITY);
+// });
