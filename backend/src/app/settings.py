@@ -26,7 +26,20 @@ SECRET_KEY = 'django-insecure-91%_7n9_iy#**nn6vxq#lztavpirlo!8#a%w%m=9thh=ub6mrr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 AUTH_USER_MODEL = 'customuser.CustomUser'
 
@@ -40,16 +53,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Seu frontend Next.js
-    "https://seusite.com",
-]
-
-CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 

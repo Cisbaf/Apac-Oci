@@ -1,6 +1,6 @@
 annotated-types==0.7.0
-# Editable install with no version control (apac_core==0.1.0)
--e /home/daniel/Desenvolvimento/cisbaf/apac/core
+# Editable Git install with no remote (apac_core==0.1.0)
+-e /app/core
 asgiref==3.8.1
 Django==5.2.1
 django-adminlte-3==0.1.6

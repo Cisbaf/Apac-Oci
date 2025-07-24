@@ -113,8 +113,10 @@ class ApacRequestListCreate(APIView):
             }, status=status.HTTP_200_OK)
         
         except ValidationError as e:
+            print(str(e))
             return Response({"message": e.errors()}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            print(str(e))
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @staff_member_required

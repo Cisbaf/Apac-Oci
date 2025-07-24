@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
     path: '/',
   });
 
+  
   return res;
 }
 

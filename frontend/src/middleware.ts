@@ -62,23 +62,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
-
-// O CÓDIGO ESTÁ AQUI SÓ PARA SALVAR UM EXEMPLO DE LOGOUT
-// export async function logoutUser() {
-//   const token = (await cookies()).get('token')?.value;
-  
-//   if (token) {
-//     try {
-//       await fetch(`${API_BASE_URL}/auth/logout/`, {
-//         method: 'POST',
-//         headers: {
-//           'Authorization': `Bearer ${token}`,
-//         },
-//       });
-//     } catch (error) {
-//       console.error('Logout error:', error);
-//     }
-//   }
-  
-//   (await cookies()).delete('token');
-// }

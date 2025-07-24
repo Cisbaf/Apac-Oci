@@ -14,7 +14,7 @@ export default function Login() {
     const { showBackdrop, showAlert } = useGlobalComponents();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirectTo = searchParams.get('from') || '/';
+    const redirectTo = searchParams.get('from') || '/visualizar';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,6 +24,7 @@ export default function Login() {
                 const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // <- ESSENCIAL para receber o cookie
                 body: JSON.stringify({ username, password }),
             });
             if (response.ok) {
