@@ -34,7 +34,7 @@ PATIENT_DATA = {
     "patient_address_street_type": "Avenida",
     "patient_address_street_name": "Abilio Augusto Tavora",
     "patient_address_number": "2789",
-    "patient_address_complement": "Apartamento 201",
+    "patient_address_complement": "Apartamento 201", # opcional
     "patient_address_postal_code": "26265-090",
     "patient_address_neighborhood": "Jardim Alvorada",
     "patient_address_city": "Nova Iguaçu",

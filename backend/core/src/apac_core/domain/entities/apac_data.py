@@ -35,7 +35,7 @@ class ApacData(BaseModel):
         'patient_name', 'patient_record_number', 'patient_cns', 'patient_cpf',
         'patient_birth_date', 'patient_race_color', 'patient_gender', 'patient_mother_name',
         'patient_address_street_type', 'patient_address_street_name', 'patient_address_number',
-        'patient_address_complement', 'patient_address_postal_code', 'patient_address_neighborhood',
+        'patient_address_postal_code', 'patient_address_neighborhood',
         'patient_address_city', 'patient_address_state', 'medic_name', 'medic_cns', 'medic_cbo', 'procedure_date',
         mode='before'
     )
