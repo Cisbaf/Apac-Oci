@@ -23,8 +23,8 @@ export default function GenderSelector({disabled}: {disabled?: boolean}) {
                     required
                     size="small" 
                     {...field}>
-                    <MenuItem value="masculino">Masculino</MenuItem>
-                    <MenuItem value="feminino">Feminino</MenuItem>
+                    <MenuItem value="M">Masculino</MenuItem>
+                    <MenuItem value="F">Feminino</MenuItem>
                 </Select>
                 </FormControl>
         )}/>

@@ -61,9 +61,9 @@ export function fillRequestFormFromPatient(
   setValue('apacData.patientCpf', formatCpf(patientInfo.cpf));
   setValue('apacData.patientCns', formatCns(patientInfo.cns) || '');
   setValue('apacData.patientBirthDate', formatDate(patientInfo.birth_date));
-  setValue('apacData.patientGender', formatGender(patientInfo.gender));
+  setValue('apacData.patientGender', patientInfo.gender);
   setValue('apacData.patientMotherName', patientInfo.mother_name || '');
-  setValue('apacData.patientRaceColor', raceToCode(patientInfo.race));
+  setValue('apacData.patientRaceColor', patientInfo.race || '');
 
   // Dados de endereço
   if (address) {
@@ -75,17 +75,6 @@ export function fillRequestFormFromPatient(
     // setValue('apacData.patientAddressCity', getCityNameByCode(address.city_code) || '');
     setValue('apacData.patientAddressState', address.state || '');
   }
-
-  // Campos que não vêm da API mas precisam ser inicializados
-  setValue('apacData.patientRecordNumber', '');
-  setValue('apacData.patientAddressStreetType', '');
-  setValue('apacData.medicName', '');
-  setValue('apacData.medicCns', '');
-  setValue('apacData.medicCbo', '');
-  setValue('apacData.cidId', 0);
-  setValue('apacData.procedureDate', '');
-  setValue('apacData.mainProcedureId', 0);
-  setValue('apacData.subProcedures', []);
 }
 
 // Função auxiliar para converter código IBGE em nome da cidade

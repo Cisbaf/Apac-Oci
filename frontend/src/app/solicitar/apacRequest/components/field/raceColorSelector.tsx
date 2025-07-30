@@ -24,11 +24,11 @@ const { form } = useFormRequest();
               size="small"
               disabled={disabled}
               {...field}>
-              <MenuItem value="branca">Branca</MenuItem>
-              <MenuItem value="preta">Preta</MenuItem>
-              <MenuItem value="parda">Parda</MenuItem>
-              <MenuItem value="amarela">Amarela</MenuItem>
-              <MenuItem value="indigena">Indígena</MenuItem>
+              <MenuItem value="01">Branca</MenuItem>
+              <MenuItem value="02">Preta</MenuItem>
+              <MenuItem value="03">Parda</MenuItem>
+              <MenuItem value="04">Amarela</MenuItem>
+              <MenuItem value="05">Indígena</MenuItem>
             </Select>
           </FormControl>
     )}/>
