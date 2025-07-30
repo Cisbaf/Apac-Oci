@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pydantic import BaseModel
 from typing import List
+from datetime import date
 from apac_core.domain.repositories.apac_data_repository import ApacDataRepository
 from apac_core.domain.repositories.cid_repository import CidRepository
 from apac_core.domain.repositories.procedure_repository import ProcedureRepository
@@ -16,7 +17,7 @@ class CreateApacDataDTO(BaseModel):
     patient_record_number: str
     patient_cns: str
     patient_cpf: str
-    patient_birth_date: str
+    patient_birth_date: date
     patient_race_color: str
     patient_gender: str
     patient_mother_name: str
@@ -32,7 +33,7 @@ class CreateApacDataDTO(BaseModel):
     medic_cns: str
     medic_cbo: str
     cid_id: int
-    procedure_date: str
+    procedure_date: date
     main_procedure_id: int
     sub_procedures: List[CreateProcedureRecordDTO]
 

@@ -4,7 +4,6 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-
 from apac_request.models import ApacRequestModel
 from apac_batch.models import ApacBatchModel
 from city.models import CityModel
@@ -27,7 +26,7 @@ PATIENT_DATA = {
     "patient_record_number": "2023100456",
     "patient_cns": "898001160651234",
     "patient_cpf": "123.456.789-00",
-    "patient_birth_date": "12/03/1999",
+    "patient_birth_date": "1999-03-12",
     "patient_race_color": "parda",
     "patient_gender": "Masculino",
     "patient_mother_name": "Maria Aparecida da Silva",
@@ -42,7 +41,7 @@ PATIENT_DATA = {
     "medic_name": "Fernando Rodrigues",
     "medic_cns": "5667789",
     "medic_cbo": "20154786",
-    "procedure_date": "12/03/1999"
+    "procedure_date": "2025-07-30"
 }
 
 def random_str():

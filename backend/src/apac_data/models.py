@@ -17,7 +17,8 @@ class ApacDataModel(models.Model):
     patient_record_number = models.CharField(max_length=255, verbose_name="Número do prontuário")
     patient_cns = models.CharField(max_length=255, verbose_name="CNS do paciente")
     patient_cpf = models.CharField(max_length=255, verbose_name="CPF do paciente")
-    patient_birth_date = models.CharField(max_length=255, verbose_name="Data de nascimento do paciente")
+    # patient_birth_date = models.CharField(max_length=255, verbose_name="Data de nascimento do paciente")
+    patient_birth_date = models.DateField(verbose_name="Data de nascimento do paciente")
     patient_race_color = models.CharField(max_length=255, verbose_name="Raça/cor do paciente")
     patient_gender = models.CharField(max_length=255, verbose_name="Gênero do paciente")
     patient_mother_name = models.CharField(max_length=255, verbose_name="Nome da mãe do paciente")
@@ -33,7 +34,8 @@ class ApacDataModel(models.Model):
     medic_cns = models.CharField(max_length=255, verbose_name="CNS do médico")
     medic_cbo = models.CharField(max_length=255, verbose_name="CBO do médico")
     main_procedure = models.ForeignKey(to=ProcedureModel, on_delete=models.DO_NOTHING, verbose_name="Procedimento principal")
-    procedure_date = models.CharField(max_length=255, verbose_name="Data do procedimento")
+    # procedure_date = models.CharField(max_length=255, verbose_name="Data do procedimento")
+    procedure_date = models.DateField(verbose_name="Data do procedimento")
     cid = models.ForeignKey(to=CidModel, on_delete=models.DO_NOTHING, verbose_name="CID")
 
     class Meta:

@@ -4,13 +4,15 @@ from apac_core.domain.entities.procedure import Procedure
 from apac_core.domain.entities.procedure_record import ProcedureRecord
 from apac_core.domain.entities.cid import Cid
 from apac_core.domain.exceptions import ValidationException
+from datetime import date
+
 
 class ApacData(BaseModel):
     patient_name: str
     patient_record_number: str
     patient_cns: str
     patient_cpf: str
-    patient_birth_date: str
+    patient_birth_date: date
     patient_race_color: str
     patient_gender: str
     patient_mother_name: str
@@ -26,7 +28,7 @@ class ApacData(BaseModel):
     medic_cns: str
     medic_cbo: str
     cid: Cid
-    procedure_date: str
+    procedure_date: date
     main_procedure: Procedure
     sub_procedures: List[ProcedureRecord]
     id: Optional[int] = None

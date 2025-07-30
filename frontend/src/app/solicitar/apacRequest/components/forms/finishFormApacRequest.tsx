@@ -9,7 +9,7 @@ import { useGlobalComponents } from "@/shared/context/GlobalUIContext";
 import { useRouter } from "next/navigation";
 import { useFormRequest } from "../../contexts/FormApacRequest";
 import ConfirmButton from "@/shared/components/ConfirmButton";
-import { adapterFormSubProcedures } from "../../utils/adapterForm";
+import { adapterFormSubProcedures, formatDateToISO } from "../../utils/adapterForm";
 import { ToSnakeCase } from "@/shared/utils/snakeCase";
 
 export default function ApacRequestFinishForm() {
@@ -22,7 +22,9 @@ export default function ApacRequestFinishForm() {
         showBackdrop(true, "Solicitando apac!");
         const data = structuredClone(getValues());
         // @ts-ignore
-        data.apacData.subProcedures =  adapterFormSubProcedures(data.apacData.subProcedures);
+        data.apacData.subProcedures = adapterFormSubProcedures(data.apacData.subProcedures);
+        data.apacData.procedureDate = formatDateToISO(data.apacData.procedureDate);
+        data.apacData.patientBirthDate = formatDateToISO(data.apacData.patientBirthDate);
         const data_json = JSON.stringify(ToSnakeCase(data))
         const response = await fetch('/api/proxy/apac_request/api', {
             method: "POST",

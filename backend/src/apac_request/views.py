@@ -23,6 +23,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Count
 from django.shortcuts import render
 from collections import defaultdict
+from apac_core.application.ultils.formart_errors import format_validation_errors
 
 class ApacRequestApprovedAPIView(APIView):
     authentication_classes = [SessionAuthentication, JWTAuthentication]
@@ -113,10 +114,9 @@ class ApacRequestListCreate(APIView):
             }, status=status.HTTP_200_OK)
         
         except ValidationError as e:
-            print(str(e))
-            return Response({"message": e.errors()}, status=status.HTTP_400_BAD_REQUEST)
+            formatted = format_validation_errors(e.errors())
+            return Response({"message": formatted}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(str(e))
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @staff_member_required
