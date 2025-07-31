@@ -13,7 +13,7 @@ RUN npm install
 # Copia o restante do código (após instalar dependências para melhor cache)
 COPY tsconfig.json next.config.ts jest.config.js next-env.d.ts ./
 COPY public ./public
-COPY src ./src
+COPY src /app/src
 
 
 # Comando para iniciar o servidor de desenvolvimento
