@@ -17,5 +17,7 @@ class EstablishmentController(EstablishmentRepository):
             name=establishment.name,
             cnes=establishment.cnes,
             city=CityModel.objects.get(pk=establishment.city.id),
+            cnpj=establishment.cnpj,
+            acronym=establishment.acronym,
             is_active=establishment.is_active
         ).to_entity()

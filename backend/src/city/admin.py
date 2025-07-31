@@ -3,5 +3,4 @@ from .models import CityModel
 
 @admin.register(CityModel)
 class CityAdmin(admin.ModelAdmin):
-    pass
-
+    list_display = ['name', 'ibge_code', 'agency_name']
