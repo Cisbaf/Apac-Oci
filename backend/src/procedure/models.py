@@ -5,7 +5,7 @@ from apac_core.domain.entities.cid import Cid
 
 class ProcedureModel(models.Model):
     code = models.CharField(verbose_name="Código do Procedimento", max_length=20, db_column='cod_sig_tap')
-    name = models.CharField(verbose_name="Nome do Procedimento", max_length=100)
+    name = models.CharField(verbose_name="Nome do Procedimento", max_length=255)
     description = models.CharField(verbose_name="Descrição do Procedimento", max_length=255, null=True, blank=True)
     parent = models.ForeignKey(
         verbose_name="Procedimento Pai",
