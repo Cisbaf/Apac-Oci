@@ -13,5 +13,7 @@ class CityController(CityRepository):
     
     def save(self, city):
         return CityModel.objects.create(
-            name=city.name
+            name=city.name,
+            ibge_code=city.ibge_code,
+            agency_name=city.agency_name,
         ).to_entity()

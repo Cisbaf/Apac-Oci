@@ -8,7 +8,7 @@ class ParentFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         # Mostra apenas os registros onde parent é None (nível raiz)
         roots = ProcedureModel.objects.filter(parent__isnull=True)
-        return [("none", "Sem Parent")] + [(obj.pk, str(obj)) for obj in roots]
+        return [("none", "Procedimentos Principais")] + [(obj.pk, str(obj)) for obj in roots]
 
     def queryset(self, request, queryset):
         value = self.value()

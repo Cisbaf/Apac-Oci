@@ -12,6 +12,8 @@ class EstablishmentModel(models.Model):
         on_delete=models.CASCADE,
         related_name='establishments'
     )
+    cnpj = models.CharField(verbose_name="CNPJ", max_length=14, null=True, blank=True)
+    acronym = models.CharField(verbose_name="Sigla", max_length=255, null=True, blank=True)
     is_active = models.BooleanField(verbose_name="Está Ativo", default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -26,6 +28,8 @@ class EstablishmentModel(models.Model):
             name=self.name,
             cnes=self.cnes,
             city=self.city.to_entity(),
+            cnpj=self.cnpj,
+            acronym=self.acronym,
             is_active=self.is_active,
             id=self.pk
         )
