@@ -37,7 +37,7 @@ class ApacData(BaseModel):
     id: Optional[int] = None
 
     @field_validator(
-        'patient_name', 'patient_record_number', 'patient_cns', 'patient_cpf',
+        'patient_name', 'patient_cns', 'patient_cpf',
         'patient_birth_date', 'patient_race_color', 'patient_gender', 'patient_mother_name',
         'patient_address_street_type', 'patient_address_street_name', 'patient_address_number',
         'patient_address_postal_code', 'patient_address_neighborhood',

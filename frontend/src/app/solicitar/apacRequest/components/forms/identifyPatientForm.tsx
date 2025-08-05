@@ -81,7 +81,6 @@ const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, 
                                 type="number"
                                 disabled={disabled}
                                 fullWidth
-                                required
                                 {...field}/>
                             )}/>
                     </Grid>

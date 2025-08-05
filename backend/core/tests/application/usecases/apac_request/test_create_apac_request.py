@@ -100,7 +100,7 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
         establishment_id=establishment.id,
         apac_data= CreateApacDataDTO(
             patient_name="João da Silva",
-            patient_record_number="2023100456",
+            patient_record_number="99999", # OPCIONAL
             patient_cns="706000343458946",
             patient_cpf="187.149.337-48",
             patient_birth_date="1999-03-12",
