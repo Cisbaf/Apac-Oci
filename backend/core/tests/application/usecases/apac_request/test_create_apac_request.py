@@ -101,9 +101,9 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
         apac_data= CreateApacDataDTO(
             patient_name="João da Silva",
             patient_record_number="2023100456",
-            patient_cns="898001160651234",
-            patient_cpf="123.456.789-00",
-            patient_birth_date=date(1999, 3, 12),
+            patient_cns="706000343458946",
+            patient_cpf="187.149.337-48",
+            patient_birth_date="1999-03-12",
             patient_race_color="parda",
             patient_gender="Masculino",
             patient_mother_name="Maria Aparecida da Silva",
@@ -116,10 +116,10 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
             patient_address_city="Nova Iguaçu",
             patient_address_state="RJ",
             medic_name="Fernando Rodrigues",
-            medic_cns="5667789",
+            medic_cns="706000343458946",
             medic_cbo="20154786",
             cid_id=cid.id,
-            procedure_date=date(2025, 7, 30),
+            procedure_date="2025-07-30",
             main_procedure_id=main_procedure.id,
             sub_procedures=sub_procedures
         )

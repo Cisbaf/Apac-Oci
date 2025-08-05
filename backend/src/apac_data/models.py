@@ -2,6 +2,9 @@ from django.db import models
 from procedure.models import ProcedureModel, CidModel
 from apac_request.models import ApacRequestModel
 from apac_core.domain.entities.apac_data import ApacData
+from apac_core.domain.value_objects.cns import CnsField
+from apac_core.domain.value_objects.cpf import CpfField
+from apac_core.domain.value_objects.cep import CepField
 
 
 class ApacDataModel(models.Model):
@@ -54,8 +57,8 @@ class ApacDataModel(models.Model):
         return ApacData(
             patient_name = self.patient_name,
             patient_record_number = self.patient_record_number,
-            patient_cns = self.patient_cns,
-            patient_cpf = self.patient_cpf,
+            patient_cns = CnsField(value=self.patient_cns),
+            patient_cpf = CpfField(value=self.patient_cpf),
             patient_birth_date = self.patient_birth_date,
             patient_race_color = self.patient_race_color,
             patient_gender = self.patient_gender,
@@ -64,12 +67,12 @@ class ApacDataModel(models.Model):
             patient_address_street_name = self.patient_address_street_name,
             patient_address_number = self.patient_address_number,
             patient_address_complement = self.patient_address_complement,
-            patient_address_postal_code = self.patient_address_postal_code,
+            patient_address_postal_code = CepField(value=self.patient_address_postal_code),
             patient_address_neighborhood = self.patient_address_neighborhood,
             patient_address_city = self.patient_address_city,
             patient_address_state = self.patient_address_state,
             medic_name = self.medic_name,
-            medic_cns = self.medic_cns,
+            medic_cns = CnsField(value=self.medic_cns),
             medic_cbo = self.medic_cbo,
             cid=self.cid.to_entity(),
             procedure_date=self.procedure_date,
