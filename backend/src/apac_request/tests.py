@@ -23,7 +23,7 @@ from apac_core.domain.messages.apac_request_messages import (
 # Constantes para dados de teste
 PATIENT_DATA = {
     "patient_name": "João da Silva",
-    "patient_record_number": "2023100456",
+    "patient_record_number": "",
     "patient_cns": "706000343458946",
     "patient_cpf": "187.149.337-48",
     "patient_birth_date": "1999-03-12",
