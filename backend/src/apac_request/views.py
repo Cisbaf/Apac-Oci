@@ -97,7 +97,6 @@ class ApacRequestListCreate(APIView):
     @transaction.atomic
     def post(self, request):
         try:
-
             apac_request = CreateApacRequestUseCase(
                 repo_apac_request=ApacRequestController(),
                 repo_user=UserController(),

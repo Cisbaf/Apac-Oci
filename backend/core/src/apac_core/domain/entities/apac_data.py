@@ -1,17 +1,20 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, field_validator
 from typing import List, Optional
 from apac_core.domain.entities.procedure import Procedure
 from apac_core.domain.entities.procedure_record import ProcedureRecord
 from apac_core.domain.entities.cid import Cid
 from apac_core.domain.exceptions import ValidationException
+from apac_core.domain.value_objects.cns import CnsField
+from apac_core.domain.value_objects.cpf import CpfField
+from apac_core.domain.value_objects.cep import CepField
 from datetime import date
 
 
 class ApacData(BaseModel):
     patient_name: str
     patient_record_number: str
-    patient_cns: str
-    patient_cpf: str
+    patient_cns: CnsField
+    patient_cpf: CpfField
     patient_birth_date: date
     patient_race_color: str
     patient_gender: str
@@ -20,12 +23,12 @@ class ApacData(BaseModel):
     patient_address_street_name: str
     patient_address_number: str
     patient_address_complement: str
-    patient_address_postal_code: str
+    patient_address_postal_code: CepField
     patient_address_neighborhood: str
     patient_address_city: str
     patient_address_state: str
     medic_name: str
-    medic_cns: str
+    medic_cns: CnsField
     medic_cbo: str
     cid: Cid
     procedure_date: date

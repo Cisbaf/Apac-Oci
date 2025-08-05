@@ -10,14 +10,16 @@ from apac_core.domain.entities.apac_data import ApacData
 from apac_core.application.use_cases.procedure_record_cases.create_procedure_record_case import (
     CreateProcedureRecordDTO, CreateProcedureRecordUseCase
 )
-
+from apac_core.domain.value_objects.cns import CnsField
+from apac_core.domain.value_objects.cpf import CpfField
+from apac_core.domain.value_objects.cep import CepField
 
 class CreateApacDataDTO(BaseModel):
     patient_name: str
     patient_record_number: str
     patient_cns: str
     patient_cpf: str
-    patient_birth_date: date
+    patient_birth_date: str
     patient_race_color: str
     patient_gender: str
     patient_mother_name: str
@@ -33,7 +35,7 @@ class CreateApacDataDTO(BaseModel):
     medic_cns: str
     medic_cbo: str
     cid_id: int
-    procedure_date: date
+    procedure_date: str
     main_procedure_id: int
     sub_procedures: List[CreateProcedureRecordDTO]
 
@@ -67,8 +69,8 @@ class CreateApacDataUseCase:
         return self.repo_apac_data.save(ApacData(
             patient_name=data.patient_name,
             patient_record_number=data.patient_record_number,
-            patient_cns=data.patient_cns,
-            patient_cpf=data.patient_cpf,
+            patient_cns=CnsField(value=data.patient_cns),
+            patient_cpf=CpfField(value=data.patient_cpf),
             patient_birth_date=data.patient_birth_date,
             patient_race_color=data.patient_race_color,
             patient_gender=data.patient_gender,
@@ -77,12 +79,12 @@ class CreateApacDataUseCase:
             patient_address_street_name=data.patient_address_street_name,
             patient_address_number=data.patient_address_number,
             patient_address_complement=data.patient_address_complement,
-            patient_address_postal_code=data.patient_address_postal_code,
+            patient_address_postal_code=CepField(value=data.patient_address_postal_code),
             patient_address_neighborhood=data.patient_address_neighborhood,
             patient_address_city=data.patient_address_city,
             patient_address_state=data.patient_address_state,
             medic_name=data.medic_name,
-            medic_cns=data.medic_cns,
+            medic_cns=CnsField(value=data.medic_cns),
             medic_cbo=data.medic_cbo,
             cid=cid,
             procedure_date=data.procedure_date,

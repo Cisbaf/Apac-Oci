@@ -24,8 +24,8 @@ from apac_core.domain.messages.apac_request_messages import (
 PATIENT_DATA = {
     "patient_name": "João da Silva",
     "patient_record_number": "2023100456",
-    "patient_cns": "898001160651234",
-    "patient_cpf": "123.456.789-00",
+    "patient_cns": "706000343458946",
+    "patient_cpf": "187.149.337-48",
     "patient_birth_date": "1999-03-12",
     "patient_race_color": "parda",
     "patient_gender": "Masculino",
@@ -39,7 +39,7 @@ PATIENT_DATA = {
     "patient_address_city": "Nova Iguaçu",
     "patient_address_state": "RJ",
     "medic_name": "Fernando Rodrigues",
-    "medic_cns": "5667789",
+    "medic_cns": "706000343458946",
     "medic_cbo": "20154786",
     "procedure_date": "2025-07-30"
 }
