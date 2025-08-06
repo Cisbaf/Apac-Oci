@@ -12,6 +12,7 @@ import RaceColorSelector from "../field/raceColorSelector";
 import GenderSelector from "../field/genderSelector";
 import CpfInput from "../field/cpfInput";
 import CnsInput from "../field/cnsInput";
+import FormLogradouro from "../field/logradouroSelector";
 
 const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, ref)=>{
     const formRef = React.useRef<HTMLFormElement>(null); 
@@ -120,17 +121,7 @@ const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, 
                     <Grid size={{xs:12}}><hr/></Grid>
                     {/* Seção de Endereço */}
                     <Grid size={{xs:12, md:3, sm:6}}>
-                        <Controller
-                            name="apacData.patientAddressStreetType"
-                            control={control}
-                            render={({ field }) => (
-                            <TextField   size="small" 
-                                label="Tipo Logradouro"
-                                disabled={disabled}
-                                fullWidth
-                                required
-                                {...field}/>
-                        )}/>
+                        <FormLogradouro disabled={disabled}/>
                     </Grid>
                     <Grid size={{xs:12, md:3, sm:6}}>
                         <Controller
