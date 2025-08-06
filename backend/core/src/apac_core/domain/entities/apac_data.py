@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, field_serializer
 from typing import List, Optional
 from apac_core.domain.entities.procedure import Procedure
 from apac_core.domain.entities.procedure_record import ProcedureRecord
@@ -44,8 +44,25 @@ class ApacData(BaseModel):
         'patient_address_city', 'patient_address_state', 'medic_name', 'medic_cns', 'medic_cbo', 'procedure_date',
         mode='before'
     )
+
     @classmethod
     def validate_non_empty(cls, value: str, info):
         if value is None or (isinstance(value, str) and not value.strip()):
             raise ValidationException(f"O campo '{info.field_name}' não pode ser vazio ou None.")
         return value
+    
+    @field_serializer("patient_cpf", return_type=str)
+    def serialize_patient_cpf(self, cpf: CpfField, _info):
+        return cpf.value
+    
+    @field_serializer("patient_cns", return_type=str)
+    def serialize_patient_cns(self, cns: CnsField, _info):
+        return cns.value
+
+    @field_serializer("patient_address_postal_code", return_type=str)
+    def serialize_patient_address_postal_code(self, cep: CepField, _info):
+        return cep.value
+
+    @field_serializer("medic_cns", return_type=str)
+    def serialize_medic_cns(self, cns: CnsField, _info):
+        return cns.value
