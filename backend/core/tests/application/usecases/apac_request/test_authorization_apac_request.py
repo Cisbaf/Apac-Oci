@@ -59,7 +59,7 @@ def common_entities(repos):
     
     apac_data = CreateApacDataDTO(
         patient_name="João da Silva",
-        patient_record_number="2023100456",
+        patient_record_number="99999", # OPCIONAL
         patient_cns="706000343458946",
         patient_cpf="187.149.337-48",
         patient_birth_date="1999-03-12",
@@ -74,9 +74,12 @@ def common_entities(repos):
         patient_address_neighborhood="Jardim Alvorada",
         patient_address_city="Nova Iguaçu",
         patient_address_state="RJ",
-        medic_name="Fernando Rodrigues",
-        medic_cns="706000343458946",
-        medic_cbo="20154786",
+        supervising_physician_name="Fernando Rodrigues",
+        supervising_physician_cns="706000343458946",
+        supervising_physician_cbo="20154786",
+        authorizing_physician_name="Fernando Rodrigues",
+        authorizing_physician_cns="706000343458946",
+        authorizing_physician_cbo="20154786",
         cid_id=cid.id,
         procedure_date="2025-07-30",
         main_procedure_id=main_procedure.id,

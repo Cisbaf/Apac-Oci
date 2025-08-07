@@ -11,7 +11,8 @@ import IdentifyPatientForm from '@/app/solicitar/apacRequest/components/forms/id
 import IdentifyMainProcedure from '@/app/solicitar/apacRequest/components/forms/identifyMainProcedureForm';
 import IdentifySubProcedures from '@/app/solicitar/apacRequest/components/forms/identifySubProceduresForm';
 import IdentifyCidForm from '@/app/solicitar/apacRequest/components/forms/identifyCidForm';
-import IdentifyMedicForm from '@/app/solicitar/apacRequest/components/forms/identifyMedicForm';
+import IdentifyMedicSupervisingForm from '@/app/solicitar/apacRequest/components/forms/identifyMedicSupervisingForm';
+import IdentifyMedicAuthorizingForm from './apacRequest/components/forms/indentifyMedicAuthorizingForm';
 import ApacRequestFinishForm from '@/app/solicitar/apacRequest/components/forms/finishFormApacRequest';
 import ApacRequestSkeleton from '@/app/solicitar/apacRequest/components/ApacRequestSekeleton';
 import { RouteGuard } from "@/shared/components/RouteGuard";
@@ -54,7 +55,8 @@ export default function PageApacRequest() {
                             </StepForm>
                             <StepForm>
                                 <IdentifyCidForm/>
-                                <IdentifyMedicForm/>
+                                <IdentifyMedicSupervisingForm/>
+                                <IdentifyMedicAuthorizingForm/>
                             </StepForm>
                             <StepForm>
                                 <ApacRequestFinishForm/>

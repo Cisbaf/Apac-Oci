@@ -23,9 +23,12 @@ export  interface ApacData {
     patientAddressNeighborhood: string;    // Bairro (e.g., "CATETE")
     patientAddressCity: string;            // Município (e.g., "RIO DE JANEIRO")
     patientAddressState: string;           // UF (e.g., "RJ")
-    medicName: string;
-    medicCns: string;
-    medicCbo: string;
+    supervisingPhysicianName: string;
+    supervisingPhysicianCns: string;
+    supervisingPhysicianCbo: string;
+    authorizingPhysicianName: string;
+    authorizingPhysicianCns: string;
+    authorizingPhysicianCbo: string;
     cidId: number;
     procedureDate: string;
     mainProcedureId: number;

@@ -6,6 +6,7 @@ import { useApacViewContext } from "@/shared/context/ApacViewContext";
 import ConfirmButton from "@/shared/components/ConfirmButton";
 import { useGlobalComponents } from "@/shared/context/GlobalUIContext";
 import { useContextUser } from "@/shared/context/UserContext";
+import { formatDateBr } from "@/app/solicitar/apacRequest/utils/adapterForm";
 
 interface AuthorizationType {
     authorize: (id: number, status: "approved"|"reject"|null) => void;
@@ -22,8 +23,8 @@ export function AuthorizationProvider({children}: {children: React.ReactNode}) {
     const [justification, setJustification] = React.useState("");
     const user = useContextUser();
     const infoApproved = {
-        "Nome:": apacRequest?.apac_data.patient_name,
-        "Data de Solicitação do Procedimento:": apacRequest?.apac_data.procedure_date,
+        "Nome:": apacRequest?.apac_data.patient_data.name,
+        "Data de Solicitação do Procedimento:": formatDateBr(apacRequest?.apac_data.procedure_date || ""),
         "Procedimento:": apacRequest?.apac_data.main_procedure.name
     }
 
