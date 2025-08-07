@@ -38,9 +38,12 @@ PATIENT_DATA = {
     "patient_address_neighborhood": "Jardim Alvorada",
     "patient_address_city": "Nova Iguaçu",
     "patient_address_state": "RJ",
-    "medic_name": "Fernando Rodrigues",
-    "medic_cns": "706000343458946",
-    "medic_cbo": "20154786",
+    "supervising_physician_name": "Fernando Rodrigues",
+    "supervising_physician_cns": "706000343458946",
+    "supervising_physician_cbo": "20154786",
+    "authorizing_physician_name": "Fernando Rodrigues",
+    "authorizing_physician_cns": "706000343458946",
+    "authorizing_physician_cbo": "20154786",
     "procedure_date": "2025-07-30"
 }
 
@@ -152,7 +155,6 @@ class ApacCreationTests(BaseApacTest):
             self.base_data.model_dump(),
             format='json'
         )
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("message"), SUCCESSFULLY_REGISTERED)
         

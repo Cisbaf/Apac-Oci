@@ -5,6 +5,8 @@ from apac_core.domain.entities.apac_data import ApacData
 from apac_core.domain.value_objects.cns import CnsField
 from apac_core.domain.value_objects.cpf import CpfField
 from apac_core.domain.value_objects.cep import CepField
+from apac_core.domain.dto.medicData import MedicData
+from apac_core.domain.dto.patientData import PatientData
 
 
 class ApacDataModel(models.Model):
@@ -20,7 +22,6 @@ class ApacDataModel(models.Model):
     patient_record_number = models.CharField(max_length=255, verbose_name="Número do prontuário")
     patient_cns = models.CharField(max_length=255, verbose_name="CNS do paciente")
     patient_cpf = models.CharField(max_length=255, verbose_name="CPF do paciente")
-    # patient_birth_date = models.CharField(max_length=255, verbose_name="Data de nascimento do paciente")
     patient_birth_date = models.DateField(verbose_name="Data de nascimento do paciente")
     patient_race_color = models.CharField(max_length=255, verbose_name="Raça/cor do paciente")
     patient_gender = models.CharField(max_length=255, verbose_name="Gênero do paciente")
@@ -33,11 +34,13 @@ class ApacDataModel(models.Model):
     patient_address_neighborhood = models.CharField(max_length=255, verbose_name="Bairro")
     patient_address_city = models.CharField(max_length=255, verbose_name="Cidade")
     patient_address_state = models.CharField(max_length=255, verbose_name="Estado")
-    medic_name = models.CharField(max_length=255, verbose_name="Nome do médico")
-    medic_cns = models.CharField(max_length=255, verbose_name="CNS do médico")
-    medic_cbo = models.CharField(max_length=255, verbose_name="CBO do médico")
+    supervising_physician_name = models.CharField(max_length=255, verbose_name="Nome do médico responsavel")
+    supervising_physician_cns = models.CharField(max_length=255, verbose_name="CNS do médico responsavel")
+    supervising_physician_cbo = models.CharField(max_length=255, verbose_name="CBO do médico responsavel")
+    authorizing_physician_name = models.CharField(max_length=255, verbose_name="Nome do médico autorizador")
+    authorizing_physician_cns = models.CharField(max_length=255, verbose_name="CNS do médico autorizador")
+    authorizing_physician_cbo = models.CharField(max_length=255, verbose_name="CBO do médico autorizador")
     main_procedure = models.ForeignKey(to=ProcedureModel, on_delete=models.DO_NOTHING, verbose_name="Procedimento principal")
-    # procedure_date = models.CharField(max_length=255, verbose_name="Data do procedimento")
     procedure_date = models.DateField(verbose_name="Data do procedimento")
     cid = models.ForeignKey(to=CidModel, on_delete=models.DO_NOTHING, verbose_name="CID")
 
@@ -55,25 +58,34 @@ class ApacDataModel(models.Model):
         except:
             records = None
         return ApacData(
-            patient_name = self.patient_name,
-            patient_record_number = self.patient_record_number,
-            patient_cns = CnsField(value=self.patient_cns),
-            patient_cpf = CpfField(value=self.patient_cpf),
-            patient_birth_date = self.patient_birth_date,
-            patient_race_color = self.patient_race_color,
-            patient_gender = self.patient_gender,
-            patient_mother_name = self.patient_mother_name,
-            patient_address_street_type = self.patient_address_street_type,
-            patient_address_street_name = self.patient_address_street_name,
-            patient_address_number = self.patient_address_number,
-            patient_address_complement = self.patient_address_complement,
-            patient_address_postal_code = CepField(value=self.patient_address_postal_code),
-            patient_address_neighborhood = self.patient_address_neighborhood,
-            patient_address_city = self.patient_address_city,
-            patient_address_state = self.patient_address_state,
-            medic_name = self.medic_name,
-            medic_cns = CnsField(value=self.medic_cns),
-            medic_cbo = self.medic_cbo,
+            patient_data=PatientData(
+               name=self.patient_name,
+               record_number=self.patient_record_number,
+               cns=CnsField(value=self.patient_cns),
+               cpf=CpfField(value=self.patient_cpf),
+               birth_date=self.patient_birth_date,
+               race_color=self.patient_race_color,
+               gender=self.patient_gender,
+               mother_name=self.patient_mother_name,
+               address_street_type=self.patient_address_street_type,
+               address_street_name=self.patient_address_street_name,
+               address_number=self.patient_address_number,
+               address_complement=self.patient_address_complement,
+               address_postal_code=CepField(value=self.patient_address_postal_code),
+               address_neighborhood=self.patient_address_neighborhood,
+               address_city=self.patient_address_city,
+               address_state=self.patient_address_state,
+            ),
+            supervising_physician_data=MedicData(
+                name=self.supervising_physician_name,
+                cns=CnsField(value=self.supervising_physician_cns),
+                cbo=self.supervising_physician_cbo,
+            ),
+            authorizing_physician_data=MedicData(
+                name=self.authorizing_physician_name,
+                cns=CnsField(value=self.authorizing_physician_cns),
+                cbo=self.authorizing_physician_cbo,
+            ),
             cid=self.cid.to_entity(),
             procedure_date=self.procedure_date,
             main_procedure=self.main_procedure.to_entity(),

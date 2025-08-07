@@ -8,7 +8,7 @@ import { MESSAGENOTCHECKVALIDITY,} from "@/app/solicitar/apacRequest/utils/messa
 import { isValidCNS } from "@/shared/utils/validate";
 import CnsInput from "../field/cnsInput";
 
-const IdentifyMedicForm = React.forwardRef<FormRepository, FormProps>((props, ref)=>{
+const IdentifyMedicAuthorizingForm = React.forwardRef<FormRepository, FormProps>((props, ref)=>{
     const formRef = React.useRef<HTMLFormElement>(null); 
     const { form , disabled: disabledForm } = useFormRequest();
     const { control } = form;
@@ -26,7 +26,7 @@ const IdentifyMedicForm = React.forwardRef<FormRepository, FormProps>((props, re
 
     return(
         <CardForm
-            title="Medico Solicitante"
+            title="Medico Autorizador"
             contentBoxStyle={{
                 padding: 4
             }}>
@@ -37,7 +37,7 @@ const IdentifyMedicForm = React.forwardRef<FormRepository, FormProps>((props, re
                 <Grid container spacing={3}>
                     <Grid size={{xs:12, sm:12}}>
                         <Controller
-                            name="apacData.medicName"
+                            name="apacData.authorizingPhysicianName"
                             control={control}
                             render={({ field }) => (
                             <TextField   size="small" 
@@ -49,11 +49,11 @@ const IdentifyMedicForm = React.forwardRef<FormRepository, FormProps>((props, re
                         )}/>
                     </Grid>
                     <Grid size={{xs:12, sm:6}}>
-                       <CnsInput formKey="medic" disabled={disabled}/>
+                       <CnsInput formKey="authorizing" disabled={disabled}/>
                     </Grid>
                     <Grid size={{xs:12, sm:6}}>
                         <Controller
-                            name="apacData.medicCbo"
+                            name="apacData.authorizingPhysicianCbo"
                             control={control}
                             render={({ field }) => (
                             <TextField   size="small" 
@@ -70,4 +70,4 @@ const IdentifyMedicForm = React.forwardRef<FormRepository, FormProps>((props, re
     )
 });
 
-export default IdentifyMedicForm;
+export default IdentifyMedicAuthorizingForm;

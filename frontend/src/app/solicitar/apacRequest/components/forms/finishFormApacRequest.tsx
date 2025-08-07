@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import IdentifyEstablishmentForm from "./identifyEstablishmentForm";
 import IdentifyMainProcedure from "./identifyMainProcedureForm";
-import IdentifyMedicForm from "./identifyMedicForm";
+import IdentifyMedicForm from "./identifyMedicSupervisingForm";
 import IdentifyPatientForm from "./identifyPatientForm";
 import IdentifySubProcedures from "./identifySubProceduresForm";
 import IdentifyCidForm from "./identifyCidForm";
@@ -11,9 +11,12 @@ import { useFormRequest } from "../../contexts/FormApacRequest";
 import ConfirmButton from "@/shared/components/ConfirmButton";
 import { adapterFormSubProcedures, formatDateToISO } from "../../utils/adapterForm";
 import { ToSnakeCase } from "@/shared/utils/snakeCase";
+import IdentifyMedicAuthorizingForm from "./indentifyMedicAuthorizingForm";
+import IdentifyMedicSupervisingForm from "./identifyMedicSupervisingForm";
+
 
 export default function ApacRequestFinishForm() {
-    const { form } = useFormRequest();
+    const { form } = useFormRequest();0
     const { getValues } = form;
     const { showResponseApi, showBackdrop } = useGlobalComponents();
     const route = useRouter();
@@ -50,7 +53,8 @@ export default function ApacRequestFinishForm() {
             <IdentifyMainProcedure disabled/>
             <IdentifySubProcedures disabled/>
             <IdentifyCidForm disabled/>
-            <IdentifyMedicForm disabled/>
+            <IdentifyMedicSupervisingForm disabled/>
+            <IdentifyMedicAuthorizingForm disabled/>
             <br></br>
             <ConfirmButton
                 holdDuration={750}

@@ -8,7 +8,7 @@ import { useGlobalComponents } from '@/shared/context/GlobalUIContext';
 import { fillRequestFormFromPatient } from '../../services/PatientInfoService';
 
 interface CnsInputProps {
-    formKey: "patient"|"medic";
+    formKey: "patient"|"supervising"|"authorizing";
     disabled?: boolean;
 }
 
@@ -17,6 +17,11 @@ export default function CnsInput(props: CnsInputProps) {
     const { control, setValue } = form;
     const cnsMaskRef = useMask(CnsMask);
     const { showBackdrop, showResponseApi, showAlert } = useGlobalComponents();
+    const chv = {
+        patient: {form: "apacData.patientCns", label: "Cns do paciente"},
+        supervising: {form: "apacData.supervisingPhysicianCns", label: "Cns do medico responsavel"},
+        authorizing: {form: "apacData.authorizingPhysicianCns", label: "Cns do medico autorizador"},
+    } as const;
 
     const handleSearchClick = async() => {
         const cns = cnsMaskRef.current?.value.replace(/\s+/g, '');
@@ -33,9 +38,12 @@ export default function CnsInput(props: CnsInputProps) {
                 const patient_info = await showResponseApi(response);
                 if (response.ok && props.formKey == "patient") {
                     fillRequestFormFromPatient(patient_info, setValue);
-                } else if (response.ok && props.formKey == "medic") {
-                    setValue("apacData.medicName", patient_info.full_name);
+                } else if (response.ok && props.formKey == "supervising") {
+                    setValue("apacData.supervisingPhysicianName", patient_info.full_name);
+                } else if (response.ok && props.formKey == "authorizing") {
+                    setValue("apacData.authorizingPhysicianName", patient_info.full_name);
                 }
+                
             } catch (e) {
                 showAlert({ color: "error", message: "Erro ao tentar preencher dados automáticos, por favor preencha manualmente!"})
             }
@@ -48,13 +56,13 @@ export default function CnsInput(props: CnsInputProps) {
 
     return (
         <Controller
-            name={props.formKey === "patient"? "apacData.patientCns": "apacData.medicCns"}
+            name={chv[props.formKey].form}
             control={control}
             render={({ field }) => (
                 <TextField
                     size="small"
                     inputRef={cnsMaskRef}
-                    label={props.formKey === "patient"? "Cns do paciente": "Cns do profissional"}
+                    label={chv[props.formKey].label}
                     disabled={props.disabled}
                     required
                     fullWidth

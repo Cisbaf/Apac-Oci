@@ -115,9 +115,12 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
             patient_address_neighborhood="Jardim Alvorada",
             patient_address_city="Nova Iguaçu",
             patient_address_state="RJ",
-            medic_name="Fernando Rodrigues",
-            medic_cns="706000343458946",
-            medic_cbo="20154786",
+            supervising_physician_name="Fernando Rodrigues",
+            supervising_physician_cns="706000343458946",
+            supervising_physician_cbo="20154786",
+            authorizing_physician_name="Fernando Rodrigues",
+            authorizing_physician_cns="706000343458946",
+            authorizing_physician_cbo="20154786",
             cid_id=cid.id,
             procedure_date="2025-07-30",
             main_procedure_id=main_procedure.id,
@@ -130,7 +133,7 @@ class TestCreateApacRequest:
 
     def test_request_has_correct_initial_state(self, repos, requester, establishment, cid, medical_procedures):
         """Newly created APAC request should have correct initial state."""
-
+    
         request = create_apac_request(
             repos,
             generate_apac_request_dto(

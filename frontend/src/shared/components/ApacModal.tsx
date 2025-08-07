@@ -5,12 +5,13 @@ import IdentifyEstablishmentForm from '@/app/solicitar/apacRequest/components/fo
 import IdentifyPatientForm from '@/app/solicitar/apacRequest/components/forms/identifyPatientForm';
 import IdentifyMainProcedure from '@/app/solicitar/apacRequest/components/forms/identifyMainProcedureForm';
 import IdentifySubProcedures from '@/app/solicitar/apacRequest/components/forms/identifySubProceduresForm';
-import IdentifyMedicForm from '@/app/solicitar/apacRequest/components/forms/identifyMedicForm';
 import { ApacRequestFormProvider } from "@/app/solicitar/apacRequest/contexts/FormApacRequest";
 import { ApacRequestFillingData } from "@/app/solicitar/apacRequest/contexts/ApacRequestContext";
 import { DataApacRequest } from '@/app/solicitar/apacRequest/contexts/ApacRequestContext';
 import { RequestForm } from "@/app/solicitar/apacRequest/schemas/requestForm";
 import { convertApacDataToForm } from "@/app/solicitar/apacRequest/utils/convertApacData";
+import IdentifyMedicAuthorizingForm from "@/app/solicitar/apacRequest/components/forms/indentifyMedicAuthorizingForm";
+import IdentifyMedicSupervisingForm from "@/app/solicitar/apacRequest/components/forms/identifyMedicSupervisingForm";
 
 interface ApacModalProps {
     apacRequest: ApacRequest;
@@ -30,7 +31,6 @@ export default function ApacModal({ apacRequest, ref, onClose }: ApacModalProps)
         apacData: convertApacDataToForm(apacRequest.apac_data)
     }
 
-    
     return (
         <CustomModal 
             title={apacRequest?.apac_data.main_procedure.name} 
@@ -53,7 +53,8 @@ export default function ApacModal({ apacRequest, ref, onClose }: ApacModalProps)
                     <IdentifyPatientForm/>
                     <IdentifyMainProcedure/>
                     <IdentifySubProcedures/>
-                    <IdentifyMedicForm/>
+                    <IdentifyMedicSupervisingForm/>
+                    <IdentifyMedicAuthorizingForm/>
                 </Box>
                 
                 </ApacRequestFormProvider>

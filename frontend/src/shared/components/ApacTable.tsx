@@ -82,8 +82,8 @@ export default function ApacTable({ onlyView }: TableProps) {
   const rows = useMemo(() => {
     return listApac.map((apac) => ({
       id: apac.id,
-      name: apac.apac_data.patient_name,
-      cns: apac.apac_data.patient_cns,
+      name: apac.apac_data.patient_data.name,
+      cns: apac.apac_data.patient_data.cns,
       request_date: apac.request_date,
       procedure: apac.apac_data.main_procedure.name,
       status: ApacStatusTranslation[apac.status],

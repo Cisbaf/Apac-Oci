@@ -13,6 +13,8 @@ from apac_core.application.use_cases.procedure_record_cases.create_procedure_rec
 from apac_core.domain.value_objects.cns import CnsField
 from apac_core.domain.value_objects.cpf import CpfField
 from apac_core.domain.value_objects.cep import CepField
+from apac_core.domain.dto.patientData import PatientData
+from apac_core.domain.dto.medicData import MedicData
 
 class CreateApacDataDTO(BaseModel):
     patient_name: str
@@ -31,9 +33,12 @@ class CreateApacDataDTO(BaseModel):
     patient_address_neighborhood: str
     patient_address_city: str
     patient_address_state: str
-    medic_name: str
-    medic_cns: str
-    medic_cbo: str
+    supervising_physician_name: str
+    supervising_physician_cns: str
+    supervising_physician_cbo: str
+    authorizing_physician_name: str
+    authorizing_physician_cns: str
+    authorizing_physician_cbo: str
     cid_id: int
     procedure_date: str
     main_procedure_id: int
@@ -67,25 +72,34 @@ class CreateApacDataUseCase:
 
         # Registrando e retornando ApacData
         return self.repo_apac_data.save(ApacData(
-            patient_name=data.patient_name,
-            patient_record_number=data.patient_record_number,
-            patient_cns=CnsField(value=data.patient_cns),
-            patient_cpf=CpfField(value=data.patient_cpf),
-            patient_birth_date=data.patient_birth_date,
-            patient_race_color=data.patient_race_color,
-            patient_gender=data.patient_gender,
-            patient_mother_name=data.patient_mother_name,
-            patient_address_street_type=data.patient_address_street_type,
-            patient_address_street_name=data.patient_address_street_name,
-            patient_address_number=data.patient_address_number,
-            patient_address_complement=data.patient_address_complement,
-            patient_address_postal_code=CepField(value=data.patient_address_postal_code),
-            patient_address_neighborhood=data.patient_address_neighborhood,
-            patient_address_city=data.patient_address_city,
-            patient_address_state=data.patient_address_state,
-            medic_name=data.medic_name,
-            medic_cns=CnsField(value=data.medic_cns),
-            medic_cbo=data.medic_cbo,
+            patient_data=PatientData(
+               name=data.patient_name,
+               record_number=data.patient_record_number,
+               cns=CnsField(value=data.patient_cns),
+               cpf=CpfField(value=data.patient_cpf),
+               birth_date=data.patient_birth_date,
+               race_color=data.patient_race_color,
+               gender=data.patient_gender,
+               mother_name=data.patient_mother_name,
+               address_street_type=data.patient_address_street_type,
+               address_street_name=data.patient_address_street_name,
+               address_number=data.patient_address_number,
+               address_complement=data.patient_address_complement,
+               address_postal_code=CepField(value=data.patient_address_postal_code),
+               address_neighborhood=data.patient_address_neighborhood,
+               address_city=data.patient_address_city,
+               address_state=data.patient_address_state,
+            ),
+            supervising_physician_data=MedicData(
+                name=data.supervising_physician_name,
+                cns=CnsField(value=data.supervising_physician_cns),
+                cbo=data.supervising_physician_cbo,
+            ),
+            authorizing_physician_data=MedicData(
+                name=data.authorizing_physician_name,
+                cns=CnsField(value=data.authorizing_physician_cns),
+                cbo=data.authorizing_physician_cbo,
+            ),
             cid=cid,
             procedure_date=data.procedure_date,
             main_procedure=main_procedure,

@@ -19,26 +19,35 @@ interface SubProcedure {
     id: number;
 }
 
+export interface PatientData {
+  name: string;
+  record_number: string;
+  cns: string;
+  cpf: string;
+  birth_date: string; // ISO date string (ex: "2025-01-01")
+  race_color: string;
+  gender: string;
+  mother_name: string;
+  address_street_type: string;
+  address_street_name: string;
+  address_number: string;
+  address_complement: string;
+  address_postal_code: string;
+  address_neighborhood: string;
+  address_city: string;
+  address_state: string;
+}
+
+export interface MedicData {
+  name: string;
+  cns: string;
+  cbo: string;
+}
+
 export interface ApacData {
-  patient_name: string;
-  patient_record_number: string;
-  patient_cns: string;
-  patient_cpf: string;
-  patient_birth_date: string;
-  patient_race_color: string;
-  patient_gender: string;
-  patient_mother_name: string;
-  patient_address_street_type: string;
-  patient_address_street_name: string;
-  patient_address_number: string;
-  patient_address_complement: string;
-  patient_address_postal_code: string;
-  patient_address_neighborhood: string;
-  patient_address_city: string;
-  patient_address_state: string;
-  medic_name: string;
-  medic_cns: string;
-  medic_cbo: string;
+  patient_data: PatientData;
+  supervising_physician_data: MedicData;
+  authorizing_physician_data: MedicData;
   cid: Cid;
   procedure_date: string;
   main_procedure: Procedure;

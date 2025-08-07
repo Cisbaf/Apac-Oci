@@ -7,7 +7,7 @@ import IdentifyPatientForm from '@/app/solicitar/apacRequest/components/forms/id
 import IdentifyMainProcedure from '@/app/solicitar/apacRequest/components/forms/identifyMainProcedureForm';
 import IdentifySubProcedures from '@/app/solicitar/apacRequest/components/forms/identifySubProceduresForm';
 import IdentifyCidForm from '../components/forms/identifyCidForm';
-import IdentifyMedicForm from '../components/forms/identifyMedicForm';
+import IdentifyMedicForm from '../components/forms/identifyMedicSupervisingForm';
 import ApacRequestDataDisabled from '../components/forms/finishFormApacRequest';
 import { fakeRequestForm } from '../utils/dataFakes';
 import { DataApacRequest } from '../contexts/ApacRequestContext';
