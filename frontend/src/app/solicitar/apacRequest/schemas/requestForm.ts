@@ -31,6 +31,7 @@ export  interface ApacData {
     authorizingPhysicianCbo: string;
     cidId: number;
     procedureDate: string;
+    dischargeDate: string;
     mainProcedureId: number;
     subProcedures: SubProceduresForm[];
 }

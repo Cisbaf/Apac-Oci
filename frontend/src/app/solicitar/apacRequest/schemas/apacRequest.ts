@@ -50,6 +50,7 @@ export interface ApacData {
   authorizing_physician_data: MedicData;
   cid: Cid;
   procedure_date: string;
+  discharge_date: string;
   main_procedure: Procedure;
   sub_procedures: SubProcedure[];
 }

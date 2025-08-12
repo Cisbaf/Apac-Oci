@@ -123,6 +123,7 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
             authorizing_physician_cbo="20154786",
             cid_id=cid.id,
             procedure_date="2025-07-30",
+            discharge_date="2025-07-31",
             main_procedure_id=main_procedure.id,
             sub_procedures=sub_procedures
         )

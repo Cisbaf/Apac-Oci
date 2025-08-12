@@ -9,18 +9,27 @@ import { useFormRequest } from "@/app/solicitar/apacRequest/contexts/FormApacReq
 
 dayjs.locale('pt-br');
 
-function DateProcedureSelector({ disabled }: { disabled?: boolean }) {
+interface DateSelector {
+  formKey: "procedure"|"discharge";
+  disabled?: boolean;
+}
+
+function DateSelector(props: DateSelector) {
   const { form } = useFormRequest();
   const { control } = form;
+  const chv = {
+    procedure: {form: "apacData.procedureDate", label: "Data do Procedimento"},
+    discharge: {form: "apacData.dischargeDate", label: "Data da Alta"},
+} as const;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
       <Controller
-        name="apacData.procedureDate"
+        name={chv[props.formKey].form}
         control={control}
         defaultValue=""
         rules={{
-          required: 'Data do procedimento é obrigatória',
+          required: `${chv[props.formKey].label} é obrigatoria`,
           validate: (value) => {
             if (!value) return true; // Se vazio, o required já trata
             return dayjs(value, 'DD/MM/YYYY', true).isValid() || 'Data inválida';
@@ -29,7 +38,7 @@ function DateProcedureSelector({ disabled }: { disabled?: boolean }) {
         render={({ field, fieldState: { error } }) => (
           <DatePicker
             sx={{}}
-            label="Data do Procedimento"
+            label={chv[props.formKey].label}
             value={field.value ? dayjs(field.value, 'DD/MM/YYYY') : null}
             onChange={(date) => {
               const formatted = date ? date.format('DD/MM/YYYY') : '';
@@ -38,13 +47,13 @@ function DateProcedureSelector({ disabled }: { disabled?: boolean }) {
             format="DD/MM/YYYY"
             slotProps={{
               textField: {
-                helperText: error?.message || disabled? "" : 'Formato: dd/mm/aaaa',
+                helperText: error?.message || props.disabled? "" : 'Formato: dd/mm/aaaa',
                 error: !!error, // Isso ativa o estado de erro visual
                 fullWidth: true,
                 required: true, // Adiciona o asterisco vermelho
               },
             }}
-            disabled={disabled}
+            disabled={props.disabled}
           />
         )}
       />
@@ -52,4 +61,4 @@ function DateProcedureSelector({ disabled }: { disabled?: boolean }) {
   );
 }
 
-export default DateProcedureSelector;
+export default DateSelector;

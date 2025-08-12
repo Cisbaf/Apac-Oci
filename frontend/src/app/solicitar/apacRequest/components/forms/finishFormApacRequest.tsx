@@ -16,7 +16,7 @@ import IdentifyMedicSupervisingForm from "./identifyMedicSupervisingForm";
 
 
 export default function ApacRequestFinishForm() {
-    const { form } = useFormRequest();0
+    const { form } = useFormRequest();
     const { getValues } = form;
     const { showResponseApi, showBackdrop } = useGlobalComponents();
     const route = useRouter();
@@ -27,6 +27,7 @@ export default function ApacRequestFinishForm() {
         // @ts-ignore
         data.apacData.subProcedures = adapterFormSubProcedures(data.apacData.subProcedures);
         data.apacData.procedureDate = formatDateToISO(data.apacData.procedureDate);
+        data.apacData.dischargeDate = formatDateToISO(data.apacData.dischargeDate);
         data.apacData.patientBirthDate = formatDateToISO(data.apacData.patientBirthDate);
         const data_json = JSON.stringify(ToSnakeCase(data))
         const response = await fetch('/api/proxy/apac_request/api', {
