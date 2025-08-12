@@ -17,6 +17,8 @@ COPY src /app/src
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
+RUN python src/manage.py migrate
+
 # Expõe a porta usada pela aplicação (Django ou FastAPI)
 EXPOSE 8000
 
