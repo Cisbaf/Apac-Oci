@@ -41,6 +41,7 @@ class CreateApacDataDTO(BaseModel):
     authorizing_physician_cbo: str
     cid_id: int
     procedure_date: str
+    discharge_date: str
     main_procedure_id: int
     sub_procedures: List[CreateProcedureRecordDTO]
 
@@ -102,6 +103,7 @@ class CreateApacDataUseCase:
             ),
             cid=cid,
             procedure_date=data.procedure_date,
+            discharge_date=data.discharge_date,
             main_procedure=main_procedure,
             sub_procedures=sub_procedures
         ))

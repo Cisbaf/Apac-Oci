@@ -18,11 +18,20 @@ class ApacData(BaseModel):
     authorizing_physician_data: MedicData
     cid: Cid
     procedure_date: date
+    discharge_date: date
     main_procedure: Procedure
     sub_procedures: List[ProcedureRecord]
     id: Optional[int] = None
 
-    @field_validator('procedure_date', mode='before')
+    @field_validator('procedure_date', 'discharge_date', mode='after')
+    @classmethod
+    def validate_discharge_date(cls, v, info):
+        procedure_date = info.data.get('procedure_date')
+        if procedure_date and v < procedure_date:
+            raise ValueError("A data da alta não pode ser anterior à data do procedimento.")
+        return v
+    
+    @field_validator('procedure_date', 'discharge_date', mode='before')
     @classmethod
     def validate_non_empty(cls, value: str, info):
         if value is None or (isinstance(value, str) and not value.strip()):

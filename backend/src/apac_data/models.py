@@ -42,6 +42,7 @@ class ApacDataModel(models.Model):
     authorizing_physician_cbo = models.CharField(max_length=255, verbose_name="CBO do médico autorizador")
     main_procedure = models.ForeignKey(to=ProcedureModel, on_delete=models.DO_NOTHING, verbose_name="Procedimento principal")
     procedure_date = models.DateField(verbose_name="Data do procedimento")
+    discharge_date = models.DateField(verbose_name="Data da alta")
     cid = models.ForeignKey(to=CidModel, on_delete=models.DO_NOTHING, verbose_name="CID")
 
     class Meta:
@@ -88,6 +89,7 @@ class ApacDataModel(models.Model):
             ),
             cid=self.cid.to_entity(),
             procedure_date=self.procedure_date,
+            discharge_date=self.discharge_date,
             main_procedure=self.main_procedure.to_entity(),
             sub_procedures=[record.to_entity() for record in records if record] if records else [],
             id=self.pk

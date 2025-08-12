@@ -5,8 +5,8 @@ import { useFormRequest } from "@/app/solicitar/apacRequest/contexts/FormApacReq
 import { FormRepository, FormProps } from "@/shared/repositories/formRepository";
 import { MESSAGENOTCHECKVALIDITY } from "@/app/solicitar/apacRequest/utils/messages";
 import { Controller, useWatch } from 'react-hook-form';
-import DateProcedureSelector from "../field/dateProcedureSelector";
 import { useRequestData } from "@/app/solicitar/apacRequest/contexts/ApacRequestContext";
+import DateSelector from "../field/dateSelector";
 
 const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props, ref)=>{
     const formRef = React.useRef<HTMLFormElement>(null);
@@ -42,10 +42,7 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
     return(
         <CardForm
             title="Procedimento Solicitado"
-            contentBoxStyle={{
-                padding: 4,
-
-            }}>
+            contentBoxStyle={{ padding: 4}}>
             <Box 
                 ref={formRef} 
                 component="form"
@@ -111,7 +108,7 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                          )}/>
                         )}
                     </Grid>
-                    <Grid size={{xs:12, sm:6}}>
+                    <Grid size={{xs:12, sm:6, md: 3}}>
                         {disabled? (
                             <Box sx={{
                                 height: "100%",
@@ -132,9 +129,34 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                 </Typography>
                             </Box>
                                 ):(
-                            <DateProcedureSelector disabled={disabled}/>
+                            <DateSelector formKey="procedure" disabled={disabled}/>
                         )}
                     </Grid>
+                    <Grid size={{xs:12, sm:6, md: 3}}>
+                         {disabled? (
+                            <Box sx={{
+                                height: "100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                                alignItems: "center",
+                            }}>
+                                <Typography
+                                    color="textDisabled"
+                                    variant="h6">
+                                    Data da Alta
+                                </Typography>
+                                <Typography
+                                    color="textDisabled"
+                                    variant="body1">
+                                    {getValues("apacData.dischargeDate")}
+                                </Typography>
+                            </Box>
+                                ):(
+                            <DateSelector formKey="discharge" disabled={disabled}/>
+                        )}
+                    </Grid>
+
                 </Grid>
             </Box>
         </CardForm>

@@ -82,6 +82,7 @@ def common_entities(repos):
         authorizing_physician_cbo="20154786",
         cid_id=cid.id,
         procedure_date="2025-07-30",
+        discharge_date="2025-07-31",
         main_procedure_id=main_procedure.id,
         sub_procedures=[CreateProcedureRecordDTO(procedure_id=sub_procedure.id, quantity=3)]
     )

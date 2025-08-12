@@ -29,6 +29,7 @@ export const emptyRequestForm: RequestForm = {
     authorizingPhysicianCbo: "",
     cidId: 0,
     procedureDate: "",
+    dischargeDate: "",
     mainProcedureId: 0,
     subProcedures: []
   }

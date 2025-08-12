@@ -44,7 +44,8 @@ PATIENT_DATA = {
     "authorizing_physician_name": "Fernando Rodrigues",
     "authorizing_physician_cns": "706000343458946",
     "authorizing_physician_cbo": "20154786",
-    "procedure_date": "2025-07-30"
+    "procedure_date": "2025-07-30",
+    "discharge_date": "2025-07-31"
 }
 
 def random_str():
