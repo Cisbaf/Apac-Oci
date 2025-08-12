@@ -19,7 +19,7 @@ class ApacDataModel(models.Model):
         verbose_name="Solcitação APAC"
     )
     patient_name = models.CharField(max_length=255, verbose_name="Nome do paciente")
-    patient_record_number = models.CharField(max_length=255, verbose_name="Número do prontuário")
+    patient_record_number = models.CharField(max_length=255, verbose_name="Número do prontuário", blank=True, null=True)
     patient_cns = models.CharField(max_length=255, verbose_name="CNS do paciente")
     patient_cpf = models.CharField(max_length=255, verbose_name="CPF do paciente")
     patient_birth_date = models.DateField(verbose_name="Data de nascimento do paciente")
@@ -29,7 +29,7 @@ class ApacDataModel(models.Model):
     patient_address_street_type = models.CharField(max_length=255, verbose_name="Tipo de logradouro")
     patient_address_street_name = models.CharField(max_length=255, verbose_name="Nome do logradouro")
     patient_address_number = models.CharField(max_length=255, verbose_name="Número do endereço")
-    patient_address_complement = models.CharField(max_length=255, verbose_name="Complemento do endereço")
+    patient_address_complement = models.CharField(max_length=255, verbose_name="Complemento do endereço", blank=True, null=True)
     patient_address_postal_code = models.CharField(max_length=255, verbose_name="CEP")
     patient_address_neighborhood = models.CharField(max_length=255, verbose_name="Bairro")
     patient_address_city = models.CharField(max_length=255, verbose_name="Cidade")
