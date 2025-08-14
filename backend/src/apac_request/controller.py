@@ -27,6 +27,7 @@ class ApacRequestController(ApacRequestRepository):
         apac_request_model = ApacRequestModel.objects.create(
             establishment=EstablishmentModel.objects.get(pk=apac_request.establishment.id),
             requester=CustomUser.objects.get(pk=apac_request.requester.id),
+            request_date=apac_request.request_date
         )
         apac_data = ApacDataModel.objects.get(pk=apac_request.apac_data.id)
         if apac_data:

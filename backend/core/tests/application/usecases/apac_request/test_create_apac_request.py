@@ -98,6 +98,7 @@ def generate_apac_request_dto(user, establishment, medical_procedures, cid):
     return CreateApacRequestDTO(
         requester_id=user.id,
         establishment_id=establishment.id,
+        request_date="2025-07-01",
         apac_data= CreateApacDataDTO(
             patient_name="João da Silva",
             patient_record_number="99999", # OPCIONAL

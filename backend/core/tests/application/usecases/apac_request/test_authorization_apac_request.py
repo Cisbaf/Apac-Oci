@@ -124,6 +124,7 @@ def apac_request(repos, common_entities, requester):
     ).execute(CreateApacRequestDTO(
         requester_id=requester.id,
         establishment_id=establishment.id,
+        request_date="2025-07-01",
         apac_data=apac_data
     ))
 
@@ -139,6 +140,7 @@ def create_apac_request(repos, requester_id: int, establishment_id: int, apac_da
     ).execute(CreateApacRequestDTO(
         requester_id=requester_id,
         establishment_id=establishment_id,
+        request_date="2025-07-01",
         apac_data=apac_data
     ))
 

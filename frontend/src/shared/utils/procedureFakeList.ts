@@ -1,6 +1,60 @@
 import { Procedure } from "../schemas";
+import { SubProceduresForm } from "@/app/solicitar/apacRequest/schemas/requestForm";
 
 const baseDate = "2025-01-01T00:00:00Z";
+
+
+export const subProcedures: SubProceduresForm[] = [
+  {
+    procedure: {
+      id: 232,
+      children: [],
+      cid: [],
+      code: "0301010072",
+      name: "CONSULTA E/OU TELECONSULTA MÉDICA EM ATENÇÃO ESPECIALIZADA",
+      description: null,
+      mandatory: true,
+      is_active: true,
+      created_at: "2025-06-06T12:35:32.629000-03:00",
+      updated_at: "2025-06-06T12:35:32.629000-03:00",
+    },
+    quantity: 1,
+    checked: true,
+  },
+  {
+    procedure: {
+      id: 233,
+      children: [],
+      cid: [],
+      code: "0204030030",
+      name: "MAMOGRAFIA",
+      description: null,
+      mandatory: true,
+      is_active: true,
+      created_at: "2025-06-06T12:35:32.632000-03:00",
+      updated_at: "2025-06-06T12:35:32.633000-03:00",
+    },
+    quantity: 1,
+    checked: true,
+  },
+  {
+    procedure: {
+      id: 234,
+      children: [],
+      cid: [],
+      code: "0205020097",
+      name: "ULTRASSONOGRAFIA BILATERAL",
+      description: null,
+      mandatory: false,
+      is_active: true,
+      created_at: "2025-06-06T12:35:32.636000-03:00",
+      updated_at: "2025-06-06T12:35:32.636000-03:00",
+    },
+    quantity: 0,
+    checked: false,
+  },
+];
+
 
 // Primeiro, criamos os procedimentos sem `parent`
 export const fakeProcedureOne: Procedure = {

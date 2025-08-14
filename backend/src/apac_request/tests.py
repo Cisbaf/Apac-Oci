@@ -118,6 +118,7 @@ class BaseApacTest(APITestCase):
         return CreateApacRequestDTO(**{
             "requester_id": self.requester.pk,
             "establishment_id": self.establishment.pk,
+            "request_date":"2025-07-01",
             "apac_data": {
                 **PATIENT_DATA,
                 "cid_id": self.cid.pk,
@@ -156,6 +157,7 @@ class ApacCreationTests(BaseApacTest):
             self.base_data.model_dump(),
             format='json'
         )
+        print(response.json())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("message"), SUCCESSFULLY_REGISTERED)
         

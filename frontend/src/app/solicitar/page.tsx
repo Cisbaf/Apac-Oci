@@ -20,7 +20,8 @@ import { UserRole } from "@/shared/schemas/user";
 import StepForm from '@/shared/components/StepComponent';
 import { ProgressStepper } from "@/shared/components/ProgressStepper";
 import { emptyRequestForm } from './apacRequest/utils/formDataApacRequest';
-
+import { fakeRequestForm } from '@/app/solicitar/apacRequest/utils/dataFakes';
+import IdentifyRequestDate from './apacRequest/components/forms/identifyRequestDate';
 
 export default function PageApacRequest() {
     const [data, setData] = React.useState<DataApacRequest>();
@@ -45,6 +46,9 @@ export default function PageApacRequest() {
                     <ApacRequestFormProvider
                         initialData={emptyRequestForm}>
                         <ProgressStepper>
+                            <StepForm>
+                                <IdentifyRequestDate/>
+                            </StepForm>
                             <StepForm>
                                 <IdentifyEstablishmentForm/>
                                 <IdentifyPatientForm/>

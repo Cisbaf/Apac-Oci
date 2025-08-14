@@ -25,38 +25,6 @@ from django.shortcuts import render
 from collections import defaultdict
 from apac_core.application.ultils.formart_errors import format_validation_errors
 
-class ApacRequestApprovedAPIView(APIView):
-    authentication_classes = [SessionAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    @transaction.atomic
-    def post(self, request):
-        try:
-            ApprovedApacRequestUseCase(
-                repo_apac_request=ApacRequestController(),
-                repo_user=UserController(),
-                repo_apac_batch=ApacBatchController()
-            ).execute(ApprovedApacRequestDTO(**request.data))
-            return Response({"message": "Solicitação aprovada!"})
-        except Exception as e:
-            return Response({"message": str(e)}, status=403)
-        
-
-class ApacRequestRejectAPIView(APIView):
-    authentication_classes = [SessionAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    @transaction.atomic
-    def post(self, request):
-        try:
-            RejectApacRequestUseCase(
-                repo_apac_request=ApacRequestController(),
-                repo_user=UserController(),
-                repo_apac_batch=ApacBatchController()
-            ).execute(RejectApacRequestDTO(**request.data))
-            return Response({"message": "Solicitação rejeitada!"})
-        except Exception as e:
-            return Response({"message": str(e)}, status=403)
 
 class ApacRequestListCreate(APIView):
     authentication_classes = [SessionAuthentication, JWTAuthentication]
@@ -117,6 +85,39 @@ class ApacRequestListCreate(APIView):
             return Response({"message": formatted}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class ApacRequestApprovedAPIView(APIView):
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, request):
+        try:
+            ApprovedApacRequestUseCase(
+                repo_apac_request=ApacRequestController(),
+                repo_user=UserController(),
+                repo_apac_batch=ApacBatchController()
+            ).execute(ApprovedApacRequestDTO(**request.data))
+            return Response({"message": "Solicitação aprovada!"})
+        except Exception as e:
+            return Response({"message": str(e)}, status=403)
+        
+
+class ApacRequestRejectAPIView(APIView):
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, request):
+        try:
+            RejectApacRequestUseCase(
+                repo_apac_request=ApacRequestController(),
+                repo_user=UserController(),
+                repo_apac_batch=ApacBatchController()
+            ).execute(RejectApacRequestDTO(**request.data))
+            return Response({"message": "Solicitação rejeitada!"})
+        except Exception as e:
+            return Response({"message": str(e)}, status=403)
 
 @staff_member_required
 def apac_dashboard(request):

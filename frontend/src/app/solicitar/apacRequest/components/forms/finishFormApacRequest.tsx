@@ -13,6 +13,8 @@ import { adapterFormSubProcedures, formatDateToISO } from "../../utils/adapterFo
 import { ToSnakeCase } from "@/shared/utils/snakeCase";
 import IdentifyMedicAuthorizingForm from "./indentifyMedicAuthorizingForm";
 import IdentifyMedicSupervisingForm from "./identifyMedicSupervisingForm";
+import React from "react";
+import IdentifyRequestDate from "./identifyRequestDate";
 
 
 export default function ApacRequestFinishForm() {
@@ -20,6 +22,10 @@ export default function ApacRequestFinishForm() {
     const { getValues } = form;
     const { showResponseApi, showBackdrop } = useGlobalComponents();
     const route = useRouter();
+
+    React.useEffect(()=>{
+        console.log(getValues());
+    }, [])
 
     const finish = async() => {
         showBackdrop(true, "Solicitando apac!");
@@ -49,6 +55,7 @@ export default function ApacRequestFinishForm() {
             flexDirection: "column",
             gap: 2
         }}>
+            <IdentifyRequestDate disabled/>
             <IdentifyEstablishmentForm disabled/>
             <IdentifyPatientForm disabled/>
             <IdentifyMainProcedure disabled/>

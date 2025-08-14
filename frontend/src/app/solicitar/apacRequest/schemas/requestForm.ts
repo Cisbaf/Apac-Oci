@@ -40,5 +40,6 @@ export  interface ApacData {
 export interface RequestForm {
     requesterId: number;
     establishmentId: number;
+    requestDate: string;
     apacData: ApacData;
 }
