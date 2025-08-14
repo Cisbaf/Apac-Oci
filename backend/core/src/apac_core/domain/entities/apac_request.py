@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from apac_core.domain.entities.apac_status import ApacStatus
 from apac_core.domain.entities.establishment import Establishment
@@ -14,9 +14,9 @@ class ApacRequest(BaseModel):
     establishment: Establishment
     requester: User
     apac_data: Optional[ApacData] = None
+    request_date: date
     status: Optional[ApacStatus] = ApacStatus.PENDING
     updated_at: datetime = Field(default_factory=datetime.now)
-    request_date: datetime = Field(default_factory=datetime.now)
     authorizer: Optional[User] = None
     justification: Optional[str] = None
     review_date: Optional[datetime] = None

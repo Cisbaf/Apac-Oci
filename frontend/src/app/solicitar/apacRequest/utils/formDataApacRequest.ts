@@ -4,6 +4,7 @@ import { RequestForm } from "../schemas/requestForm";
 export const emptyRequestForm: RequestForm = {
   requesterId: 0,
   establishmentId: 0,
+  requestDate: "",
   apacData: {
     patientName: "",
     patientRecordNumber: "",

@@ -12,9 +12,11 @@ from apac_core.domain.repositories.procedure_record_repository import ProcedureR
 from apac_core.domain.exceptions import DomainException
 from dataclasses import dataclass
 
+
 class CreateApacRequestDTO(BaseModel):
     requester_id: int
     establishment_id: int
+    request_date: str
     apac_data: CreateApacDataDTO
 
 @dataclass
@@ -48,7 +50,8 @@ class CreateApacRequestUseCase:
         created_apac_request = self.repo_apac_request.save(ApacRequest(
             requester=requester,
             establishment=establishment,
-            apac_data=apac_data
+            apac_data=apac_data,
+            request_date=data.request_date
         ))
 
         return created_apac_request

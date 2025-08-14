@@ -22,10 +22,7 @@ class ApacRequestModel(models.Model):
         related_name='request',
         verbose_name="Solicitante"
     )
-    request_date = models.DateField(
-        auto_now_add=True,
-        verbose_name="Data da solicitação"
-    )
+    request_date = models.DateField(verbose_name="Data da solicitação")
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -73,9 +70,9 @@ class ApacRequestModel(models.Model):
             establishment=self.establishment.to_entity(),
             requester=self.requester.to_entity() if self.requester else None,
             apac_data=apac_data.to_entity() if apac_data else None,
+            request_date=self.request_date,
             status=ApacStatus.get(self.status),
             updated_at=self.updated_at,
-            request_date=self.request_date,
             authorizer=self.authorizer.to_entity() if self.authorizer else None,
             justification=self.justification,
             review_date=self.review_date,
