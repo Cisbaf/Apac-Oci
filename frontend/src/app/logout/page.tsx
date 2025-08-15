@@ -1,23 +1,18 @@
-'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+
+import { useEffect } from "react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LogoutPage() {
-    const router = useRouter();
-       
-    React.useEffect(() => {
-        fetch('/api/auth/logout', {
-        method: 'POST',
-        }).then(response=>{
-            if (response.ok) {
-                router.push('/login');
-            }
-        }).catch((error)=>{
-            console.error('Erro ao fazer logout:', error);
-        })
-    }, []);
+  const router = useRouter();
 
-    return (
-        <h1>Logging out...</h1>
-    );
+  useEffect(() => {
+    // Faz logout e redireciona para a página inicial
+    signOut({ redirect: false }).then(() => {
+      router.push("/login"); // ou "/" se quiser
+    });
+  }, [router]);
+
+  return <p>Saindo...</p>;
 }

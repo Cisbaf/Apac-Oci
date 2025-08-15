@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 const API_URL = process.env.DJANGO_API_URL;
 
@@ -11,73 +12,31 @@ function getTargetUrl(request: NextRequest) {
     return `${API_URL}/${endpointPath}${url.search}`;
 }
 
-export async function GET(request: NextRequest) {
-    const token = request.cookies.get('token')?.value;
-    const targetUrl = getTargetUrl(request);
-    try {
-        const res = await fetch(targetUrl, {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
+async function proxyHandler(request: NextRequest) {
+    const session = await auth();
 
-        const data = await res.json();
-        return NextResponse.json(data, { status: res.status });
-    } catch (error: any) {
-        console.error("Proxy GET error:", error);
-        return NextResponse.json(
-            { error: "Erro ao comunicar com a API externa", details: error.message },
-            { status: 500 }
-        );
+    if (!session?.accessToken) {
+        return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
-}
 
-export async function POST(request: NextRequest) {
-    return handleProxy(request);
-}
-
-export async function PUT(request: NextRequest) {
-    return handleProxy(request);
-}
-
-export async function DELETE(request: NextRequest) {
     const targetUrl = getTargetUrl(request);
-    try {
-        const res = await fetch(targetUrl, {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json",
-            },
-        });
+    const headers: Record<string, string> = {
+        Accept: "application/json",
+        Authorization: `Bearer ${session.accessToken}`,
+    };
 
-        const data = await res.json();
-        return NextResponse.json(data, { status: res.status });
-    } catch (error: any) {
-        console.error("Proxy DELETE error:", error);
-        return NextResponse.json(
-            { error: "Erro ao comunicar com a API externa", details: error.message },
-            { status: 500 }
-        );
+    let body: BodyInit | undefined;
+    if (request.method !== "GET" && request.method !== "HEAD") {
+        try {
+            const json = await request.json();
+            body = JSON.stringify(json);
+            headers["Content-Type"] = "application/json";
+        } catch {
+            // Caso o corpo seja vazio ou não seja JSON
+        }
     }
-}
 
-async function handleProxy(request: NextRequest) {
-    const token = request.cookies.get('token')?.value;
-    const targetUrl = getTargetUrl(request);
     try {
-        const headers: Record<string, string> = {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`
-        };
-
-        let body: BodyInit | undefined;
-        
-        const json = await request.json();
-        body = JSON.stringify(json);
-        headers["Content-Type"] = "application/json";
-
         const res = await fetch(targetUrl, {
             method: request.method,
             headers,
@@ -86,12 +45,18 @@ async function handleProxy(request: NextRequest) {
 
         const data = await res.json();
         return NextResponse.json(data, { status: res.status });
-
     } catch (error: any) {
-        console.error("Proxy error:", error);
+        console.error(`Proxy ${request.method} error:`, error);
         return NextResponse.json(
             { error: "Erro ao comunicar com a API externa", details: error.message },
             { status: 500 }
         );
     }
 }
+
+// Exporta todos os métodos usando o mesmo handler
+export const GET = proxyHandler;
+export const POST = proxyHandler;
+export const PUT = proxyHandler;
+export const DELETE = proxyHandler;
+export const PATCH = proxyHandler;
