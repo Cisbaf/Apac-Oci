@@ -28,6 +28,7 @@ export default function ApacModal({ apacRequest, ref, onClose }: ApacModalProps)
     const dataForm: RequestForm = {
         requesterId: apacRequest.requester.id,
         establishmentId: apacRequest.establishment.id,
+        requestDate: apacRequest.request_date,
         apacData: convertApacDataToForm(apacRequest.apac_data)
     }
 
