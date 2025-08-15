@@ -11,7 +11,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # Copia o restante do código
-COPY tsconfig.json next.config.js jest.config.js next-env.d.ts ./
+COPY tsconfig.json next.config.ts jest.config.js next-env.d.ts ./
 COPY public ./public
 COPY src ./src
 
