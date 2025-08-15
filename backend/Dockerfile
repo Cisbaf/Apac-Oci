@@ -13,14 +13,16 @@ RUN apt-get update && \
 COPY core /app/core
 COPY src /app/src
 
-# Copia dependências e instala com pip (sem cache, como usuário root)
+# Copia dependências e instala com pip (sem cache)
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-RUN python src/manage.py collectstatic --noinput
+# Copia entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Expõe a porta usada pela aplicação (Django ou FastAPI)
+# Expõe a porta usada pela aplicação
 EXPOSE 8000
 
-# Comando padrão para iniciar a aplicação
-CMD ["gunicorn", "app.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Define entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
