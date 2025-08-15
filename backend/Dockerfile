@@ -24,5 +24,7 @@ RUN chmod +x /entrypoint.sh
 # Expõe a porta usada pela aplicação
 EXPOSE 8000
 
+WORKDIR /app/src
+
 # Define entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
