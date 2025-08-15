@@ -17,8 +17,10 @@ COPY src /app/src
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
+RUN python manage.py collectstatic --noinput
+
 # Expõe a porta usada pela aplicação (Django ou FastAPI)
 EXPOSE 8000
 
 # Comando padrão para iniciar a aplicação
-CMD ["python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "app.wsgi:application", "--bind", "0.0.0.0:8000"]
