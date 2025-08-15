@@ -1,17 +1,25 @@
 import React from "react";
 import { User } from "../schemas";
 import SkeletonLayout from "../components/LayoutSkeleton";
+import { useRouter } from "next/navigation";
 
 const UserContext = React.createContext<User | null | undefined>(undefined);
 
 export function UserContextProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = React.useState<User | null>(null);
+    const router = useRouter();
+
+    const getUser = async() => {
+        const response = await fetch("/api/proxy/auth/user");
+        if (response.ok) {
+            const user = await response.json();
+            return setUser(user);
+        }
+        return router.push("/login");
+    }
 
     React.useEffect(() => {
-        fetch("/api/proxy/auth/user")
-            .then(response => response.json())
-            .then(user => setUser(user))
-            .catch(e => console.error(e));
+        getUser();
     }, []);
 
     if (user === null) {

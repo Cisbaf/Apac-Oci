@@ -10,6 +10,8 @@ from establishment.models import EstablishmentModel
 from django.contrib.auth import authenticate
 from dataclasses import asdict
 import time
+from rest_framework_simplejwt.exceptions import TokenError
+
 
 class LoginView(APIView):
     def post(self, request):
@@ -33,6 +35,20 @@ class LoginView(APIView):
             {'detail': 'Invalid credentials'},
             status=status.HTTP_401_UNAUTHORIZED
         )
+
+
+class RefreshTokenView(APIView):
+    def post(self, request):
+        refresh_token = request.data.get("refresh")
+        if not refresh_token:
+            return Response({"detail": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+            return Response({"access": access_token}, status=status.HTTP_200_OK)
+        except TokenError as e:
+            return Response({"detail": "Invalid or expired refresh token", "error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
