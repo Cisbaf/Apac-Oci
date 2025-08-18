@@ -22,7 +22,7 @@ export const ApacStatusTranslation: Record<ApacStatus, string> = {
   [ApacStatus.REJECTED]: 'Rejeitado',
 };
 
-const steps = ['Solicitação OCI realizada', 'Aguardando Avaliação', 'Resultado'];
+const steps = ['Solicitação OCI realizada', 'Aguardando Autorização', 'Status da Autorização'];
 
 interface Props {
   status: ApacStatus;
