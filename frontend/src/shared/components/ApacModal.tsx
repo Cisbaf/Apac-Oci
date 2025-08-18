@@ -12,6 +12,10 @@ import { RequestForm } from "@/app/solicitar/apacRequest/schemas/requestForm";
 import { convertApacDataToForm } from "@/app/solicitar/apacRequest/utils/convertApacData";
 import IdentifyMedicAuthorizingForm from "@/app/solicitar/apacRequest/components/forms/indentifyMedicAuthorizingForm";
 import IdentifyMedicSupervisingForm from "@/app/solicitar/apacRequest/components/forms/identifyMedicSupervisingForm";
+import AccordionExpandIcon from "./AccordionItem";
+import ApacStatusStepper from "./ApacStatusStepper";
+import IdentifyRequestDate from "@/app/solicitar/apacRequest/components/forms/identifyRequestDate";
+
 
 interface ApacModalProps {
     apacRequest: ApacRequest;
@@ -39,27 +43,34 @@ export default function ApacModal({ apacRequest, ref, onClose }: ApacModalProps)
             handleChanged={(open)=>{
                 if (!open) onClose();
             }}>
-   
-             <ApacRequestFillingData dataRequest={dataRequest}>
-                <ApacRequestFormProvider initialData={dataForm} disabled>
-                <Box sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    maxHeight: "80vh",
-                    overflow: "auto",
-                    paddingTop: 5,
-                    gap: 2,
-                    }}>
-                    <IdentifyEstablishmentForm/>
-                    <IdentifyPatientForm/>
-                    <IdentifyMainProcedure/>
-                    <IdentifySubProcedures/>
-                    <IdentifyMedicSupervisingForm/>
-                    <IdentifyMedicAuthorizingForm/>
-                </Box>
-                
-                </ApacRequestFormProvider>
-            </ApacRequestFillingData>
+            <Box sx={{
+                maxHeight: "80vh",
+                overflow: "auto"
+            }}>
+                <ApacStatusStepper status={apacRequest.status} rejectionReason={apacRequest.justification}/>
+                <AccordionExpandIcon title="Preenchimento">
+                    <ApacRequestFillingData dataRequest={dataRequest}>
+                    <ApacRequestFormProvider initialData={dataForm} disabled>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            maxHeight: "80vh",
+                            overflowY: "auto",
+                            paddingTop: 2,
+                            gap: 2,
+                            }}>
+                                <IdentifyRequestDate/>
+                                <IdentifyEstablishmentForm/>
+                                <IdentifyPatientForm/>
+                                <IdentifyMainProcedure/>
+                                <IdentifySubProcedures/>
+                                <IdentifyMedicSupervisingForm/>
+                                <IdentifyMedicAuthorizingForm/>
+                        </Box>
+                    </ApacRequestFormProvider>
+                    </ApacRequestFillingData>
+                </AccordionExpandIcon>
+            </Box>
      
         </CustomModal>
     )

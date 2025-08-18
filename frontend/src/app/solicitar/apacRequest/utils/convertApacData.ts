@@ -28,8 +28,8 @@ export function convertApacDataToForm(data: ApacData): ApacDataForm {
     authorizingPhysicianCns: applyMask(data.authorizing_physician_data.cns, CnsMask),
     authorizingPhysicianCbo: data.authorizing_physician_data.cbo,
     cidId: data.cid.id, // assumindo que Cid tem propriedade id do tipo number
-    procedureDate: data.procedure_date,
-    dischargeDate: data.discharge_date,
+    procedureDate: formatDateBr(data.procedure_date),
+    dischargeDate: formatDateBr(data.discharge_date),
     mainProcedureId: data.main_procedure.id, // assumindo que Procedure tem id
     subProcedures: data.sub_procedures.map(sp => ({
       procedure: sp.procedure,
