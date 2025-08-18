@@ -147,15 +147,21 @@ export function AuthorizationProvider({children}: {children: React.ReactNode}) {
                         <Typography sx={{textWrap: "nowrap"}}>esta solicitação, preencha uma justificativa.</Typography>
                     </Box>
                     <br></br>
-                    <TextField
+                        <TextField
                         id="outlined-multiline-static"
                         label="Justificativa"
                         value={justification}
-                        onChange={(e)=>setJustification(e.target.value)}
+                        onChange={(e) => setJustification(e.target.value)}
                         fullWidth
                         multiline
-                        rows={4}
-                    />
+                        rows={6}
+                        sx={{
+                            '& .MuiInputBase-inputMultiline': {
+                            resize: 'both', // pode ser 'vertical' se quiser só na altura
+                            overflow: 'auto'
+                            }
+                        }}
+                        />
                     <br></br>
                     <br></br>
                     <hr></hr>
