@@ -100,12 +100,6 @@ export default function SignIn() {
           {loading ? <CircularProgress size={24} color="inherit" /> : "Entrar"}
         </Button>
 
-        <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
-          Não tem conta?{" "}
-          <a href="/signup" style={{ color: "#1976d2", textDecoration: "none" }}>
-            Cadastre-se
-          </a>
-        </Typography>
       </Box>
     </Box>
   );
