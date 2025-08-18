@@ -112,8 +112,7 @@ class ApacRequestRejectAPIView(APIView):
         try:
             RejectApacRequestUseCase(
                 repo_apac_request=ApacRequestController(),
-                repo_user=UserController(),
-                repo_apac_batch=ApacBatchController()
+                repo_user=UserController()
             ).execute(RejectApacRequestDTO(**request.data))
             return Response({"message": "Solicitação rejeitada!"})
         except Exception as e:

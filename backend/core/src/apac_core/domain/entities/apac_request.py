@@ -31,6 +31,8 @@ class ApacRequest(BaseModel):
     def set_justification(self, justification: str):
         if not justification or justification == "":
             raise ValidationException("A justificativa não pode ser vazia!")
+        if len(justification) > 500:
+            raise ValidationException("A justificativa não pode exceder 500 caracters!")
         self.justification = justification
 
     def set_review_date(self, date: datetime = datetime.now()):

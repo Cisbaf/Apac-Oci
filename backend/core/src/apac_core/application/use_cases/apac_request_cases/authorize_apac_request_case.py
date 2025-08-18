@@ -51,7 +51,6 @@ class RejectApacRequestDTO(BaseModel):
 class RejectApacRequestUseCase:
     repo_apac_request: ApacRequestRepository
     repo_user: UserRepository
-    repo_apac_batch: ApacBatchRepository
 
     def execute(self, data: RejectApacRequestDTO, today: date = None):
         today = today or date.today()
@@ -59,18 +58,9 @@ class RejectApacRequestUseCase:
         apac_request = GetApacRequestPedingUseCase(self.repo_apac_request).execute(data.apac_request_id)
         authorizer = GetUserAuthorizerUseCase(self.repo_user).execute(data.authorizer_id)
 
-        apac_batch = self.repo_apac_batch.search_for_available_batch(authorizer.city.id)
-        if not apac_batch.is_available(today):
-            raise DomainException(NO_BATCH_AVAILABLE)
-        
         apac_request.set_justification(data.justification)
         apac_request.set_status(ApacStatus.REJECTED)
         apac_request.set_authorizer(authorizer)
         apac_request.set_review_date()
-
-        # atribuindo apac request a Faixa Apac
-        apac_batch.set_apac_request(apac_request)
-        # atualizando a Faixa Apac
-        self.repo_apac_batch.save(apac_batch)
         
         return self.repo_apac_request.save(apac_request)

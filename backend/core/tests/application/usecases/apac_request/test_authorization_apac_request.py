@@ -189,8 +189,11 @@ def test_reject_by_authorizer_success(repos, apac_request, authorizer):
     rejected_request = RejectApacRequestUseCase(
         repos["apac_request"],
         repos["user"],
-        repos["apac_batch"]
-    ).execute(RejectApacRequestDTO(apac_request_id=apac_request.id, authorizer_id=authorizer.id, justification="Invalid procedure"))
+    ).execute(RejectApacRequestDTO(
+        apac_request_id=apac_request.id,
+        authorizer_id=authorizer.id,
+        justification="Invalid procedure"
+    ))
 
     assert rejected_request.status == ApacStatus.REJECTED
     assert rejected_request.justification == "Invalid procedure"
@@ -209,8 +212,7 @@ def test_reject_by_requester_fails(repos, common_entities, requester):
     with pytest.raises(PermissionDeniedException):
         RejectApacRequestUseCase(
             repos["apac_request"],
-            repos["user"],
-            repos["apac_batch"]
+            repos["user"]
         ).execute(RejectApacRequestDTO(
             apac_request_id=apac_request.id,
             authorizer_id=requester.id,
@@ -223,8 +225,7 @@ def test_reject_with_empty_reason_fails(repos, apac_request, authorizer):
     with pytest.raises(ValidationException):
         RejectApacRequestUseCase(
             repos["apac_request"],
-            repos["user"],
-            repos["apac_batch"]
+            repos["user"]
         ).execute(RejectApacRequestDTO(
             apac_request_id=apac_request.id,
             authorizer_id=authorizer.id,
