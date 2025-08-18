@@ -157,7 +157,6 @@ class ApacCreationTests(BaseApacTest):
             self.base_data.model_dump(),
             format='json'
         )
-        print(response.json())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("message"), SUCCESSFULLY_REGISTERED)
         
