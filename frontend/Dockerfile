@@ -11,15 +11,12 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # Copia o restante do código
-COPY tsconfig.json next.config.js jest.config.js next-env.d.ts ./
+COPY tsconfig.json next.config.ts jest.config.js next-env.d.ts ./
 COPY public ./public
 COPY src /app/src
-
-# Faz o build do Next.js
-RUN npm run build
 
 # Exponha a porta padrão do Next.js
 EXPOSE 3000
 
 # Comando para iniciar o servidor em produção
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
