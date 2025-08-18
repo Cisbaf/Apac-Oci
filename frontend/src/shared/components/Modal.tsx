@@ -26,8 +26,15 @@ const style = {
   borderRadius: 2,
   boxShadow: 24,
   p: 4,
+  width: {
+    xs: '100%', // telas pequenas (mobile)
+    sm: '90%', // tablets
+    md: '80%',  // desktop ou maior
+    lg: "50%"
+  },
+  maxHeight: '90vh',
+  overflowY: 'auto',
 };
-
 const CustomModal = forwardRef<ModalHandles, ModalProps>(
   ({ title = 'Modal Title', children, handleChanged }, ref) => {
     const [open, setOpen] = useState(false);
@@ -54,9 +61,20 @@ const CustomModal = forwardRef<ModalHandles, ModalProps>(
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-title" variant="h6" component="h2" gutterBottom>
-            {title}
-          </Typography>
+          <Box sx={{
+            display: "flex",
+            justifyContent: "space-between"
+          }}>
+            <Typography id="modal-title" variant="h6" component="h2" gutterBottom>
+              {title}
+           </Typography>
+            <Typography 
+              id="modal-title" 
+              variant="h6"
+              sx={{backgroundColor: "transparent", border: "none"}}
+              component="button"
+              onClick={closeModal}>X</Typography>
+          </Box>
           <Box id="modal-description" sx={{ mb: 2 }}>
             {children}
           </Box>
