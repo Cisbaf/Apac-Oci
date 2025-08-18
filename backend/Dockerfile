@@ -17,10 +17,13 @@ COPY src /app/src
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-RUN python src/manage.py migrate
-
 # Expõe a porta usada pela aplicação (Django ou FastAPI)
 EXPOSE 8000
 
-# Comando padrão para iniciar a aplicação
-CMD ["python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+WORKDIR /app/src
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Define entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
