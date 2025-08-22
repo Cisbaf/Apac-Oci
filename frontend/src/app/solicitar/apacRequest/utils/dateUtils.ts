@@ -14,8 +14,12 @@ export function getFirstDays(monthCount: number): Date[] {
 }
 
 export function getMonthNamePtBr(dateInput: string | Date): string {
-    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-    return date.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  const date =
+    typeof dateInput === "string"
+      ? new Date(dateInput + "T00:00:00") // força horário local
+      : dateInput;
+
+  return date.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
 }
 
 export function formatDateToYMD(date: Date): string {
