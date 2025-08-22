@@ -9,6 +9,7 @@ import { useApacAuthorizationContext } from "@/app/responder/apacAuthorization/c
 import { UserRole } from "../schemas/user";
 import ApacModal from "./ApacModal";
 import { ModalHandles } from "./Modal";
+import { formatDateBr } from "@/app/solicitar/apacRequest/utils/adapterForm";
 
 interface TableProps {
   onlyView?: boolean;
@@ -84,7 +85,7 @@ export default function ApacTable({ onlyView }: TableProps) {
       id: apac.id,
       name: apac.apac_data.patient_data.name,
       cns: apac.apac_data.patient_data.cns,
-      request_date: apac.request_date,
+      request_date: formatDateBr(apac.request_date),
       procedure: apac.apac_data.main_procedure.name,
       status: ApacStatusTranslation[apac.status],
     }));
