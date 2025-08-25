@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from apac_core.application.use_cases.create_apac_data_case import CreateApacDataDTO, CreateApacDataUseCase
-from apac_core.application.use_cases.user_cases.get_user_case import GetUserRequesterUseCase
+from apac_core.application.use_cases.user_cases.get_user_case import GetUserRequesterOrAdministratorUseCase
 from apac_core.domain.entities.apac_request import ApacRequest
 from apac_core.domain.repositories.apac_request_repository import ApacRequestRepository
 from apac_core.domain.repositories.user_repository import UserRepository
@@ -31,7 +31,7 @@ class CreateApacRequestUseCase:
 
     def execute(self, data: CreateApacRequestDTO) -> ApacRequest:
         # Obtém o requester pelo ID 
-        requester = GetUserRequesterUseCase(self.repo_user).execute(data.requester_id)
+        requester = GetUserRequesterOrAdministratorUseCase(self.repo_user).execute(data.requester_id)
 
         # Obtém o estabelecimento pelo ID
         establishment = self.repo_establishment.get_by_id(data.establishment_id)

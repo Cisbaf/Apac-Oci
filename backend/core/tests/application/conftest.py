@@ -76,3 +76,12 @@ def authorizer(repos, city):
         UserRole.AUTHORIZER,
         city.id
     )
+
+@pytest.fixture
+def administrator(repos, city):
+    """Fixture creating an authorizer user."""
+    return CreateUserUseCase(repos["user"], repos["city"]).execute(
+        "Authorizer User",
+        UserRole.ADMIN,
+        city.id
+    )

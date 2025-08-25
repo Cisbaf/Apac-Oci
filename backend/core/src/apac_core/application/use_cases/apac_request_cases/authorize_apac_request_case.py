@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from apac_core.application.use_cases.user_cases.get_user_case import GetUserAuthorizerUseCase
+from apac_core.application.use_cases.user_cases.get_user_case import GetUserAuthorizerUseCase, GetUserAuthorizerOrAdministratorUseCase
 from apac_core.application.use_cases.apac_request_cases.get_apac_request_case import GetApacRequestPedingUseCase
 from apac_core.domain.repositories.apac_request_repository import ApacRequestRepository
 from apac_core.domain.repositories.user_repository import UserRepository
@@ -25,7 +25,7 @@ class ApprovedApacRequestUseCase:
         today = today or date.today()
 
         apac_request = GetApacRequestPedingUseCase(self.repo_apac_request).execute(data.apac_request_id)
-        authorizer = GetUserAuthorizerUseCase(self.repo_user).execute(data.authorizer_id)
+        authorizer = GetUserAuthorizerOrAdministratorUseCase(self.repo_user).execute(data.authorizer_id)
 
         apac_batch = self.repo_apac_batch.search_for_available_batch(authorizer.city.id)
         if not apac_batch.is_available(today):
@@ -56,7 +56,7 @@ class RejectApacRequestUseCase:
         today = today or date.today()
 
         apac_request = GetApacRequestPedingUseCase(self.repo_apac_request).execute(data.apac_request_id)
-        authorizer = GetUserAuthorizerUseCase(self.repo_user).execute(data.authorizer_id)
+        authorizer = GetUserAuthorizerOrAdministratorUseCase(self.repo_user).execute(data.authorizer_id)
 
         apac_request.set_justification(data.justification)
         apac_request.set_status(ApacStatus.REJECTED)
