@@ -35,9 +35,11 @@ class ApacDataInline(admin.StackedInline):
     sub_procedures_readonly.short_description = "Sub Procedimentos"
 
     def get_readonly_fields(self, request, obj=None):
-        base_fields = [field.name for field in self.model._meta.fields]
-        if request.user.role == "admin":
-            return [] + ['sub_procedures_readonly']
+        edit = ['cid', 'main_procedure', 'patient_name', 'patient_cns',
+                'patient_cpf', 'patient_birth_date', 'patient_race_color',
+                'patient_gender']
+        base_fields = [field.name for field in self.model._meta.fields if field.name in edit]
+        print(base_fields)
         # Adiciona o método customizado ao readonly_fields
         return base_fields + ['sub_procedures_readonly']
 
@@ -48,9 +50,6 @@ class ApacBatchInline(admin.StackedInline):  # ou StackedInline
     can_delete = False  # evita remoção no admin, opcional
 
     def get_readonly_fields(self, request, obj=None):
-        # Retorna todos os campos do modelo como somente leitura
-        if request.user.role == "admin":
-            return []
         return [field.name for field in self.model._meta.fields]
 
 class Finishedilter(admin.SimpleListFilter):
@@ -74,7 +73,7 @@ class Finishedilter(admin.SimpleListFilter):
 @admin.register(ApacRequestModel)
 class ApacRequestAdmin(admin.ModelAdmin):
     inlines = [ApacBatchInline, ApacDataInline]
-    list_display = ['__str__', 'requester_user',  'establishment', 'city', 'request_date', 'status', 'apac_batch', 'apac_data', 'authorizer', 'review_date', 'finished']
+    list_display = ['__str__', 'requester',  'establishment', 'city', 'request_date', 'status', 'apac_batch', 'apac_data', 'authorizer', 'review_date', 'finished']
     list_filter = ['status', 'establishment__city', 'establishment', Finishedilter, 'request_date', 'review_date', 'updated_at']
 
     @admin.display(description="Soliciante")
@@ -92,6 +91,6 @@ class ApacRequestAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         # Retorna todos os campos do modelo como somente leitura
-        if request.user.role == "admin":
-            return []
+        # if request.user.role == "admin":
+        #     return []
         return [field.name for field in self.model._meta.fields if field.name != 'updated_at']

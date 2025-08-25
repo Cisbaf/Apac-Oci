@@ -52,3 +52,6 @@ class ApacBatchAdmin(admin.ModelAdmin):
     @admin.display(boolean=True, description='Disponível')
     def available(self, obj):
         return obj.apac_request is None and date.today() <= obj.expire_in
+
+    def get_readonly_fields(self, request, obj=None):
+        return [field.name for field in self.model._meta.fields]
