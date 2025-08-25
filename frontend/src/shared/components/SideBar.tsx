@@ -57,7 +57,7 @@ const menuItems: MenuItemType[] = [
   { label: 'Solicitar Apac Oci', icon: <AppRegistration />, route: '/solicitar', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
   { label: 'Autorizar APAC OCI', icon: <HowToReg />, route: '/responder', viwer: [UserRole.AUTHORIZER, UserRole.ADMIN] },
   { label: 'Listagem de Solicitações', icon: <PlaylistAddCheck />, route: '/visualizar' },
-  { label: 'Extração APAC-OCI de Solicitações', icon: <FileDownload />, route: '/', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
+  { label: 'Extração APAC-OCI de Solicitações', icon: <FileDownload />, route: '/extracao', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
   // { label: 'Relatórios', icon: <Assignment />, route: '/', viwer: UserRole.ADMIN},
 ];
 
