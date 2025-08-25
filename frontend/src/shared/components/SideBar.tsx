@@ -45,7 +45,7 @@ interface MenuItemType {
   label: string;
   icon: React.ReactNode;
   route: string;
-  viwer?: UserRole;
+  viwer?: UserRole | UserRole[]; // <-- pode ser um ou vários
   subItems?: string[];
 }
 
@@ -54,11 +54,11 @@ const collapsedWidth = 72;
 
 const menuItems: MenuItemType[] = [
   { label: 'Home', icon: <Home />, route: '/' },
-  { label: 'Solicitar Apac Oci', icon: <AppRegistration />, route: '/solicitar', viwer: UserRole.REQUESTER },
-  { label: 'Autorizar APAC OCI', icon: <HowToReg />, route: '/responder', viwer: UserRole.AUTHORIZER},
+  { label: 'Solicitar Apac Oci', icon: <AppRegistration />, route: '/solicitar', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
+  { label: 'Autorizar APAC OCI', icon: <HowToReg />, route: '/responder', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
   { label: 'Listagem de Solicitações', icon: <PlaylistAddCheck />, route: '/visualizar' },
-  { label: 'Extração APAC-OCI de Solicitações', icon: <FileDownload />, route: '/', viwer: UserRole.REQUESTER },
-  { label: 'Relatórios', icon: <Assignment />, route: '/', viwer: UserRole.ADMIN},
+  { label: 'Extração APAC-OCI de Solicitações', icon: <FileDownload />, route: '/', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
+  // { label: 'Relatórios', icon: <Assignment />, route: '/', viwer: UserRole.ADMIN},
 ];
 
 export default function Sidebar() {
@@ -168,7 +168,10 @@ export default function Sidebar() {
         {menuItems.map((item) => {
           const isExpanded = openItems[item.label];
           const hasSubItems = item.subItems && item.subItems.length > 0;
-          if (item.viwer && item.viwer != user.role) return;
+          if (item.viwer) {
+            const roles = Array.isArray(item.viwer) ? item.viwer : [item.viwer];
+            if (!roles.includes(user.role)) return null;
+          }
           return (
             <React.Fragment key={item.label}>
               <Tooltip

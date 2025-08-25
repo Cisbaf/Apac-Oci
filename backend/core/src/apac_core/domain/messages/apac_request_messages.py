@@ -4,3 +4,5 @@ UNRESTRAINED="Para solicitar uma APAC você deverá ter a permissão de solicita
 APAC_REQUEST_NOT_PENDING="Não foi possível obter pois não está pendente"
 USER_IS_NOT_AUTHORIZER="O usuário não tem a permissão de autorizador!"
 USER_IS_NOT_REQUESTER="O usuário não tem a permissão de solicitante!"
+USER_IS_NOT_REQUESTER_OR_ADM="O usuário não tem a permissão de solicitante ou administrador!"
+USER_IS_NOT_AUTHORIZER_OR_ADM="O usuário não tem a permissão de autorizador our administrador!"

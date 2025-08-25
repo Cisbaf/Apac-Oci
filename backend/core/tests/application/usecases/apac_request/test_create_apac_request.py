@@ -197,3 +197,23 @@ class TestCreateApacRequest:
         )
         with pytest.raises(DomainException):
             create_apac_request(repos, apac_request_dto)
+
+    def test_adm_can_create_request(self, repos, administrator, establishment, cid, medical_procedures):
+        """Requester role should be able to create APAC requests."""
+        request = create_apac_request(
+            repos,
+            generate_apac_request_dto(
+                administrator,
+                establishment,
+                medical_procedures,
+                cid
+            )
+        )
+        
+        assert request.id == 1
+        assert request.status == ApacStatus.PENDING
+        assert request.requester.id == administrator.id
+        assert request.establishment.id == establishment.id
+        assert request.authorizer is None
+        assert request.justification is None
+        

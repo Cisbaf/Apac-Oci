@@ -17,6 +17,7 @@ from apac_core.domain.entities.apac_status import ApacStatus
 from apac_core.domain.messages.apac_request_messages import (
     NO_BATCH_AVAILABLE,
     USER_IS_NOT_REQUESTER,
+    USER_IS_NOT_REQUESTER_OR_ADM,
     SUCCESSFULLY_REGISTERED,
 )
 
@@ -60,7 +61,7 @@ class BaseApacTest(APITestCase):
         self.city = CityModel.objects.create(name=random_str())
         self.authorizer = self.create_user(UserRole.AUTHORIZER, "auth_user")
         self.requester = self.create_user(UserRole.REQUESTER, "req_user")
-        
+        self.administrator = self.create_user(UserRole.ADMIN, "administrator")
         # Configuração de estabelecimento
         self.establishment = EstablishmentModel.objects.create(
             cnes=random_str(), 
@@ -164,6 +165,22 @@ class ApacCreationTests(BaseApacTest):
         self.assertEqual(apac.status, ApacStatus.PENDING)
         self.assertEqual(apac.requester, self.requester)
         self.assertEqual(apac.establishment, self.establishment)
+
+    def test_success_as_adm(self):
+        base_data = self.base_data
+        base_data.requester_id = self.administrator.pk
+        response = self.client.post(
+            self.create_apac_url, 
+            base_data.model_dump(),
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get("message"), SUCCESSFULLY_REGISTERED)
+        
+        apac = ApacRequestModel.objects.first()
+        self.assertEqual(apac.status, ApacStatus.PENDING)
+        self.assertEqual(apac.requester, self.administrator)
+        self.assertEqual(apac.establishment, self.establishment)
     
     def test_fail_as_authorizer(self):
         self.authenticate(self.authorizer)
@@ -174,9 +191,8 @@ class ApacCreationTests(BaseApacTest):
             self.base_data.model_dump(),
             format='json'
         )
-        
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data.get("message"), USER_IS_NOT_REQUESTER)
+        self.assertEqual(response.data.get("message"), USER_IS_NOT_REQUESTER_OR_ADM)
         self.assertEqual(ApacRequestModel.objects.count(), 0)
 
 
@@ -203,6 +219,22 @@ class ApacApprovalTests(BaseApacTest):
         
         apac = ApacRequestModel.objects.get(pk=self.apac.pk)
         self.assertEqual(apac.authorizer, self.authorizer)
+        self.assertIsNotNone(apac.review_date)
+
+    def test_success_with_available_batch_for_adm(self):
+        response = self.client.post(
+            self.approve_url,
+            {
+                "apac_request_id": self.apac.pk,
+                "authorizer_id": self.administrator.pk
+            },
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assert_apac_status(self.apac.pk, ApacStatus.APPROVED)
+        
+        apac = ApacRequestModel.objects.get(pk=self.apac.pk)
+        self.assertEqual(apac.authorizer, self.administrator)
         self.assertIsNotNone(apac.review_date)
     
     def test_fail_without_batch(self):

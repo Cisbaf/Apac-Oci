@@ -164,6 +164,26 @@ def test_validate_by_authorizer_success(repos, common_entities, requester, autho
     
     assert approved_request.status == ApacStatus.APPROVED
 
+def test_validate_by_adm_success(repos, common_entities, requester, administrator):
+    """Test that authorizer can successfully approve an APAC request."""
+    establishment, apac_data = common_entities
+    apac_request = create_apac_request(
+        repos=repos,
+        requester_id=requester.id,
+        establishment_id=establishment.id,
+        apac_data=apac_data
+    )
+    
+    assert apac_request.status == ApacStatus.PENDING
+    
+    approved_request = ApprovedApacRequestUseCase(
+        repos["apac_request"],
+        repos["user"],
+        repos["apac_batch"]
+    ).execute(ApprovedApacRequestDTO(apac_request_id=apac_request.id, authorizer_id=administrator.id))
+    
+    assert approved_request.status == ApacStatus.APPROVED
+
 
 def test_validate_by_requester_fails(repos, common_entities, requester):
     """Test that requester cannot approve an APAC request."""
@@ -192,6 +212,20 @@ def test_reject_by_authorizer_success(repos, apac_request, authorizer):
     ).execute(RejectApacRequestDTO(
         apac_request_id=apac_request.id,
         authorizer_id=authorizer.id,
+        justification="Invalid procedure"
+    ))
+
+    assert rejected_request.status == ApacStatus.REJECTED
+    assert rejected_request.justification == "Invalid procedure"
+
+def test_reject_by_adm_success(repos, apac_request, administrator):
+    """Test that authorizer can reject an APAC request with valid reason."""
+    rejected_request = RejectApacRequestUseCase(
+        repos["apac_request"],
+        repos["user"],
+    ).execute(RejectApacRequestDTO(
+        apac_request_id=apac_request.id,
+        authorizer_id=administrator.id,
         justification="Invalid procedure"
     ))
 
