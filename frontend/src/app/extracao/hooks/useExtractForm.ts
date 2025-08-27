@@ -1,4 +1,3 @@
-import { useGlobalComponents } from "@/shared/context/GlobalUIContext";
 import { useForm } from "react-hook-form";
 import { ExtractFormData } from "../schemas/extractForm";
 

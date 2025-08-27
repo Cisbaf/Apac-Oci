@@ -1,4 +1,4 @@
-import { User, Establishment, City, Procedure, Cid } from "@/shared/schemas"
+import { User, Establishment, Procedure, Cid } from "@/shared/schemas"
 
 
 export enum ApacStatus {

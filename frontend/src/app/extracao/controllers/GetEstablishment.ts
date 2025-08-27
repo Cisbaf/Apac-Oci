@@ -1,7 +1,5 @@
 import { Establishment } from "@/shared/schemas";
 
-
-
 export function GetEstablishments(): Promise<Establishment[]> {
     return new Promise(async (resolve, reject)=>{
         try {

@@ -4,7 +4,6 @@ import CardForm from "@/shared/components/CardForm";
 import { Box, Button, Typography } from "@mui/material";
 import { formatDateToYMD, getFirstDays, getMonthNamePtBr } from "../../utils/dateUtils";
 import { useFormRequest } from "../../contexts/FormApacRequest";
-import { MESSAGENOTCHECKVALIDITY } from "../../utils/messages";
 
 const IdentifyRequestDate = React.forwardRef<FormRepository, FormProps>((props, ref) => {
     const { form, disabled: disabledForm } = useFormRequest();

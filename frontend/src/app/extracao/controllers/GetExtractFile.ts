@@ -1,9 +1,5 @@
-import { ToSnakeCase } from "@/shared/utils/snakeCase";
 import { ExtractFormData } from "../schemas/extractForm";
-import { formatDateToISO } from "@/app/solicitar/apacRequest/utils/adapterForm";
 import { formatDateToYMD } from "@/app/solicitar/apacRequest/utils/dateUtils";
-
-
 
 export default async function GetExtractFile(data: ExtractFormData) {
     const newData = {

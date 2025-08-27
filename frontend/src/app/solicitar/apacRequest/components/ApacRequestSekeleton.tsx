@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Skeleton } from "@mui/material";
 
-
 export default function ApacRequestSkeleton() {
     return(
         <Box

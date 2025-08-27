@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 const API_CADSUS = process.env.API_CADSUS || 'http://192.168.1.10:8014/consult';
 
