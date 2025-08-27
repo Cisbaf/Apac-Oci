@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from apac_core.application.use_cases.apac_export_case import ApacExportCase, ApacExportDto
 from apac_batch.controller import ApacBatchController
 from establishment.controller import EstablishmentController
-from django.http import HttpResponse
 from apac_core.application.ultils.formart_errors import format_validation_errors
 from pydantic import ValidationError
 from rest_framework import status
