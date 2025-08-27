@@ -44,7 +44,7 @@ export default function PageApacRequest() {
                 <RouteGuard
                     allowedRoles={[UserRole.REQUESTER, UserRole.ADMIN]}>
                     <ApacRequestFormProvider
-                        initialData={fakeRequestForm}>
+                        initialData={emptyRequestForm}>
                         <ProgressStepper>
                             <StepForm>
                                 <IdentifyRequestDate/>
