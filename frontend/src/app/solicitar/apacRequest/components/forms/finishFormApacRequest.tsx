@@ -1,7 +1,6 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import IdentifyEstablishmentForm from "./identifyEstablishmentForm";
 import IdentifyMainProcedure from "./identifyMainProcedureForm";
-import IdentifyMedicForm from "./identifyMedicSupervisingForm";
 import IdentifyPatientForm from "./identifyPatientForm";
 import IdentifySubProcedures from "./identifySubProceduresForm";
 import IdentifyCidForm from "./identifyCidForm";

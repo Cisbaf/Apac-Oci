@@ -1,5 +1,5 @@
 import { RequestForm } from "../schemas/requestForm";
-import { fakeProcedureOne, subProcedures } from "@/shared/utils/procedureFakeList";
+import { subProcedures } from "@/shared/utils/procedureFakeList";
 
 export const fakeRequestForm: RequestForm = {
     requesterId: 1,

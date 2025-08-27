@@ -2,8 +2,8 @@ import { Establishment } from "@/shared/schemas";
 import React from "react";
 import { GetEstablishments } from "../controllers/GetEstablishment";
 import { useExportContext } from "../contexts/ExportContext";
-import { TextField, Grid, Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { Controller, useWatch } from 'react-hook-form';
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Controller } from 'react-hook-form';
 
 
 export default function SelectEstablishment() {

@@ -5,7 +5,6 @@ import { Controller } from 'react-hook-form';
 import { useFormRequest } from "@/app/solicitar/apacRequest/contexts/FormApacRequest";
 import { FormRepository, FormProps } from "@/shared/repositories/formRepository";
 import { MESSAGENOTCHECKVALIDITY,} from "@/app/solicitar/apacRequest/utils/messages";
-import { isValidCNS } from "@/shared/utils/validate";
 import CnsInput from "../field/cnsInput";
 
 const IdentifyMedicSupervisingForm = React.forwardRef<FormRepository, FormProps>((props, ref)=>{

@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useExportContext } from "@/app/extracao/contexts/ExportContext";
 
 const MonthYearInput: React.FC = () => {
