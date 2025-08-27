@@ -8,6 +8,12 @@ from apac_core.domain.messages.apac_request_messages import NO_BATCH_AVAILABLE
 
 class ApacBatchController(ApacBatchRepository):
 
+    def get_by_id(self, batch_id):
+        batch = ApacBatchModel.objects.get(pk=batch_id)
+        if batch:
+            return batch.to_entity()
+        return NotFoundException()
+
     def search_for_available_batch(self, city_id):
         apac_batch = ApacBatchModel.objects.filter(
             apac_request=None,

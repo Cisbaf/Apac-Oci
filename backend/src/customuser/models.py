@@ -39,7 +39,7 @@ class UserRole(models.TextChoices):
 
 
 class CustomUser(AbstractUser):
-    city = models.ForeignKey(verbose_name="Cidade", to=CityModel, on_delete=models.CASCADE, related_name='users', null=True)
+    city = models.ForeignKey(verbose_name="Cidade", to=CityModel, on_delete=models.SET_NULL, related_name='users', null=True)
     role = models.CharField(
         max_length=10,
         choices=UserRole.choices,

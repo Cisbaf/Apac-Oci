@@ -16,7 +16,6 @@ from apac_core.application.use_cases.apac_request_cases.create_apac_request_case
 from apac_core.domain.entities.apac_status import ApacStatus
 from apac_core.domain.messages.apac_request_messages import (
     NO_BATCH_AVAILABLE,
-    USER_IS_NOT_REQUESTER,
     USER_IS_NOT_REQUESTER_OR_ADM,
     SUCCESSFULLY_REGISTERED,
 )
@@ -58,15 +57,21 @@ class BaseApacTest(APITestCase):
 
     def setUp(self):
         # Configuração básica
-        self.city = CityModel.objects.create(name=random_str())
+        self.city = CityModel.objects.create(
+            name=random_str(),
+            ibge_code=random_str(),
+            agency_name=random_str()
+        )
         self.authorizer = self.create_user(UserRole.AUTHORIZER, "auth_user")
         self.requester = self.create_user(UserRole.REQUESTER, "req_user")
         self.administrator = self.create_user(UserRole.ADMIN, "administrator")
         # Configuração de estabelecimento
         self.establishment = EstablishmentModel.objects.create(
             cnes=random_str(), 
-            name="Test Hospital", 
-            city=self.city
+            name="Test Hospital",
+            city=self.city,
+            cnpj=random_str(),
+            acronym=random_str()
         )
         
         # Configuração de procedimentos

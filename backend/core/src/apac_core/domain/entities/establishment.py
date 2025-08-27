@@ -7,8 +7,8 @@ class Establishment(BaseModel):
     name: str
     cnes: str
     city: City
-    cnpj: Optional[str] = None
-    acronym: Optional[str] = None
+    cnpj: str
+    acronym: str
     is_active: Optional[bool] = True
     id: Optional[int] = None  # ID opcional até ser salvo
 

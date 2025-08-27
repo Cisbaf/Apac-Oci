@@ -23,4 +23,5 @@ urlpatterns = [
     path('establishment/', include('establishment.urls')),
     path('procedure/', include('procedure.urls')),
     path('apac_request/', include('apac_request.urls')),
+    path("apac_batch/", include('apac_batch.urls'))
 ]

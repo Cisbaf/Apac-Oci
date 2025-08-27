@@ -4,7 +4,12 @@ from apac_core.application.use_cases.create_apac_data_case import CreateApacData
 from apac_core.application.use_cases.create_city_case import CreateCityUseCase
 from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase
 from apac_core.domain.entities.apac_status import ApacStatus
-from apac_core.domain.exceptions import PermissionDeniedException, DomainException, NotFoundException
+from apac_core.domain.exceptions import PermissionDeniedException, DomainException
+from apac_core.application.use_cases.create_city_case import CreateCityUseCase, CreateCityDto
+from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase, CreateEstablishmentDto
+from apac_core.domain.entities.apac_status import ApacStatus
+from apac_core.domain.exceptions import PermissionDeniedException, DomainException
+
 
 def create_apac_request(repos, data):
     """Helper function to create an APAC request."""
@@ -113,8 +118,23 @@ class TestCreateApacRequest:
 
     def test_request_rejection_from_out_of_city_requester(self, repos, requester, cid, medical_procedures):
         """A user without an active establishment will not be able to create APAC requests."""
-        _city =  CreateCityUseCase(repos["city"]).execute("Engenho")
-        _establishment = CreateEstablishmentUseCase(repos["establishment"], repos["city"]).execute("Mariana", "6987749", _city.id)
+        _city =  CreateCityUseCase(
+            repos["city"]
+        ).execute(CreateCityDto(
+            name="xxxxx",
+            ibge_code="yyyyy",
+            agency_name="zzzzzz"
+        ))
+        _establishment = CreateEstablishmentUseCase(
+            repos["establishment"],
+            repos["city"]
+            ).execute(CreateEstablishmentDto(
+                name="xxxxxx",
+                cnes="zzzzzz",
+                cnpj="yyyyyy",
+                acronym="@@@@@",
+                city_id=_city.id
+            ))
         apac_request_dto = generate_apac_request_dto(
             requester,
             _establishment,
