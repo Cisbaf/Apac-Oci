@@ -1,62 +1,28 @@
 import pytest
 from apac_core.application.use_cases.apac_request_cases.authorize_apac_request_case import ApprovedApacRequestUseCase, RejectApacRequestUseCase, ApprovedApacRequestDTO, RejectApacRequestDTO
-from apac_core.application.implementations.apac_data_fake_repository import ApacDataFakeRepository
-from apac_core.application.implementations.apac_request_fake_repository import ApacRequestFakeRepository
-from apac_core.application.implementations.establishment_fake_repository import EstablishmentFakeRepository
-from apac_core.application.implementations.user_fake_repository import UserFakeRepository
-from apac_core.application.implementations.city_fake_repository import CityFakeRepository
-from apac_core.application.implementations.procedure_fake_repository import ProcedureFakeRepository
-from apac_core.application.implementations.procedure_record_fake_repository import ProcedureRecordFakeRepository
-from apac_core.application.implementations.apac_batch_fake_repository import ApacBatchFakeRepository
-from apac_core.application.implementations.cid_fake_repository import CidFakeRepository
 from apac_core.application.use_cases.apac_request_cases.create_apac_request_case import CreateApacRequestUseCase, CreateApacRequestDTO
 from apac_core.application.use_cases.create_apac_data_case import CreateApacDataDTO, CreateProcedureRecordDTO
-from apac_core.application.use_cases.user_cases.create_user_case import CreateUserUseCase
-from apac_core.application.use_cases.create_city_case import CreateCityUseCase
-from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase
 from apac_core.application.use_cases.procedure_cases.create_procedure_case import CreateProcedureUseCase
 from apac_core.application.use_cases.apac_batch_cases.create_apac_batch_case import CreateApacBatchUseCase
-from apac_core.application.use_cases.cid_cases.create_cid_case import CreateCidUseCase
-from apac_core.domain.entities.user_role import UserRole
 from apac_core.domain.exceptions import PermissionDeniedException, ValidationException, DomainException
 from apac_core.domain.entities.apac_status import ApacStatus
-from datetime import date
 from utils import get_date_for_token
 
 
 @pytest.fixture
-def repos():
-    return {
-        "user": UserFakeRepository(),
-        "establishment": EstablishmentFakeRepository(),
-        "city": CityFakeRepository(),
-        "apac_request": ApacRequestFakeRepository(),
-        "apac_data": ApacDataFakeRepository(),
-        "cid": CidFakeRepository(),
-        "procedure": ProcedureFakeRepository(),
-        "procedure_record": ProcedureRecordFakeRepository(),
-        "apac_batch": ApacBatchFakeRepository()
-    }
-
-
-@pytest.fixture
-def common_entities(repos):
+def common_entities(repos, city, establishment, cid, medical_procedures):
     """Fixture that creates and returns common test entities."""
-    city = CreateCityUseCase(repos["city"]).execute("Nova Iguaçu")
+   
     CreateApacBatchUseCase(repos["apac_batch"], repos["city"]).execute("7894", get_date_for_token(), city.id)
-    establishment = CreateEstablishmentUseCase(repos["establishment"], repos["city"]).execute("HGNI", "7569944", city.id)
-    main_procedure = CreateProcedureUseCase(repos["procedure"]).execute(
-        "OCI MUALAÇÃO INICIAL EM OFFICIALOLOGIA", 
-        "0005010035"
-    )
+    
+    main_procedure, _ =  medical_procedures
+
     sub_procedure = CreateProcedureUseCase(repos["procedure"]).execute(
         "CONSULTA IMEDICA EM ATENÇÃO ESPECIALIZADA", 
         "02010100072", 
         main_procedure.id
     )
 
-    cid = CreateCidUseCase(repos["cid"], repos["procedure"]).execute("xxxxx", "xxxxx", main_procedure.id)
-    
     apac_data = CreateApacDataDTO(
         patient_name="João da Silva",
         patient_record_number="99999", # OPCIONAL
@@ -87,27 +53,6 @@ def common_entities(repos):
         sub_procedures=[CreateProcedureRecordDTO(procedure_id=sub_procedure.id, quantity=3)]
     )
     return establishment, apac_data
-
-
-@pytest.fixture
-def authorizer(repos, common_entities):
-    """Fixture that creates an authorizer user."""
-    establishment, _ = common_entities
-    return CreateUserUseCase(repos["user"], repos["city"]).execute(
-        "Mariana",
-        UserRole.AUTHORIZER,
-        establishment.city.id
-    )
-
-@pytest.fixture
-def requester(repos, common_entities):
-    """Fixture that creates an authorizer user."""
-    establishment, _ = common_entities
-    return CreateUserUseCase(repos["user"], repos["city"]).execute(
-        "Requester",
-        UserRole.REQUESTER,
-        establishment.city.id
-    )
 
 @pytest.fixture
 def apac_request(repos, common_entities, requester):

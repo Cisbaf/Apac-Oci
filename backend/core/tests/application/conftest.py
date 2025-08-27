@@ -12,8 +12,8 @@ from apac_core.application.use_cases.procedure_cases.create_procedure_case impor
 from apac_core.application.use_cases.procedure_record_cases.create_procedure_record_case import CreateProcedureRecordDTO
 from apac_core.application.use_cases.cid_cases.create_cid_case import CreateCidUseCase
 from apac_core.application.use_cases.user_cases.create_user_case import CreateUserUseCase
-from apac_core.application.use_cases.create_city_case import CreateCityUseCase
-from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase
+from apac_core.application.use_cases.create_city_case import CreateCityUseCase, CreateCityDto
+from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase, CreateEstablishmentDto
 from apac_core.domain.entities.user_role import UserRole
 
 @pytest.fixture
@@ -34,12 +34,27 @@ def repos():
 @pytest.fixture
 def city(repos):
     """Fixture creating a test city."""
-    return CreateCityUseCase(repos["city"]).execute("Nova Iguaçu")
+    return CreateCityUseCase(
+        repos["city"]
+    ).execute(CreateCityDto(
+        name="Nova Iguaçu",
+        ibge_code="3303500",
+        agency_name="SECRETARIA MUNICIPAL DE NOVA IGUACU"
+    ))
 
 @pytest.fixture
 def establishment(repos, city):
     """Fixture creating a test establishment."""
-    return CreateEstablishmentUseCase(repos["establishment"], repos["city"]).execute("HGNI", "78999631", city.id)
+    return CreateEstablishmentUseCase(
+        repos["establishment"],
+        repos["city"]
+    ).execute(CreateEstablishmentDto(
+        name="POLICLINICA SHOPPING NOVA IGUACU",
+        cnes="4507940",
+        cnpj="29138278000705",
+        acronym="POLSHG",
+        city_id=city.id
+    ))
 
 @pytest.fixture
 def medical_procedures(repos):

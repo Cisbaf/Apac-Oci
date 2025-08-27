@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import ApacDataModel
 from procedure_record.models import ProcedureRecordModel
+
 
 class ProcedureRecordInline(admin.StackedInline):
     model = ProcedureRecordModel

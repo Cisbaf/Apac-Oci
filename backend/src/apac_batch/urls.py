@@ -1,5 +1,7 @@
 from django.urls import path
+from .views import ApacBatchsAvailable, ExportApacBatch
 
 urlpatterns = [
-    path('api', ApacRequestListCreate.as_view(), name='apac_route'),
+    path('availables', ApacBatchsAvailable.as_view(), name='batchs_avaliables'),
+    path('extract', ExportApacBatch.as_view(), name="extract_batch")
 ]

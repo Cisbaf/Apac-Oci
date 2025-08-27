@@ -1,8 +1,8 @@
-
 from dataclasses import dataclass
 from apac_core.domain.repositories.procedure_repository import ProcedureRepository
 from apac_core.domain.entities.procedure import Procedure
 from apac_core.domain.exceptions import ValidationException
+
 
 @dataclass
 class CreateProcedureUseCase:

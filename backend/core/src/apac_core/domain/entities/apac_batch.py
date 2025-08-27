@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
+from pydantic import BaseModel
+from typing import Optional
 from datetime import datetime, date
 from apac_core.domain.entities.city import City
 from apac_core.domain.value_objects.validity import Validity
 from apac_core.domain.entities.apac_request import ApacRequest
+
 
 class ApacBatch(BaseModel):
     batch_number: str
