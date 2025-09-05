@@ -38,8 +38,11 @@ class ApacDataInline(admin.StackedInline):
         edit = ['cid', 'main_procedure', 'patient_name', 'patient_cns',
                 'patient_cpf', 'patient_birth_date', 'patient_race_color',
                 'patient_gender']
+        
+        if request.user.is_superuser:
+            return []
         base_fields = [field.name for field in self.model._meta.fields if field.name in edit]
-        print(base_fields)
+
         # Adiciona o método customizado ao readonly_fields
         return base_fields + ['sub_procedures_readonly']
 
@@ -50,6 +53,8 @@ class ApacBatchInline(admin.StackedInline):  # ou StackedInline
     can_delete = False  # evita remoção no admin, opcional
 
     def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return []
         return [field.name for field in self.model._meta.fields]
 
 class Finishedilter(admin.SimpleListFilter):
@@ -90,7 +95,6 @@ class ApacRequestAdmin(admin.ModelAdmin):
         return obj.status != "pending"
 
     def get_readonly_fields(self, request, obj=None):
-        # Retorna todos os campos do modelo como somente leitura
-        # if request.user.role == "admin":
-        #     return []
+        if request.user.is_superuser:
+            return []
         return [field.name for field in self.model._meta.fields if field.name != 'updated_at']
