@@ -1,6 +1,6 @@
 from django.contrib import admin
 from procedure_record.models import ProcedureRecordModel
-
+from apac_data.models import ApacDataModel
 
 class ProcedureRecordInline(admin.StackedInline):
     model = ProcedureRecordModel
@@ -14,7 +14,7 @@ class ProcedureRecordInline(admin.StackedInline):
             return []
         return [field.name for field in self.model._meta.fields]
 
-# @admin.register(ApacDataModel)
+@admin.register(ApacDataModel)
 class ApacDataAdmin(admin.ModelAdmin):
     list_display = ['pk', 'patient_name', 'patient_cpf', 'main_procedure', 'procedure_date', 'apac_request']
     list_filter = ['apac_request', 'apac_request__establishment__city','apac_request__establishment', 'apac_request__request_date']
