@@ -54,4 +54,7 @@ class ApacBatchAdmin(admin.ModelAdmin):
         return obj.apac_request is None and date.today() <= obj.expire_in
 
     def get_readonly_fields(self, request, obj=None):
+        print(request.user.is_superuser)
+        if request.user.is_superuser:
+            return []
         return [field.name for field in self.model._meta.fields]
