@@ -3,13 +3,14 @@ import { ExtractFormData } from "../schemas/extractForm";
 
 export default function useExtractForm() {
     const form = useForm<ExtractFormData>({
-        defaultValues: {apacBatchs: [], establishmentId: 0, production: new Date(),},
+        defaultValues: {apacBatchs: [], production: new Date(), establishmentId: 0, establishmentName: ""},
     });
 
-    const { getValues, setValue, watch, control, trigger } = form;
+    const { getValues, setValue, watch, control } = form;
 
     const productionValue = watch("production");
     const batchsSelected = watch("apacBatchs");
+    const establishmentIdValue = watch("establishmentId");
 
     const addBatchId = (id: number) => {
         const current = getValues("apacBatchs") || [];
@@ -30,11 +31,11 @@ export default function useExtractForm() {
         setValue("production", date);
     };
 
-    const setEstablishmentId = (id: number)=> {
-        setValue("establishmentId", id);
+    const setEstablishmentName = (name: string)=> {
+        setValue("establishmentName", name);
     }
 
 
-    return {addBatchId, removeBatchId, setProduction, productionValue, control, setEstablishmentId, batchsSelected, getValues}
+    return {addBatchId, removeBatchId, setProduction, productionValue, control, setEstablishmentName, batchsSelected, getValues, establishmentIdValue}
 
 }

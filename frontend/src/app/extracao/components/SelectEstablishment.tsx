@@ -15,6 +15,14 @@ export default function SelectEstablishment() {
         .then(list=>setEstablishments(list));
     }, [])
 
+    React.useEffect(()=>{
+        const v = hookExtractForm.establishmentIdValue;
+        if (!v) return;
+        const establishment = establishments.find(e=>e.id === v);
+        if (!establishment) throw new Error("establishmentName não encontrado!");
+        hookExtractForm.setEstablishmentName(establishment.acronym);
+    }, [hookExtractForm.establishmentIdValue]);
+
     return (
         <Controller
             name="establishmentId"
