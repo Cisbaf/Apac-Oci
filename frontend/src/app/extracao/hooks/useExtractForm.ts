@@ -31,7 +31,7 @@ export default function useExtractForm() {
         setValue("production", date);
     };
 
-    const setEstablishmentName = (name: string)=> {
+    const setEstablishmentName = (name?: string)=> {
         setValue("establishmentName", name);
     }
 
