@@ -27,6 +27,7 @@ def generate_apac_request_dto(user, establishment, apac_data, request_date):
 
 def test_generate(repos):
     today = datetime.date.today()
+    production = datetime.date(2025, 5, 1)
     repo_apac_batch = repos['apac_batch']
     repo_apac_batch.apac_batchs.append(ApacBatch(**batch_fake_data))
     repo_establishment = repos['establishment']
@@ -35,13 +36,13 @@ def test_generate(repos):
         repo_apac_batch=repo_apac_batch,
         repo_establishment=repo_establishment
     ).execute(ApacExportDto(
-        production=datetime.date(2025, 5, 1),
+        production=production,
         establishment_id=4,
         apac_batchs=[2]
     ))
     assert export == f"""01#APAC2025050000011810POLICLINICA SHOPPING NOVA IGUAPOLSHG29138278000705SECRETARIA MUNICIPAL DE NOVA IGUACU     M{today.strftime("%Y%m%d")}Versao 03.15   
 142025053325700278252334507940202505012025050120250630003EVANI BARBOSA DA SILVA        MARINETE BARBOSA DA SILVA     081 AMERICO DE JESUS          199  CASA 1    26271132330350019730105MDAVID DE BARROS VALENTE       09020100261220250512VINICIUS DOS SANTOS AUGUSTO   000000000000000700000138906208704602184313922              45079402025050120250508M33035000101000000000000003EVANI BARBOSA DA SILVA        010    081JARDIM PALMARES                                                                  70000013890620822022934776          N
-062025053325700278252Z848
+062025{production.strftime("%m")}3325700278252Z848
 1320250533257002782520902010026225120000001
 1320250533257002782520301010072225120000001
 1320250533257002782520211020036225120000001

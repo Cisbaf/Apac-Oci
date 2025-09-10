@@ -90,7 +90,7 @@ class ExportApacBatchController:
                 ),
                 apac_info=ApacInfo(
                     mes_fim_validate=data_fim.strftime("%m%Y"),
-                    o_que_e="05",
+                    o_que_e=self.date_production.strftime("%m"),
                     numero_apac=apac_batch.batch_number,
                     cid=apac_data.cid.code,
                 ),
