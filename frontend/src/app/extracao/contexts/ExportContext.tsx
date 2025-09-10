@@ -29,7 +29,15 @@ export function ExportContextProvider({ children }: ExportContextProps) {
         try {
             const response = await GetExtractFile(form);
             if (response.content) {
-                GenerateStringToDownloadFile("extracao.txt", response.content);
+                var fileName;
+                const extension = form.production.toLocaleString("pt-BR", { month: "short" }).toUpperCase();
+                const establishmentShortName = form.establishmentName;
+                if (!extension || !establishmentShortName) {
+                    fileName = "exportacao.txt";
+                } else {
+                    fileName = `${establishmentShortName}.${extension}`;
+                }
+                GenerateStringToDownloadFile(fileName, response.content);
             } else {
                 throw new Error("Problema ao extrair, contate o desenvolvedor!")
             }
