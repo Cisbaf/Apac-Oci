@@ -5,14 +5,14 @@ from apac_core.domain.services.apac_extract.utils import format_date_yyyymmdd, f
 from datetime import date
 
 class ApacInfo(FixedWidthBaseModel):
-    __field_sizes__ = {
+    __field_sizes__ = { # A quantidade de caracters que cada campo deverá ter
         "mes_fim_validate": 6,
         "o_que_e": 2,
         "numero_apac": 13,
         "cid": 4,
     }
     mes_fim_validate: str
-    o_que_e: Optional[str] = Field("05")
+    o_que_e: str # antigo "o_que_e"
     numero_apac: str
     cid: str
 
