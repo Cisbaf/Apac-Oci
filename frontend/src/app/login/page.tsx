@@ -11,6 +11,7 @@ import {
   Alert,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { isValidCPF, formatCPF } from "@/shared/utils/validate";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -25,9 +26,14 @@ export default function SignIn() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const username = formData.get("username")?.toString() ?? "";
+    var username = formData.get("username")?.toString() ?? "";
     const password = formData.get("password")?.toString() ?? "";
 
+    if (!isValidCPF(username)) {
+      return setErrorMsg("Cpf Invalido!")
+    }
+
+    username = formatCPF(username);
     const result = await signIn("credentials", {
       redirect: false,
       username,
