@@ -43,3 +43,17 @@ export function isValidCNS(cns: string): boolean {
 
   return false;
 }
+
+
+export function formatCPF(cpf: string) {
+  // Remove qualquer coisa que não seja número
+  const digits = cpf.replace(/\D/g, '');
+
+  // Verifica se tem 11 dígitos
+  if (digits.length !== 11) {
+    return cpf;
+  }
+
+  // Formata para 000.000.000-00
+  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
