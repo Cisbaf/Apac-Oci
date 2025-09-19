@@ -1,0 +1,101 @@
+
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-login {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 4px 8px 0 rgba(230, 98, 98, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height: 70%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.box-login img {
+    align-self: anchor-center;
+}
+
+.box-info {
+    width: 40%;
+    padding: 20px;
+    background-color: rgb(65, 140, 202);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height: 70%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(135deg, #0b58a5, #074079);
+    justify-content: center;
+    align-items: center;
+}
+
+.box-info div {
+    display: flex;
+    flex-direction: column;
+    height: 50%;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 20%;
+}
+/* círculo maior */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* círculo menor */
+.card::after {
+  content: "";
+  position: absolute;
+  bottom: -30%;
+  right: -20%;
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 800px) {
+    .container {
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+    }
+    .box-login {
+        box-shadow: none;
+        width: 60%;
+    }
+    .box-info {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+    }
+    .box-login {
+        box-shadow: none;
+        width: 100%;
+    }
+    .box-info {
+        display: none;
+    }
+}

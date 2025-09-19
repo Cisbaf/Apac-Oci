@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { isValidCPF, formatCPF } from "@/shared/utils/validate";
+import "./style.css"
+import logoImg from "../../../public/logo_cisbaf.png"
+import Image from "next/image";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -23,58 +26,44 @@ export default function SignIn() {
     setLoading(true);
     setErrorMsg("");
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
+    const submit = async() => {
+      const form = event.currentTarget;
+      const formData = new FormData(form);
 
-    var username = formData.get("username")?.toString() ?? "";
-    const password = formData.get("password")?.toString() ?? "";
+      var username = formData.get("username")?.toString() ?? "";
+      const password = formData.get("password")?.toString() ?? "";
 
-    if (!isValidCPF(username)) {
-      return setErrorMsg("Cpf Invalido!")
+      if (!isValidCPF(username)) {
+        return setErrorMsg("Cpf Invalido!")
+      }
+
+      username = formatCPF(username);
+      const result = await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      });
+
+      if (result?.error) {
+        setErrorMsg("Usuário ou senha inválidos.");
+      } else {
+        router.push("/");
+      }
+
     }
 
-    username = formatCPF(username);
-    const result = await signIn("credentials", {
-      redirect: false,
-      username,
-      password,
-    });
-
+    await submit();
     setLoading(false);
-
-    if (result?.error) {
-      setErrorMsg("Usuário ou senha inválidos.");
-    } else {
-      router.push("/");
-    }
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          width: 400,
-          p: 4,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-          boxShadow: 3,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-        }}
-      >
-        <Typography variant="h5" textAlign="center" fontWeight="bold">
-          Login
+    <Box className="container">
+
+      {/* Bloco Esquerdo - Login */}
+      <Box className="box-login" component="form" onSubmit={handleSubmit} >
+        <Image src={logoImg.src} width={200} height={50} alt=""/>
+        <Typography variant="h5" textAlign="center" fontWeight="bold" gutterBottom>
+          Sistema Apac
         </Typography>
 
         {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
@@ -85,6 +74,7 @@ export default function SignIn() {
           variant="outlined"
           required
           fullWidth
+          sx={{ mb: 2 }}
         />
 
         <TextField
@@ -94,6 +84,7 @@ export default function SignIn() {
           variant="outlined"
           required
           fullWidth
+          sx={{ mb: 2 }}
         />
 
         <Button
@@ -101,12 +92,65 @@ export default function SignIn() {
           variant="contained"
           color="primary"
           disabled={loading}
-          sx={{ py: 1.5, mt: 1 }}
+          sx={{ py: 1.5 }}
+          fullWidth
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : "Entrar"}
         </Button>
+      </Box>
+
+      {/* Bloco Direito - Informações */}
+      <Box className="box-info" sx={{ color: "white" }}>
+              
+      <Box>
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Bem-vindo ao Sistema Apac OCI
+        </Typography>
+
+        <Typography variant="body1" gutterBottom>
+          O Sistema Apac OCI foi desenvolvido para <strong>centralizar</strong> e <strong>agilizar</strong> o processo de 
+          solicitação, autorização e faturamento das APACs em cada município.
+        </Typography>
+
+        <Typography variant="body1" gutterBottom>
+          Com ele, você poderá:
+        </Typography>
+
+        <ul style={{ marginLeft: "1rem" }}>
+          <li>
+            <Typography variant="body2">
+              Realizar <strong>solicitações de APAC</strong> por unidade de forma simples e segura
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="body2">
+              Permitir que o <strong>profissional autorizador</strong> valide as solicitações, aprovando ou recusando com justificativa
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="body2">
+              Garantir <strong>controle e rastreabilidade</strong> de todas as etapas do processo
+            </Typography>
+          </li>
+          <li>
+            <Typography variant="body2">
+              Gerar automaticamente o <strong>arquivo de produção mensal</strong> para fins de faturamento municipal
+            </Typography>
+          </li>
+        </ul>
+
+        <Typography variant="body2" sx={{ mt: 2, opacity: 0.8 }}>
+          Resultados esperados: mais agilidade, redução de erros no faturamento e melhor gestão das APACs no município.
+        </Typography>
+
+        <Typography variant="body2" sx={{ mt: 1, opacity: 0.8 }}>
+          Dúvidas ou suporte? Entre em contato com a equipe do CisBaf.
+        </Typography>
+      </Box>
 
       </Box>
+
     </Box>
+
   );
 }
