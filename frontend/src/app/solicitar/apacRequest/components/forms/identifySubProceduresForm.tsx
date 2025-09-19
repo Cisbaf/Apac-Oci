@@ -119,16 +119,15 @@ const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props
           {subProceduresField?.length > 0 ? (
             <Grid container spacing={3}>
               {subProceduresField.map((procedure, i) =>
-                !disabled || (disabled && procedure.checked) ? (
-                  <ProcedureItem
+                !disabled || (disabled && procedure.checked) ? procedure.procedure.is_active &&
+                <ProcedureItem
                     key={`ProcedureItem-${i}`}
                     i={i}
                     control={control}
                     register={register}
                     subProcedure={procedure}
                     disabled={disabled || false}
-                  />
-                ) : null
+                  /> : null
               )}
             </Grid>
           ) : (

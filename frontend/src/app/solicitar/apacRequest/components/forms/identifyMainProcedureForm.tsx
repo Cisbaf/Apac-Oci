@@ -86,23 +86,23 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                     <MenuItem value={0} disabled>
                                         <em>Selecione um Procedimento</em>
                                     </MenuItem>
-                                    {procedures.map((procedure, i) => (
+                                    {procedures.map((procedure, i) => procedure.is_active && 
                                         <MenuItem
-                                        key={`${procedure.code}-${i}`}
-                                        value={procedure.id}
-                                        sx={{
-                                            display: "flex",
-                                            gap: 1,
-                                            flexDirection: "column",
-                                            alignItems: "flex-start"
-                                        }}
-                                        >
-                                        <Typography variant="subtitle1">{procedure.name}</Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            {procedure.code}
-                                        </Typography>
+                                            key={`${procedure.code}-${i}`}
+                                            value={procedure.id}
+                                            sx={{
+                                                display: "flex",
+                                                gap: 1,
+                                                flexDirection: "column",
+                                                alignItems: "flex-start"
+                                            }}
+                                            >
+                                            <Typography variant="subtitle1">{procedure.name}</Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                {procedure.code}
+                                            </Typography>
                                         </MenuItem>
-                                    ))}
+                                    )}
                                 </Select>
                             </FormControl>
                          )}/>
