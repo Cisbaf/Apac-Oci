@@ -32,6 +32,7 @@ class AvaliableFilter(admin.SimpleListFilter):
             )
         return queryset
 
+
 @admin.register(ApacBatchModel)
 class ApacBatchAdmin(admin.ModelAdmin):
     list_display = [
@@ -41,7 +42,6 @@ class ApacBatchAdmin(admin.ModelAdmin):
     list_filter = ['city', AvaliableFilter, 'created_in', 'expire_in', 'export_date']
     search_fields = ['batch_number', 'city__name']
     readonly_fields = ('apac_request', 'export_date')
-
 
     @admin.display(description="Data de uso da Faixa")
     def assignment(self, obj):
@@ -54,7 +54,13 @@ class ApacBatchAdmin(admin.ModelAdmin):
         return obj.apac_request is None and date.today() <= obj.expire_in
 
     def get_readonly_fields(self, request, obj=None):
-        print(request.user.is_superuser)
         if request.user.is_superuser:
             return []
         return [field.name for field in self.model._meta.fields]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        # Filtra pelo campo 'city' do usuário
+        return qs.filter(city=request.user.city)

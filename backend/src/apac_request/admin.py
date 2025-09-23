@@ -98,3 +98,10 @@ class ApacRequestAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return []
         return [field.name for field in self.model._meta.fields if field.name != 'updated_at']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        # Filtra pelo campo 'city' do usuário
+        return qs.filter(establishment__city=request.user.city)
