@@ -53,7 +53,7 @@ class ApacDataModel(models.Model):
     def __str__(self):
         return f"{self.pk}"
 
-    def to_entity(self):
+    def to_entity(self, **kwargs):
         try:
             records = self.records.all()
         except:
@@ -87,10 +87,10 @@ class ApacDataModel(models.Model):
                 cns=CnsField(value=self.authorizing_physician_cns),
                 cbo=self.authorizing_physician_cbo,
             ),
-            cid=self.cid.to_entity(),
+            cid=self.cid.to_entity(**kwargs),
             procedure_date=self.procedure_date,
             discharge_date=self.discharge_date,
-            main_procedure=self.main_procedure.to_entity(),
+            main_procedure=self.main_procedure.to_entity(**kwargs),
             sub_procedures=[record.to_entity() for record in records if record] if records else [],
             id=self.pk
         )

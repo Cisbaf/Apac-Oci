@@ -32,7 +32,7 @@ class ApacBatchsAvailable(APIView):
             city=request.user.city
         )
         
-        entities = [batch.to_entity() for batch in list(batchs)]
+        entities = [batch.to_entity(exclude_cid_procedures=True, exclude_sub_procedures_for_main=True) for batch in list(batchs)]
 
         return Response([entity.model_dump() for entity in entities])
     

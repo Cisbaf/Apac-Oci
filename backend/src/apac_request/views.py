@@ -56,7 +56,7 @@ class ApacRequestListCreate(APIView):
                 "message": "Nenhum registro encontrado!",
             }, status=400)
         
-        entities_apac = [apac.to_entity() for apac in models_apac]
+        entities_apac = [apac.to_entity(exclude_cid_procedures=True, exclude_sub_procedures_for_main=True) for apac in models_apac]
         return Response({
             "message": f"{lenght} solicitações encontradas!",
             "data":  [entity.model_dump() for entity in entities_apac]
