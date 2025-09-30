@@ -7,14 +7,6 @@ class ProcedureModel(models.Model):
     code = models.CharField(verbose_name="Código do Procedimento", max_length=20, db_column='cod_sig_tap')
     name = models.CharField(verbose_name="Nome do Procedimento", max_length=255)
     description = models.CharField(verbose_name="Descrição do Procedimento", max_length=255, null=True, blank=True)
-    parent = models.ForeignKey(
-        verbose_name="Procedimento Pai",
-        to='self',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='children'
-    )
     parents = models.ManyToManyField(
         "self",
         symmetrical=False,
@@ -32,7 +24,7 @@ class ProcedureModel(models.Model):
         verbose_name_plural = "Procedimentos"
     
     def to_entity(self):
-        childrens = ProcedureModel.objects.filter(parent=self)
+        childrens = ProcedureModel.objects.filter(parents=self)
         return Procedure (
             name=self.name,
             code=self.code,
