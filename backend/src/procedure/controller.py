@@ -13,15 +13,20 @@ class ProcedureController(ProcedureRepository):
         raise NotFoundException()
     
     def save(self, procedure):
-        return ProcedureModel.objects.create(
+        registered = ProcedureModel.objects.create(
             name=procedure.name,
             code=procedure.code,
             description=procedure.description,
             is_active=procedure.is_active,
-            parent=ProcedureModel.objects.get(pk=procedure.parent.id) if procedure.parent else None,
             created_at=procedure.created_at,
             updated_at=procedure.updated_at
-        ).to_entity()
+        )
+        # registrando 
+        if procedure.parent:
+            registered.parents.add(ProcedureModel.objects.get(pk=procedure.parent.id))
+            registered.save()
+
+        return registered.to_entity()
     
 
 class CidController(CidRepository):

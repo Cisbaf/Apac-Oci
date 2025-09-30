@@ -114,10 +114,11 @@ class BaseApacTest(APITestCase):
         )
         sub_procedure = ProcedureModel.objects.create(
             code=random_str(), 
-            name="Sub Procedure", 
-            parent=procedure, 
+            name="Sub Procedure",
             mandatory=True
         )
+        sub_procedure.parents.add(procedure)
+        sub_procedure.save()
         return procedure, sub_procedure
     
     def build_apac_data(self):
