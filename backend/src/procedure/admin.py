@@ -40,7 +40,7 @@ class CidFilter(admin.SimpleListFilter):
 
 @admin.register(ProcedureModel)
 class ProcedureAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name', 'get_parents', 'mandatory', 'is_active']
+    list_display = ['code', 'name', 'description', 'get_parents', 'mandatory', 'is_active']
     list_filter = [ParentFilter]
     list_editable = ['mandatory']
     search_fields = ['code', 'name']
