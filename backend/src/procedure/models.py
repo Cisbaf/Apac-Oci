@@ -15,6 +15,12 @@ class ProcedureModel(models.Model):
         blank=True,
         related_name='children'
     )
+    parents = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="children_recovery",
+        blank=True
+    )
     mandatory = models.BooleanField(verbose_name="Obrigatório", default=False)
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)
     created_at = models.DateTimeField(auto_now_add=True)

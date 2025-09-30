@@ -21,8 +21,8 @@ class ProcedureSerializer(serializers.ModelSerializer):
         return [CidSerializer(cid).data for cid in CidModel.objects.filter(procedure=obj).order_by("name")]
 
     def get_children(self, obj):
-        if obj.parent == None:
-            children = ProcedureModel.objects.filter(parent=obj).order_by("-mandatory")
+        if not obj.parents.all():
+            children = ProcedureModel.objects.filter(parents=obj).order_by("-mandatory")
             sub_produces = [ProcedureSerializer(child, context=self.context).data for child in children]
             return sub_produces
         return []
