@@ -23,14 +23,18 @@ class ProcedureModel(models.Model):
         verbose_name = "Procedimento"
         verbose_name_plural = "Procedimentos"
     
-    def to_entity(self):
-        childrens = ProcedureModel.objects.filter(parents=self)
+    def to_entity(self, **kwargs):
+        exclude = kwargs.get("exclude_sub_procedures_for_main", None)
+        sub_procedures = []
+        if not exclude:
+            sub_procedures = [children.to_entity(**kwargs) for children in ProcedureModel.objects.filter(parents=self)]
+
         return Procedure (
             name=self.name,
             code=self.code,
             description=self.description,
             is_active=self.is_active,
-            sub_procedures=[children.to_entity() for children in childrens],
+            sub_procedures=sub_procedures,
             created_at=self.created_at,
             updated_at=self.updated_at,
             id=self.pk
@@ -50,11 +54,13 @@ class CidModel(models.Model):
     )
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)
 
-    def to_entity(self):
+    def to_entity(self, **kwargs):
+        exclude = kwargs.get("exclude_cid_procedures", None)
+ 
         return Cid(
             code=self.code,
             name=self.name,
-            procedure=self.procedure.to_entity(),
+            procedure=None if exclude else self.procedure.to_entity(),
             id=self.pk
         )
 

@@ -42,7 +42,7 @@ class ApacBatchModel(models.Model):
         verbose_name = "Lote Apac"
         verbose_name_plural = "Lotes Apac"
 
-    def to_entity(self):
+    def to_entity(self, **kwargs):
         return ApacBatch(
             batch_number=self.batch_number,
             city=self.city.to_entity(),
@@ -50,7 +50,7 @@ class ApacBatchModel(models.Model):
                 expire_in=self.expire_in,
                 created_in=self.created_in
             ),
-            apac_request=self.apac_request.to_entity() if self.apac_request else None,
+            apac_request=self.apac_request.to_entity(**kwargs) if self.apac_request else None,
             export_date=self.export_date,
             id=self.pk
         )

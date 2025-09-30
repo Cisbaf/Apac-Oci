@@ -60,7 +60,7 @@ class ApacRequestModel(models.Model):
         verbose_name = "Solicitação Apac"
         verbose_name_plural = "Solicitações Apac"
 
-    def to_entity(self):
+    def to_entity(self, **kwargs):
         try:
             apac_data = self.apac_data
         except:
@@ -69,7 +69,7 @@ class ApacRequestModel(models.Model):
         return ApacRequest(
             establishment=self.establishment.to_entity(),
             requester=self.requester.to_entity() if self.requester else None,
-            apac_data=apac_data.to_entity() if apac_data else None,
+            apac_data=apac_data.to_entity(**kwargs) if apac_data else None,
             request_date=self.request_date,
             status=ApacStatus.get(self.status),
             updated_at=self.updated_at,
