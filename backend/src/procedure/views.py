@@ -6,6 +6,6 @@ from .serializers import ProcedureSerializer
 
 class ProcedureApiView(APIView):
     def get(self, request):
-        procedures = ProcedureModel.objects.filter(parent=None)
+        procedures = ProcedureModel.objects.filter(parents=None)
         serializer = ProcedureSerializer(procedures, many=True)
         return Response(serializer.data)
