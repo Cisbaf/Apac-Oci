@@ -105,7 +105,7 @@ export default function Sidebar() {
           <Box>
             <Image src={logo.src} width={200} height={50} alt="Logo" />
             <Typography variant="h6" noWrap>
-              Plataforma Cisbaf
+              Plataforma Cisbaf.
             </Typography>
             <Typography variant="body2" noWrap>
               Sistema de APAC OCI
