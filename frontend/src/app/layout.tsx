@@ -1,7 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
 import "./layout.css"
-import LayoutComponent from "@/shared/components/layout";
+import LayoutSystem from "@/shared/components/Layout";
+import { GlobalComponentsProvider } from "@/shared/context/GlobalUIContext";
 
 export const metadata: Metadata = {
   title: "Apac OCI",
@@ -18,9 +19,9 @@ export default function RootLayout({
   return (
         <html lang="pt-br">
           <body>
-            <LayoutComponent>
-              {children}
-            </LayoutComponent>
+            <GlobalComponentsProvider>
+              <LayoutSystem>{children}</LayoutSystem>
+            </GlobalComponentsProvider>
           </body>
         </html>
     

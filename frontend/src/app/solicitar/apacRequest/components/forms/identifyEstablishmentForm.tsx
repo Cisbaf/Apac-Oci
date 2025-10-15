@@ -70,9 +70,14 @@ const IdentifyEstablishmentForm = React.forwardRef<FormRepository, FormProps>((p
                                     <em>Selecione um Estabelecimento</em>
                                 </MenuItem>
                                 {establishments.map(establishment=>(
-                                <MenuItem 
+                                <MenuItem
                                     key={establishment.cnes}
                                     value={establishment.id}
+                                    sx={{
+                                    whiteSpace: 'normal',     // 🔹 Permite quebra de linha
+                                    wordBreak: 'break-word',  // 🔹 Quebra palavras longas
+                                    lineHeight: 1.3,          // 🔹 Opcional: melhora espaçamento entre linhas
+                                    }}
                                     >
                                     {establishment.name}
                                 </MenuItem>

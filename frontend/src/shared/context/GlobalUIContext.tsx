@@ -4,11 +4,13 @@
 import { createContext, useContext, useState } from 'react'
 import { AlertProps, Backdrop, CircularProgress, Typography } from '@mui/material'
 import GlobalAlert from '@/shared/components/GlobalAlert'
+import { useGlobalLayout } from '../hooks/useGlobalLayout';
 
 interface GlobalComponentsContextType {
   showAlert: (props: AlertProps & { message: string }) => void;
   showBackdrop: (show: boolean, message?: string) => void;
   showResponseApi: (response: Response) => Promise<any>;
+  hookLayout: ReturnType<typeof useGlobalLayout>;
 }
 
 const GlobalComponentsContext = createContext<GlobalComponentsContextType | null>(null)
@@ -17,6 +19,7 @@ export function GlobalComponentsProvider({ children }: { children: React.ReactNo
   const [backdropOpen, setBackdropOpen] = useState(false)
   const [alertProps, setAlertProps] = useState<AlertProps & { message: string } | null>(null)
   const [message, setMessage] = useState("");
+  const hookLayout = useGlobalLayout()
 
   const showAlert = (props: AlertProps & { message: string }) => {
     setAlertProps(props)
@@ -42,7 +45,7 @@ export function GlobalComponentsProvider({ children }: { children: React.ReactNo
   }
 
   return (
-    <GlobalComponentsContext.Provider value={{ showAlert, showBackdrop, showResponseApi }}>
+    <GlobalComponentsContext.Provider value={{ showAlert, showBackdrop, showResponseApi, hookLayout }}>
       {children}
       
       {/* Backdrop Global */}

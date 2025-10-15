@@ -14,11 +14,6 @@ export default function ApacAuthorizePage() {
         <RouteGuard
             allowedRoles={[UserRole.AUTHORIZER, UserRole.ADMIN]}>
             <Box sx={{ display: "flex", flexDirection: "column"}}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 4}}>
-                    <HowToReg sx={{fontSize: 32}}/>
-                    <Typography variant='h6'>Autorizar Solicitações APAC OCI</Typography>
-                </Box>
-                <Divider sx={{mt: 1, mb: 2}}/>
                 <ApacViewProvider>
                     <AuthorizationProvider>
                         <ApacFilter/>

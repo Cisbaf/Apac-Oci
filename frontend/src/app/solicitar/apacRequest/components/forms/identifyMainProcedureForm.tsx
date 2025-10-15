@@ -94,10 +94,13 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                                 display: "flex",
                                                 gap: 1,
                                                 flexDirection: "column",
-                                                alignItems: "flex-start"
+                                                alignItems: "flex-start",
+                                                whiteSpace: 'normal',     // 🔹 Permite quebra de linha
+                                                wordBreak: 'break-word',  // 🔹 Quebra palavras longas
+                                                lineHeight: 1.3,          // 🔹 
                                             }}
                                             >
-                                            <Typography variant="subtitle1">{procedure.name}</Typography>
+                                            <Typography sx={{textWrap: "wrap"}} variant="subtitle1">{procedure.name}</Typography>
                                             <Typography variant="caption" color="text.secondary">
                                                 {procedure.code}
                                             </Typography>
