@@ -13,13 +13,9 @@ export default function ExtracaoPage() {
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 2
+                gap: 2,
+                pt: 1
             }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 4}}>
-                    <PlaylistAddCheck sx={{fontSize: 32}}/>
-                    <Typography variant='h6'>Extrair APAC OCI</Typography>
-                </Box>
-                <Divider sx={{mt: 1, mb: 2}}/>
                 <FilterApacForExtract/>
                 <BatchTable/>
             </Box>

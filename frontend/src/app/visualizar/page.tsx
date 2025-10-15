@@ -9,12 +9,7 @@ import { PlaylistAddCheck } from "@mui/icons-material";
 
 export default function ApacViewPage() {
     return(
-         <Box sx={{ display: "flex", flexDirection: "column"}}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 4}}>
-                <PlaylistAddCheck sx={{fontSize: 32}}/>
-                <Typography variant='h6'>Visualizar Solicitações APAC OCI</Typography>
-            </Box>
-            <Divider sx={{mt: 1, mb: 2}}/>
+         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", overflow: "auto"}}>
             <ApacViewProvider>
                 <AuthorizationProvider>
                     <ApacFilter/>

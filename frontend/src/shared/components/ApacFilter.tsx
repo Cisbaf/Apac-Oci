@@ -40,6 +40,8 @@ export default function ApacFilter() {
     <Box
       sx={{
         display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
         gap: 2,
         alignItems: "center",
         padding: 2,

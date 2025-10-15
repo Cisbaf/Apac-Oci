@@ -40,26 +40,10 @@ import logo from '../../../public/logo-cisbaf.png';
 import { useRouter } from 'next/navigation';
 import { UserRole } from '../schemas/user';
 import { useContextUser } from '../context/UserContext';
-
-interface MenuItemType {
-  label: string;
-  icon: React.ReactNode;
-  route: string;
-  viwer?: UserRole | UserRole[]; // <-- pode ser um ou vários
-  subItems?: string[];
-}
+import { MenuItems } from './menu';
 
 const drawerWidth = 300;
 const collapsedWidth = 72;
-
-const menuItems: MenuItemType[] = [
-  { label: 'Home', icon: <Home />, route: '/' },
-  { label: 'Solicitar Apac Oci', icon: <AppRegistration />, route: '/solicitar', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
-  { label: 'Autorizar APAC OCI', icon: <HowToReg />, route: '/responder', viwer: [UserRole.AUTHORIZER, UserRole.ADMIN] },
-  { label: 'Listagem de Solicitações', icon: <PlaylistAddCheck />, route: '/visualizar' },
-  { label: 'Extração APAC-OCI de Solicitações', icon: <FileDownload />, route: '/extracao', viwer: [UserRole.REQUESTER, UserRole.ADMIN] },
-  // { label: 'Relatórios', icon: <Assignment />, route: '/', viwer: UserRole.ADMIN},
-];
 
 export default function Sidebar() {
   const [openItems, setOpenItems] = React.useState<{ [key: string]: boolean }>({});
@@ -165,7 +149,7 @@ export default function Sidebar() {
 
       {/* Menu */}
       <List>
-        {menuItems.map((item) => {
+        {MenuItems.map((item) => {
           const isExpanded = openItems[item.label];
           const hasSubItems = item.subItems && item.subItems.length > 0;
           if (item.viwer) {

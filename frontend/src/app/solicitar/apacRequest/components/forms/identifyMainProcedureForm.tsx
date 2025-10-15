@@ -88,19 +88,23 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                     </MenuItem>
                                     {procedures.map((procedure, i) => (
                                         <MenuItem
-                                        key={`${procedure.code}-${i}`}
-                                        value={procedure.id}
-                                        sx={{
-                                            display: "flex",
-                                            gap: 1,
-                                            flexDirection: "column",
-                                            alignItems: "flex-start"
-                                        }}
-                                        >
-                                        <Typography variant="subtitle1">{procedure.name}</Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            {procedure.code}
-                                        </Typography>
+
+                                            key={`${procedure.code}-${i}`}
+                                            value={procedure.id}
+                                            sx={{
+                                                display: "flex",
+                                                gap: 1,
+                                                flexDirection: "column",
+                                                alignItems: "flex-start",
+                                                whiteSpace: 'normal',     // 🔹 Permite quebra de linha
+                                                wordBreak: 'break-word',  // 🔹 Quebra palavras longas
+                                                lineHeight: 1.3,          // 🔹 
+                                            }}
+                                            >
+                                            <Typography sx={{textWrap: "wrap"}} variant="subtitle1">{procedure.name}</Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                {procedure.code}
+                                            </Typography>
                                         </MenuItem>
                                     ))}
                                 </Select>

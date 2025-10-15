@@ -1,6 +1,5 @@
 import React from "react";
 import { User } from "../schemas";
-import SkeletonLayout from "../components/LayoutSkeleton";
 import { useRouter } from "next/navigation";
 
 const UserContext = React.createContext<User | null | undefined>(undefined);
@@ -23,7 +22,7 @@ export function UserContextProvider({ children }: { children: React.ReactNode })
     }, []);
 
     if (user === null) {
-        return <SkeletonLayout/>;
+        return <></>;
     }
 
     return (

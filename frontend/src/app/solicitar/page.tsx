@@ -32,12 +32,7 @@ export default function PageApacRequest() {
     }, [])
 
     return(
-       <Box sx={{ display: "flex", flexDirection: "column"}}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 4}}>
-                <AppRegistrationIcon sx={{fontSize: 32}}/>
-                <Typography variant='h6'>Solicitar Apac Oci</Typography>
-            </Box>
-            <Divider sx={{mt: 1, mb: 2}}/>
+       <Box sx={{ width: "100%"}}>
             {data? 
             <ApacRequestFillingData
                 dataRequest={data}>
