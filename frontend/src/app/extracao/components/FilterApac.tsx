@@ -43,7 +43,11 @@ export default function FilterApacForExtract() {
                 <SelectEstablishment/>
             </Grid>
             <Grid size={{lg: 3}}>
-                <MonthYearInput/>
+                <MonthYearInput
+                    minDate="2024-01"
+                    maxDate="2025-12"
+                    label="Período de Produção"
+                    />
             </Grid>
             <Grid size={{lg: 3}}>
                 <Button

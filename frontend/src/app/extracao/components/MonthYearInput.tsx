@@ -1,37 +1,66 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { TextField } from "@mui/material";
 import { useExportContext } from "@/app/extracao/contexts/ExportContext";
 
-const MonthYearInput: React.FC = () => {
-    const { hookExtractForm } = useExportContext();
-    
-    const date = new Date();
+interface MonthYearInputProps {
+  /** Limite mínimo do campo (formato YYYY-MM) */
+  minDate?: string;
+  /** Limite máximo do campo (formato YYYY-MM) */
+  maxDate?: string;
+  /** Label customizado */
+  label?: string;
+}
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const [year, month] = e.target.value.split("-"); // ex: "2025-08" -> ["2025", "08"]
-        const date = new Date(Number(year), Number(month) - 1, 1);
-        console.log(date);
-        hookExtractForm.setProduction(date);
-    };
+const MonthYearInput: React.FC<MonthYearInputProps> = ({
+  minDate,
+  maxDate,
+  label = "Competência",
+}) => {
+  const { hookExtractForm } = useExportContext();
 
-    const fomartInput = (date: Date) => {
-        if (!date) return '';
-        return `${date.getFullYear()}-0${date.getMonth() + 1}`;
+  // Função auxiliar: converte Date -> "YYYY-MM"
+  const formatMonthInput = (date?: Date | null): string => {
+    if (!date) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // garante zero à esquerda
+    return `${year}-${month}`;
+  };
+
+  // Função auxiliar: converte "YYYY-MM" -> Date
+  const parseMonthInput = (value: string): Date | null => {
+    const [year, month] = value.split("-");
+    if (!year || !month) return null;
+    return new Date(Number(year), Number(month) - 1, 1);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = parseMonthInput(e.target.value);
+    if (date) {
+      hookExtractForm.setProduction(date);
     }
+  };
 
-    const valueDate = fomartInput(hookExtractForm.productionValue);
+  // Define limites padrão se não forem passados por props
+  const now = useMemo(() => new Date(), []);
+  const defaultMin = `${now.getFullYear()}-01`;
+  const defaultMax = formatMonthInput(now);
 
-    return (
-        <TextField
-            sx={{display: "flex"}}
-            label="Competência"
-            type="month"
-            value={valueDate}
-            onChange={handleChange}
-            InputLabelProps={{ shrink: true }} // mantém o label acima
-            inputProps={{ min: `${date.getFullYear()}-01`, max: `${date.getFullYear()}-0${date.getMonth() + 1}` }} // limites opcionais
-        />
-    );
+  const value = formatMonthInput(hookExtractForm.productionValue);
+
+  return (
+    <TextField
+      label={label}
+      type="month"
+      value={value}
+      onChange={handleChange}
+      sx={{ display: "flex" }}
+      InputLabelProps={{ shrink: true }}
+      inputProps={{
+        min: minDate || defaultMin,
+        max: maxDate || defaultMax,
+      }}
+    />
+  );
 };
 
 export default MonthYearInput;
