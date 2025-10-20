@@ -64,10 +64,14 @@ export default function BatchTable() {
           display: "flex",
           justifyContent: "end"
       }}>
-          <Button 
+        {hookExtractForm.batchsSelected.length > 0 &&
+        <Button 
             sx={{margin: 2}}
             variant="contained"
-            onClick={extract}>Extrair</Button>
+            onClick={extract}>{`
+              Extrair ${hookExtractForm.batchsSelected.length } registros!
+            `}</Button>}
+    
       </Box>
     </TableContainer>
   );
