@@ -188,6 +188,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # collectstatic vai colocar
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+# Confia no proxy HTTPS do Nginx
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Domínios autorizados para CSRF
+CSRF_TRUSTED_ORIGINS = ['https://apac.cisbaf.org.br']
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING = {
