@@ -9,11 +9,12 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Copia e instala dependências Python primeiro (para cache)
+COPY core /app/core
+
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copia código da aplicação
-COPY core /app/core
 COPY src /app/src
 
 # Copia entrypoint
