@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from apac_request.views import apac_dashboard
 
 urlpatterns = [
+    path('admin/dashboard', apac_dashboard, name="apac-dashboard"),
     path('admin/', admin.site.urls),
     path('auth/', include('authjwt.urls')),
     path('establishment/', include('establishment.urls')),
