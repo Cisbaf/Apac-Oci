@@ -20,7 +20,7 @@ from procedure_record.controller import ProcedureRecordController
 from apac_core.application.use_cases.apac_request_cases.authorize_apac_request_case import ApprovedApacRequestUseCase, RejectApacRequestUseCase, ApprovedApacRequestDTO, RejectApacRequestDTO
 from .models import ApacRequestModel
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render
 from collections import defaultdict
 from apac_core.application.ultils.formart_errors import format_validation_errors
@@ -120,37 +120,54 @@ class ApacRequestRejectAPIView(APIView):
 
 @staff_member_required
 def apac_dashboard(request):
+    base_query = ApacRequestModel.objects.all()
+    if not request.user.is_superuser:
+        base_query = base_query.filter(establishment__city=request.user.city)
+
     grouped_data = (
-        ApacRequestModel.objects
-        .values("establishment__city__name", "establishment__name")
+        base_query
+        .values("establishment__city__name", "establishment__name", "status")
         .annotate(total=Count("id"))
-        .order_by("establishment__city__name", "establishment__name")
+        .order_by("establishment__city__name", "establishment__name", "status")
     )
 
-    data_map = defaultdict(dict)
-    all_estabs = set()
+    # Estruturar: {estab_label: {status: count}}
+    data_map = defaultdict(lambda: defaultdict(int))
+    estab_labels = []
+
     for row in grouped_data:
         city = row["establishment__city__name"]
         estab = row["establishment__name"]
+        status = row["status"] or "pending"
         count = row["total"]
-        data_map[city][estab] = count
-        all_estabs.add(estab)
+        label = f"{estab} ({city})"
+        data_map[label][status] = count
+        if label not in estab_labels:
+            estab_labels.append(label)
 
-    all_estabs = sorted(all_estabs)
-    labels = sorted(data_map.keys())
-
+    statuses = ["rejected", "pending", "approved"]  # ordem invertida
+    status_labels = {
+        "approved": "Aprovadas",
+        "pending": "Pendentes",
+        "rejected": "Rejeitadas"
+    }
+    status_colors = {
+        "approved": "#4CAF50",   # verde
+        "pending": "#FFC107",    # amarelo
+        "rejected": "#F44336"    # vermelho
+    }
     datasets = []
-    for idx, estab in enumerate(all_estabs):
-        data = [data_map[city].get(estab, 0) for city in labels]
-        color = f"hsl({(idx * 40) % 360}, 70%, 60%)"
+    for status in statuses:
+        data = [data_map[label].get(status, 0) for label in estab_labels]
         datasets.append({
-            "label": estab,
+            "label": status_labels[status],
             "data": data,
-            "backgroundColor": color
+            "backgroundColor": status_colors[status],
+            "borderWidth": 1,
         })
 
     context = {
-        "labels": labels,
-        "datasets": datasets
+        "labels": estab_labels,
+        "datasets": datasets,
     }
     return render(request, "apac_dashboard.html", context)

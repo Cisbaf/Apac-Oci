@@ -1,6 +1,5 @@
 <canvas id="apacChart" height="80"></canvas>
 
-<!-- Chart.js + Plugin de datalabels (opcional) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
@@ -29,40 +28,35 @@
       plugins: {
         datalabels: {
           color: '#fff',
-          anchor: 'end',
-          align: 'start',
-          formatter: function(value, context) {
-            const label = context.dataset.label;
-            return value > 0 ? `${label}\n${value}` : '';
-          }
+          anchor: 'center',
+          align: 'center',
+          formatter: (value) => value > 0 ? value : ''
         },
         legend: {
           position: 'top',
         },
         title: {
           display: true,
-          text: 'Solicitações por Município e Estabelecimento'
+          text: 'Solicitações por Município (Aprovadas, Pendentes e Rejeitadas)'
         },
         tooltip: {
           mode: 'index',
           intersect: false,
           callbacks: {
-            label: function(context) {
-              return `${context.dataset.label}: ${context.raw} solicitações`;
-            }
+            label: (context) => `${context.dataset.label}: ${context.raw}`
           }
         }
       },
       scales: {
         x: {
-          stacked: false,
+          stacked: true,
           title: {
             display: true,
             text: 'Municípios'
           }
         },
         y: {
-          stacked: false,
+          stacked: true,
           beginAtZero: true,
           title: {
             display: true,

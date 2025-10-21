@@ -1,0 +1,122 @@
+{% extends "admin/login.html" %}  {# Usa o template padrão do adminlte3 como base #}
+{% load i18n static %}
+
+
+{% block title %}Painel de administração APAC OCI{% endblock %}
+
+
+{% block content %}
+
+    {% if form.errors and not form.non_field_errors %}
+        <p class="alert alert-danger">
+            {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}
+                {% trans "Please correct the errors below." %}{% endif %}
+        </p>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <p class="alert alert-danger">
+                {{ error }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+
+    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+        <div class="form-group has-feedback">
+            <input type="text" id="id_username" name="username" class="form-control" placeholder="CPF">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            {{ form.username.errors }}
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password" id="id_password" name="password" class="form-control"
+                   placeholder="Senha">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            {{ form.password.errors }}
+            <input type="hidden" name="next" value="{{ next }}"/>
+        </div>
+        {% url 'admin_password_reset' as password_reset_url %}
+        {% if password_reset_url %}
+            <div class="password-reset-link">
+                <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+            </div>
+        {% endif %}
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-xs-4">
+                <button type="submit"
+                        class="btn btn-primary btn-block btn-flat">{% trans 'Acessar' %}</button>
+            </div>
+            <!-- /.col -->
+        </div>
+    </form>
+
+
+    {% if user.is_authenticated %}
+        <p class="alert alert-danger">
+            {% blocktrans trimmed %}
+                You are authenticated as {{ username }}, but are not authorized to
+                access this page. Would you like to login to a different account?
+            {% endblocktrans %}
+        </p>
+    {% endif %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Alterar o texto da mensagem
+    const msg = document.querySelector(".login-box-msg");
+    if (msg) {
+        msg.textContent = "Entre para iniciar a sessão";
+    }
+
+    // Alterar o logo
+    const logo = document.querySelector(".login-logo a");
+    if (logo) {
+        logo.textContent = "CISBAF - APAC OCI";
+    }
+    
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g,''); // Remove caracteres não numéricos
+        if(cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+        let soma = 0, resto;
+
+        for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+        soma = 0;
+        for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+        return true;
+    }
+
+    function formatarCPF(cpf) {
+        // Remove qualquer caractere não numérico
+        cpf = cpf.replace(/[^\d]+/g,'');
+        // Formata no padrão 000.000.000-00
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+
+    const loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", function(event) {
+        const cpfInput = document.getElementById("id_username");
+        const cpfValue = cpfInput.value;
+
+        if (!validarCPF(cpfValue)) {
+            event.preventDefault(); // impede envio do form
+            alert("CPF inválido. Verifique e tente novamente.");
+        } else {
+            // CPF válido -> alterar valor do username
+            cpfInput.value = formatarCPF(cpfValue);
+
+        }
+    });
+});
+</script>
+
+{% endblock %}
