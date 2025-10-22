@@ -45,7 +45,7 @@ class ProcedureModel(models.Model):
 
 class CidModel(models.Model):
     code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_sig_tap')
-    name = models.CharField(verbose_name="Nome CID", max_length=100)
+    name = models.CharField(verbose_name="Nome CID", max_length=255)
     procedure = models.ForeignKey(
         verbose_name="Procedimento",
         to=ProcedureModel,
