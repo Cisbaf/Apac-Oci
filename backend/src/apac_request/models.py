@@ -3,6 +3,7 @@ from customuser.models import CustomUser
 from establishment.models import EstablishmentModel
 from apac_core.domain.entities.apac_request import ApacRequest
 from apac_core.domain.entities.apac_status import ApacStatus
+from django.core.exceptions import ValidationError
 
 class ApacRequestModel(models.Model):
 
@@ -22,7 +23,7 @@ class ApacRequestModel(models.Model):
         related_name='request',
         verbose_name="Solicitante"
     )
-    request_date = models.DateField(verbose_name="Data da solicitação")
+    request_date = models.DateField(verbose_name="Competência")
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -59,6 +60,12 @@ class ApacRequestModel(models.Model):
         db_table = 'solicitacoes_apac'
         verbose_name = "Solicitação Apac"
         verbose_name_plural = "Solicitações Apac"
+
+    def clean(self):
+        if self.request_date and self.request_date.day != 1:
+            raise ValidationError({
+                "request_date": "A data de competência deve ser o dia 1 do mês."
+            })
 
     def to_entity(self, **kwargs):
         try:

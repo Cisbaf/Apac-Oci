@@ -6,6 +6,7 @@ from apac_data.models import ApacDataModel
 from apac_batch.models import ApacBatchModel
 from .models import ApacRequestModel
 from establishment.models import EstablishmentModel
+from django.utils.formats import date_format
 
 
 # Personaliza o cabeçalho e títulos do painel administrativo do Django
@@ -130,7 +131,7 @@ class FinishedFilter(admin.SimpleListFilter):
     Filtro lateral personalizado para exibir apenas registros
     finalizados (status != "pending") ou não finalizados.
     """
-    title = 'Finalizado'
+    title = 'Processo Finalizado'
     parameter_name = 'finished'
 
     def lookups(self, request, model_admin):
@@ -162,16 +163,34 @@ class ApacRequestAdmin(admin.ModelAdmin):
     inlines = [ApacBatchInline, ApacDataInline]
 
     list_display = [
-        '__str__', 'requester', 'establishment', 
-        'request_date', 'status', 'apac_batch', 
-        'authorizer', 'review_date', 'finished'
+        '__str__', 'competencia_format', 'requester', 'establishment', 'paciente_name',
+        'procedimento_name', 'data_preenchimento', 'review_date', 'status', 'finished'
     ]
 
     list_filter = [
         'status',
         FinishedFilter,
-        'request_date', 
     ]
+
+    @admin.display(description="Procedimento")
+    def procedimento_name(self, obj):
+        return obj.apac_data.main_procedure.name
+    
+    @admin.display(description="Paciente")
+    def paciente_name(self, obj):
+        return obj.apac_data.patient_name
+
+    @admin.display(description="Data Preenchimento")
+    def data_preenchimento(self, obj):
+        return obj.updated_at
+
+    @admin.display(description="Data Preenchimento")
+    def data_preenchimento(self, obj):
+        return obj.updated_at
+    
+    @admin.display(description="Competencia")
+    def competencia_format(self, obj):
+        return date_format(obj.request_date, "F/Y")  # Ex.: Outubro/2025
 
     @admin.display(description="Solicitante")
     def requester_user(self, obj):
@@ -183,18 +202,29 @@ class ApacRequestAdmin(admin.ModelAdmin):
     def city(self, obj):
         return obj.establishment.city.name
 
-    @admin.display(description="Finalizado?", boolean=True)
+    @admin.display(description="Autorizado? (Aprovado/Rejeitado)", boolean=True)
     def finished(self, obj):
         return obj.status != "pending"
 
     def get_readonly_fields(self, request, obj=None):
-        if request.user.is_superuser:
-            return []
-        return [
-            field.name for field in self.model._meta.fields
-            if field.name != 'updated_at'
+        """
+        Define campos como somente leitura para usuários comuns,
+        mas permite edição total para superusuários.
+        """
+        editable_fields = [
+            'request_date'
         ]
 
+        if request.user.is_superuser:
+            return []  # superusuário pode editar tudo
+
+        base_fields = [
+            field.name for field in self.model._meta.fields
+            if not field.name in editable_fields
+        ]
+
+        return base_fields
+    
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

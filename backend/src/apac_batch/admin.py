@@ -13,7 +13,7 @@ class AvailableFilter(admin.SimpleListFilter):
       - Ainda não foi associado a um pedido (`apac_request__isnull=True`)
       - E não está vencido (`expire_in` é nulo ou maior/igual à data atual)
     """
-    title = 'Disponível'
+    title = 'Disponível para uso?'
     parameter_name = 'available'
 
     def lookups(self, request, model_admin):
@@ -57,18 +57,17 @@ class ApacBatchAdmin(admin.ModelAdmin):
     """
     # Colunas exibidas na lista principal do admin
     list_display = [
-        'batch_number', 'created_in', 'expire_in', 'city',
-        'apac_request', 'assignment', 'export_date', 'available'
+        'batch_number', 'apac_request',  'created_in', 'expire_in', 'assignment', 'available'
     ]
 
     # Filtros laterais disponíveis no admin
-    list_filter = ['city', AvailableFilter, 'created_in', 'expire_in', 'export_date']
+    list_filter = [AvailableFilter]
 
     # Campos pesquisáveis (busca superior)
-    search_fields = ['batch_number', 'city__name']
+    search_fields = ['created_in', 'batch_number']
 
     # Campos somente leitura (não editáveis)
-    readonly_fields = ('apac_request', 'export_date')
+    readonly_fields = ('export_date',)
 
     @admin.display(description="Data de uso da Faixa")
     def assignment(self, obj):
