@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Q
 from datetime import date
 from .models import ApacBatchModel
+from city.models import CityModel
 
 
 class AvailableFilter(admin.SimpleListFilter):
@@ -49,6 +50,22 @@ class AvailableFilter(admin.SimpleListFilter):
         return queryset
 
 
+class BatchForCityFilter(admin.SimpleListFilter):
+    title = "Cidade"
+    parameter_name = 'city'
+
+    def lookups(self, request, model_admin):
+        if request.user.is_superuser:
+            qs = CityModel.objects.all()
+            return [(e.id, e.name) for e in qs]
+        return []
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(city__id=self.value())
+        return queryset
+
+
 @admin.register(ApacBatchModel)
 class ApacBatchAdmin(admin.ModelAdmin):
     """
@@ -61,7 +78,7 @@ class ApacBatchAdmin(admin.ModelAdmin):
     ]
 
     # Filtros laterais disponíveis no admin
-    list_filter = [AvailableFilter]
+    list_filter = [AvailableFilter, BatchForCityFilter]
 
     # Campos pesquisáveis (busca superior)
     search_fields = [
