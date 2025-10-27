@@ -167,6 +167,19 @@ class ApacRequestAdmin(admin.ModelAdmin):
         'procedimento_name', 'data_preenchimento', 'review_date', 'status', 'finished'
     ]
 
+    search_fields = [
+    'apac_data__patient_name',
+    'apac_data__patient_cpf',
+    'apac_data__patient_address_street_name',
+    'apac_data__supervising_physician_name',
+    'apac_data__authorizing_physician_name',
+    'apac_data__main_procedure__name',
+    'apac_data__procedure_date',
+    'apac_data__discharge_date',
+    'request_date',
+    'updated_at'
+    ]
+
     list_filter = [
         'status',
         FinishedFilter,

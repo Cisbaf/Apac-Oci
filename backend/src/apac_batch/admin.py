@@ -57,18 +57,35 @@ class ApacBatchAdmin(admin.ModelAdmin):
     """
     # Colunas exibidas na lista principal do admin
     list_display = [
-        'batch_number', 'apac_request',  'created_in', 'expire_in', 'assignment', 'available'
+        'batch_number', 'nome_paciente', 'apac_request',  'created_in', 'expire_in', 'assignment', 'available'
     ]
 
     # Filtros laterais disponíveis no admin
     list_filter = [AvailableFilter]
 
     # Campos pesquisáveis (busca superior)
-    search_fields = ['created_in', 'batch_number']
+    search_fields = [
+        'created_in',
+    'batch_number',
+    'apac_request__apac_data__patient_name',
+    'apac_request__apac_data__patient_cpf',
+    'apac_request__apac_data__patient_address_street_name',
+    'apac_request__apac_data__supervising_physician_name',
+    'apac_request__apac_data__authorizing_physician_name',
+    'apac_request__apac_data__main_procedure__name',
+    'apac_request__apac_data__procedure_date',
+    'apac_request__apac_data__discharge_date',
+    ]
 
     # Campos somente leitura (não editáveis)
     readonly_fields = ('export_date',)
 
+    @admin.display(description="Paciente")
+    def nome_paciente(self, obj):
+        if obj.apac_request:
+            return obj.apac_request.apac_data.patient_name
+        return ''
+ 
     @admin.display(description="Data de uso da Faixa")
     def assignment(self, obj):
         """
