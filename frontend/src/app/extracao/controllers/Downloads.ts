@@ -1,17 +1,18 @@
 
 export function GenerateStringToDownloadFile(filename: string, content: string) {
-    // Prefixo BOM
-    const bom = '\uFEFF';
-    const blob = new Blob([bom + content], { type: "text/plain;charset=utf-8" });
+        const blob = new Blob([content], { type: "text/plain" });
 
-    const url = window.URL.createObjectURL(blob);
+        // gera uma URL temporária
+        const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
+        // cria um link "invisível"
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename; // nome do arquivo
+        document.body.appendChild(a);
+        a.click();
 
-    a.remove();
-    window.URL.revokeObjectURL(url);
+        // limpa recursos
+        a.remove();
+        window.URL.revokeObjectURL(url);
 }
