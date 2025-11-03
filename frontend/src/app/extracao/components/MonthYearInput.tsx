@@ -1,6 +1,11 @@
 import React, { useMemo } from "react";
 import { TextField } from "@mui/material";
 import { useExportContext } from "@/app/extracao/contexts/ExportContext";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+
 
 interface MonthYearInputProps {
   /** Limite mínimo do campo (formato YYYY-MM) */
@@ -11,6 +16,7 @@ interface MonthYearInputProps {
   label?: string;
 }
 
+
 const MonthYearInput: React.FC<MonthYearInputProps> = ({
   minDate,
   maxDate,
@@ -18,48 +24,29 @@ const MonthYearInput: React.FC<MonthYearInputProps> = ({
 }) => {
   const { hookExtractForm } = useExportContext();
 
-  // Função auxiliar: converte Date -> "YYYY-MM"
-  const formatMonthInput = (date?: Date | null): string => {
-    if (!date) return "";
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // garante zero à esquerda
-    return `${year}-${month}`;
-  };
-
-  // Função auxiliar: converte "YYYY-MM" -> Date
-  const parseMonthInput = (value: string): Date | null => {
-    const [year, month] = value.split("-");
-    if (!year || !month) return null;
-    return new Date(Number(year), Number(month) - 1, 1);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = parseMonthInput(e.target.value);
-    if (date) {
-      hookExtractForm.setProduction(date);
-    }
-  };
-
-  // Define limites padrão se não forem passados por props
-  const now = useMemo(() => new Date(), []);
-  const defaultMin = `${now.getFullYear()}-01`;
-  const defaultMax = formatMonthInput(now);
-
-  const value = formatMonthInput(hookExtractForm.productionValue);
-
   return (
-    <TextField
-      label={label}
-      type="month"
-      value={value}
-      onChange={handleChange}
-      sx={{ display: "flex" }}
-      InputLabelProps={{ shrink: true }}
-      inputProps={{
-        min: minDate || defaultMin,
-        max: maxDate || defaultMax,
-      }}
-    />
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+      <DatePicker
+        views={["month", "year"]}
+        label={label}
+        value={
+          hookExtractForm.productionValue
+            ? dayjs(hookExtractForm.productionValue)
+            : null
+        }
+        onChange={(newValue) => {
+          if (newValue) hookExtractForm.setProduction(newValue.toDate());
+        }}
+        minDate={minDate ? dayjs(minDate) : undefined}
+        maxDate={maxDate ? dayjs(maxDate) : undefined}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            InputLabelProps: { shrink: true },
+          },
+        }}
+      />
+    </LocalizationProvider>
   );
 };
 
