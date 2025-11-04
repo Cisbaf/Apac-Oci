@@ -101,7 +101,7 @@ export default function ApacTable({ onlyView }: TableProps) {
 
   return (
     <Box>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box sx={{  width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -110,7 +110,7 @@ export default function ApacTable({ onlyView }: TableProps) {
               paginationModel: { pageSize: 5 },
             },
           }}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[5, 10, 20, 50]}
         />
       </Box>
 
