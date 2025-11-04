@@ -63,7 +63,14 @@ export function fillRequestFormFromPatient(
   setValue('apacData.patientBirthDate', formatDate(patientInfo.birth_date));
   setValue('apacData.patientGender', patientInfo.gender);
   setValue('apacData.patientMotherName', patientInfo.mother_name || '');
-  setValue('apacData.patientRaceColor', patientInfo.race || '');
+
+  const raceLabel = raceToCode(patientInfo.race);
+  if (patientInfo.race && raceLabel && patientInfo.race !== '06') {
+    setValue('apacData.patientRaceColor', patientInfo.race);
+  } else {
+    // Limpa o campo se for "sem informação"
+    setValue('apacData.patientRaceColor', '');
+  }
 
   // Dados de endereço
   if (address) {
