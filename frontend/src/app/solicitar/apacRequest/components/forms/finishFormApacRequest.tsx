@@ -22,10 +22,6 @@ export default function ApacRequestFinishForm() {
     const { showResponseApi, showBackdrop } = useGlobalComponents();
     const route = useRouter();
 
-    React.useEffect(()=>{
-        console.log(getValues());
-    }, [])
-
     const finish = async() => {
         showBackdrop(true, "Solicitando apac!");
         const data = structuredClone(getValues());
