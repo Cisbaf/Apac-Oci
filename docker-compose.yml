@@ -1,14 +1,14 @@
 
-
 services:
   django:
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    volumes:
-      - ./logs:/app/src/logs
     ports:
-      - "${APAC_BACKEND_PORT}:8000"
+      - "8000:8000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/core:/app/core
     env_file:
       - .env
     
@@ -17,7 +17,8 @@ services:
       context: ./frontend/
       dockerfile: Dockerfile
     ports:
-      - "${APAC_FRONTEND_PORT}:3000"
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
     env_file:
       - .env
-    

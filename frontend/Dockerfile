@@ -1,25 +1,22 @@
-# Build stage
-FROM node:18-slim AS builder
+# Etapa base
+FROM node:18-slim
+
+# Diretório de trabalho
 WORKDIR /app
 
+# Copia apenas os arquivos necessários para instalar dependências
 COPY package.json package-lock.json ./
-RUN npm install --frozen-lockfile
 
+# Instala as dependências
+RUN npm install
+
+# Copia o restante do código
 COPY tsconfig.json next.config.ts jest.config.js next-env.d.ts ./
 COPY public ./public
-COPY src ./src
+COPY src /app/src
 
-RUN npm run build
-
-# Production stage
-FROM node:18-slim
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm install --production --frozen-lockfile
-
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-
+# Exponha a porta padrão do Next.js
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+
+# Comando para iniciar o servidor em produção
+CMD ["npm", "run", "dev"]
