@@ -10,6 +10,14 @@ from apac_core.domain.dto.patientData import PatientData
 
 
 class ApacDataModel(models.Model):
+    RACE_COLOR_CHOICES = [
+        ("01", "Branca"),
+        ("02", "Preta"),
+        ("03", "Parda"),
+        ("04", "Amarela"),
+        ("05", "Indígena"),
+        ("06", "Sem informação"),
+    ]
     apac_request = models.OneToOneField(
         to=ApacRequestModel,
         on_delete=models.CASCADE,
@@ -23,7 +31,11 @@ class ApacDataModel(models.Model):
     patient_cns = models.CharField(max_length=255, verbose_name="CNS do paciente")
     patient_cpf = models.CharField(max_length=255, verbose_name="CPF do paciente")
     patient_birth_date = models.DateField(verbose_name="Data de nascimento do paciente")
-    patient_race_color = models.CharField(max_length=255, verbose_name="Raça/cor do paciente")
+    patient_race_color = models.CharField(
+        max_length=2,
+        choices=RACE_COLOR_CHOICES,
+        verbose_name="Raça/cor do paciente",
+    )
     patient_gender = models.CharField(max_length=255, verbose_name="Gênero do paciente")
     patient_mother_name = models.CharField(max_length=255, verbose_name="Nome da mãe do paciente")
     patient_address_street_type = models.CharField(max_length=255, verbose_name="Tipo de logradouro")
