@@ -1,29 +1,27 @@
 FROM python:3.12-slim
 
-# Define diretório de trabalho na imagem final
 WORKDIR /app
 
-# Instala dependências de runtime necessárias para mysqlclient funcionar
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libpq-dev pkg-config default-libmysqlclient-dev poppler-utils && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Instala dependências do sistema
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc libpq-dev pkg-config default-libmysqlclient-dev poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copia código da aplicação
+# Copia e instala dependências Python primeiro (para cache)
 COPY core /app/core
-COPY src /app/src
 
-# Copia dependências e instala com pip (sem cache, como usuário root)
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Expõe a porta usada pela aplicação (Django ou FastAPI)
-EXPOSE 8000
+# Copia código da aplicação
+COPY src /app/src
 
-WORKDIR /app/src
-
+# Copia entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Define entrypoint
+EXPOSE 8000
+WORKDIR /app/src
+
 ENTRYPOINT ["/entrypoint.sh"]
