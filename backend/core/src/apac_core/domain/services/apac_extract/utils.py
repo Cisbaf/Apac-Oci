@@ -1,6 +1,27 @@
 import calendar
 from datetime import date
 from typing import Union
+import unicodedata
+
+def sanitize_text(value: str) -> str:
+    """
+    Remove acentos, caracteres especiais e espaços invisíveis.
+    Garante apenas caracteres ASCII básicos.
+    """
+    if not isinstance(value, str):
+        value = str(value)
+
+    # Normaliza e remove acentos (NFD separa base + acento)
+    value = unicodedata.normalize("NFD", value)
+    value = "".join(c for c in value if unicodedata.category(c) != "Mn")
+
+    # Remove caracteres invisíveis e BOMs (\ufeff)
+    value = value.replace("\ufeff", "").replace("\n", "").replace("\r", "").replace("\t", "")
+
+    # Substitui caracteres fora do ASCII básico
+    value = value.encode("ascii", "ignore").decode("ascii")
+
+    return value
 
 def fix_length(value: Union[str, int], size: int) -> str:
     """Trunca ou preenche à direita com espaço para garantir tamanho fixo."""
