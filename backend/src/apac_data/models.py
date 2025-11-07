@@ -5,6 +5,7 @@ from apac_core.domain.entities.apac_data import ApacData
 from apac_core.domain.value_objects.cns import CnsField
 from apac_core.domain.value_objects.cpf import CpfField
 from apac_core.domain.value_objects.cep import CepField
+from apac_core.domain.value_objects.cbo import CboField
 from apac_core.domain.dto.medicData import MedicData
 from apac_core.domain.dto.patientData import PatientData
 
@@ -92,12 +93,12 @@ class ApacDataModel(models.Model):
             supervising_physician_data=MedicData(
                 name=self.supervising_physician_name,
                 cns=CnsField(value=self.supervising_physician_cns),
-                cbo=self.supervising_physician_cbo,
+                cbo=CboField(value=self.supervising_physician_cbo),
             ),
             authorizing_physician_data=MedicData(
                 name=self.authorizing_physician_name,
                 cns=CnsField(value=self.authorizing_physician_cns),
-                cbo=self.authorizing_physician_cbo,
+                cbo=CboField(value=self.authorizing_physician_cbo),
             ),
             cid=self.cid.to_entity(**kwargs),
             procedure_date=self.procedure_date,
