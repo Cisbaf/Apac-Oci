@@ -100,7 +100,7 @@ class ExportApacBatchController:
                         competencia=self.date_production.strftime("%Y%m"),
                         numero_apac_seq=apac_batch.batch_number,
                         cod_procedimento=apac_data.main_procedure.code,
-                        cbo=apac_data.supervising_physician_data.cbo,
+                        cbo=apac_data.supervising_physician_data.cbo.value,
                         quantity=format_with_zeros(1, 6),
                     )
                 ] + [
@@ -109,7 +109,7 @@ class ExportApacBatchController:
                         competencia=self.date_production.strftime("%Y%m"),
                         numero_apac_seq=apac_batch.batch_number,
                         cod_procedimento=sub_procedure.procedure.code,
-                        cbo=apac_data.supervising_physician_data.cbo,
+                        cbo=apac_data.supervising_physician_data.cbo.value,
                         quantity=format_with_zeros(sub_procedure.quantity, 6),
                     ) for sub_procedure in apac_data.sub_procedures
                 ]

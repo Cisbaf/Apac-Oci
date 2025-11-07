@@ -13,6 +13,7 @@ from apac_core.application.use_cases.procedure_record_cases.create_procedure_rec
 from apac_core.domain.value_objects.cns import CnsField
 from apac_core.domain.value_objects.cpf import CpfField
 from apac_core.domain.value_objects.cep import CepField
+from apac_core.domain.value_objects.cbo import CboField
 from apac_core.domain.dto.patientData import PatientData
 from apac_core.domain.dto.medicData import MedicData
 
@@ -94,12 +95,12 @@ class CreateApacDataUseCase:
             supervising_physician_data=MedicData(
                 name=data.supervising_physician_name,
                 cns=CnsField(value=data.supervising_physician_cns),
-                cbo=data.supervising_physician_cbo,
+                cbo=CboField(value=data.supervising_physician_cbo),
             ),
             authorizing_physician_data=MedicData(
                 name=data.authorizing_physician_name,
                 cns=CnsField(value=data.authorizing_physician_cns),
-                cbo=data.authorizing_physician_cbo,
+                cbo=CboField(value=data.authorizing_physician_cbo),
             ),
             cid=cid,
             procedure_date=data.procedure_date,
