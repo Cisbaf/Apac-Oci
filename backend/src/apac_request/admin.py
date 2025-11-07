@@ -168,6 +168,7 @@ class ApacRequestAdmin(admin.ModelAdmin):
     ]
 
     search_fields = [
+    'apac_batch__batch_number',
     'apac_data__patient_name',
     'apac_data__patient_cpf',
     'apac_data__patient_address_street_name',
