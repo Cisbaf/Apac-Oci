@@ -21,17 +21,10 @@ import {
   Skeleton
 } from '@mui/material';
 import {
-  Home,
-  PlaylistAddCheck,
-  FileDownload,
-  Assignment,
   ExpandLess,
   ExpandMore,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
-  AppRegistration,
-  FileOpen,
-  HowToReg,
   AdminPanelSettings,
   Logout,
 } from '@mui/icons-material';
@@ -70,6 +63,11 @@ export default function Sidebar() {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+
+  const handleAdmin = () => {
+    handleCloseMenu();
+    route.push("/admin");
+  }
 
   return (
     <Box
@@ -123,7 +121,7 @@ export default function Sidebar() {
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           {user.role === UserRole.ADMIN &&
-           <MenuItem onClick={handleCloseMenu}>
+           <MenuItem onClick={handleAdmin}>
             <ListItemIcon>
               <AdminPanelSettings fontSize="small" />
             </ListItemIcon>
