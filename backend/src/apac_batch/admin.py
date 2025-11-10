@@ -83,15 +83,17 @@ class ApacBatchAdmin(admin.ModelAdmin):
     # Campos pesquisáveis (busca superior)
     search_fields = [
         'created_in',
-    'batch_number',
-    'apac_request__apac_data__patient_name',
-    'apac_request__apac_data__patient_cpf',
-    'apac_request__apac_data__patient_address_street_name',
-    'apac_request__apac_data__supervising_physician_name',
-    'apac_request__apac_data__authorizing_physician_name',
-    'apac_request__apac_data__main_procedure__name',
-    'apac_request__apac_data__procedure_date',
-    'apac_request__apac_data__discharge_date',
+        'batch_number',
+        'apac_request__apac_data__patient_name',
+        'apac_request__apac_data__patient_cpf',
+        'apac_request__apac_data__patient_address_street_name',
+        'apac_request__apac_data__supervising_physician_name',
+        'apac_request__apac_data__authorizing_physician_name',
+        'apac_request__apac_data__main_procedure__name',
+        'apac_request__apac_data__procedure_date',
+        'apac_request__apac_data__discharge_date',
+        'apac_request__apac_data__supervising_physician_cns',
+        'apac_request__apac_data__authorizing_physician_cns'
     ]
 
     # Campos somente leitura (não editáveis)
