@@ -135,7 +135,7 @@ export default function AppBarMobile() {
                     </Typography>
                 </Box>
             </MenuItem>
-            <MenuItem disabled onClick={handleClose}>Painel de Administração</MenuItem>
+            <MenuItem onClick={()=>handlePage("admin")}>Painel de Administração</MenuItem>
             <MenuItem onClick={()=>handlePage("logout")}>Sair</MenuItem>
           </Box>
            {/* Sessão: Páginas */}
