@@ -19,7 +19,6 @@ import { MenuItems } from './menu';
 import { useRouter } from 'next/navigation';
 import { useContextUser } from '../context/UserContext';
 
-// Estilo do menu
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     backgroundColor: theme.palette.background.paper,
@@ -54,8 +53,8 @@ export default function AppBarMobile() {
 
   const handlePage = (path: string) => {
     handleClose();
-    route.push(path)
-  }
+    route.push(path);
+  };
 
   return (
     <Box
@@ -110,9 +109,7 @@ export default function AppBarMobile() {
             horizontal: 'left',
           }}
         >
-         
-
-          {/* Sessão futura (exemplo) */}
+          {/* Sessão de configurações */}
           <Box sx={{ px: 2, py: 1 }}>
             <Typography
               variant="subtitle2"
@@ -126,19 +123,47 @@ export default function AppBarMobile() {
               Configurações
             </Typography>
             <Divider sx={{ mb: 1 }} />
-      
-            <MenuItem >
-                <Box sx={{display: "flex", gap: 1}}>
-                    <Avatar sx={{ width: 40, height: 40 }} />
-                    <Typography mt={1} variant="body2">
-                     { user.name }
-                    </Typography>
-                </Box>
+
+            <MenuItem>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Avatar sx={{ width: 40, height: 40 }} />
+                <Typography mt={1} variant="body2">
+                  {user.name}
+                </Typography>
+              </Box>
             </MenuItem>
-            <MenuItem onClick={()=>handlePage("admin")}>Painel de Administração</MenuItem>
-            <MenuItem onClick={()=>handlePage("logout")}>Sair</MenuItem>
+
+            {/* Abre em nova aba */}
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                window.open('/admin', '_blank'); // Painel de Administração
+              }}
+            >
+              Painel de Administração
+            </MenuItem>
+
+            {/* Novo item: Alterar Senha */}
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                window.open('/admin/password_change/', '_blank'); // Alterar Senha
+              }}
+            >
+              Alterar Senha
+            </MenuItem>
+
+            {/* Continua normal */}
+            <MenuItem
+              onClick={() => {
+                handlePage('logout');
+              }}
+            >
+              Sair
+            </MenuItem>
           </Box>
-           {/* Sessão: Páginas */}
+
+          {/* Sessão: Páginas */}
           <Box sx={{ px: 2, py: 1 }}>
             <Typography
               variant="subtitle2"
@@ -156,7 +181,7 @@ export default function AppBarMobile() {
             {MenuItems.map((menu, index) => (
               <MenuItem
                 key={index}
-                onClick={()=>handlePage(menu.route)}
+                onClick={() => handlePage(menu.route)}
                 component={Link}
                 href={menu.route}
               >

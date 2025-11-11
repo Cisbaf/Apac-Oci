@@ -27,6 +27,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   AdminPanelSettings,
   Logout,
+  Password,
 } from '@mui/icons-material';
 import Image from 'next/image';
 import logo from '../../../public/logo-cisbaf.png';
@@ -64,9 +65,9 @@ export default function Sidebar() {
     setAnchorEl(null);
   };
 
-  const handleAdmin = () => {
+  const handleUrl = (path: string) => {
     handleCloseMenu();
-    route.push("/admin");
+    route.push(path);
   }
 
   return (
@@ -113,28 +114,50 @@ export default function Sidebar() {
             { user.name }
           </Typography>
         )}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseMenu}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+<Menu
+  anchorEl={anchorEl}
+  open={Boolean(anchorEl)}
+  onClose={handleCloseMenu}
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+>
+  {user.role === UserRole.ADMIN && (
+        <MenuItem
+          onClick={() => {
+            handleCloseMenu();
+            window.open('/admin', '_blank'); // <-- abre em nova aba
+          }}
         >
-          {user.role === UserRole.ADMIN &&
-           <MenuItem onClick={handleAdmin}>
-            <ListItemIcon>
-              <AdminPanelSettings fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Painel de Administração</ListItemText>
-          </MenuItem>
-          }
-          <MenuItem onClick={()=>route.push("/logout")}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Sair</ListItemText>
-          </MenuItem>
-        </Menu>
+          <ListItemIcon>
+            <AdminPanelSettings fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Painel de Administração</ListItemText>
+        </MenuItem>
+      )}
+
+      <MenuItem
+        onClick={() => {
+          handleCloseMenu();
+          window.open('/admin/password_change/', '_blank'); // <-- abre em nova aba
+        }}
+      >
+        <ListItemIcon>
+          <Password fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>Alterar Senha</ListItemText>
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
+          handleUrl('/logout'); // esse continua normal
+        }}
+      >
+        <ListItemIcon>
+          <Logout fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>Sair</ListItemText>
+      </MenuItem>
+    </Menu>
       </Box>
 
       <Divider sx={{ bgcolor: 'rgba(255,255,255,0.2)', my: 1 }} />
