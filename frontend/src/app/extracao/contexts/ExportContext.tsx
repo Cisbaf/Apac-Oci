@@ -35,7 +35,7 @@ export function ExportContextProvider({ children }: ExportContextProps) {
                 if (!extension || !establishmentShortName) {
                     fileName = "exportacao.txt";
                 } else {
-                    fileName = `${establishmentShortName}.${extension}`;
+                    fileName = `AP${establishmentShortName}.${extension}`;
                 }
                 GenerateStringToDownloadFile(fileName, response.content);
             } else {

@@ -1,12 +1,10 @@
 
 export function GenerateStringToDownloadFile(filename: string, content: string) {
-        const blob = new Blob([content], { type: "text/plain" });
-
-        // gera uma URL temporária
+        const contentWindows = content.replace(/\n/g, "\r\n");
+        const blob = new Blob([contentWindows], { type: "application/octet-stream" });
         const url = window.URL.createObjectURL(blob);
-
-        // cria um link "invisível"
         const a = document.createElement("a");
+
         a.href = url;
         a.download = filename; // nome do arquivo
         document.body.appendChild(a);
