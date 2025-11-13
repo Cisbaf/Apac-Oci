@@ -298,6 +298,5 @@ class ApacRequestAdmin(admin.ModelAdmin):
         exceto para superusuários.
         """
         if db_field.name == "establishment" and not request.user.is_superuser:
-            print(EstablishmentModel.objects.filter(city=request.user.city))
             kwargs["queryset"] = EstablishmentModel.objects.filter(city=request.user.city)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
