@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pydantic import BaseModel
 from typing import List
-from datetime import date
+from datetime import datetime
 from apac_core.domain.repositories.apac_data_repository import ApacDataRepository
 from apac_core.domain.repositories.cid_repository import CidRepository
 from apac_core.domain.repositories.procedure_repository import ProcedureRepository
@@ -16,6 +16,8 @@ from apac_core.domain.value_objects.cep import CepField
 from apac_core.domain.value_objects.cbo import CboField
 from apac_core.domain.dto.patientData import PatientData
 from apac_core.domain.dto.medicData import MedicData
+from apac_core.domain.exceptions import DomainException
+
 
 class CreateApacDataDTO(BaseModel):
     patient_name: str
@@ -58,6 +60,16 @@ class CreateApacDataUseCase:
         self,
         data: CreateApacDataDTO
     ):
+        # --- Validação das datas ---
+        try:
+            proc_date = datetime.strptime(data.procedure_date, "%Y-%m-%d")
+            disch_date = datetime.strptime(data.discharge_date, "%Y-%m-%d")
+        except ValueError:
+            raise DomainException("Formato de data inválido.#2")
+
+        if disch_date < proc_date:
+            raise DomainException("A data de alta não pode ser anterior à data do procedimento.")
+
         # Obtém o procedimento principal pelo ID
         main_procedure = self.repo_procedure.get_by_id(data.main_procedure_id)
 
