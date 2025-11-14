@@ -11,6 +11,7 @@ from apac_core.domain.repositories.procedure_repository import ProcedureReposito
 from apac_core.domain.repositories.procedure_record_repository import ProcedureRecordRepository
 from apac_core.domain.exceptions import DomainException
 from dataclasses import dataclass
+from datetime import datetime
 
 
 class CreateApacRequestDTO(BaseModel):
@@ -30,6 +31,22 @@ class CreateApacRequestUseCase:
     repo_procedure_record: ProcedureRecordRepository
 
     def execute(self, data: CreateApacRequestDTO) -> ApacRequest:
+
+        # Verifica se a competencia e a data do procedimento estão no mesmo ano e mês
+        try:
+            request_date = datetime.strptime(data.request_date, "%Y-%m-%d")
+            procedure_date = datetime.strptime(data.apac_data.procedure_date, "%Y-%m-%d")
+        except ValueError:
+            raise DomainException("Formato de data inválido.#1")
+
+        same_year_and_month = (
+            request_date.year == procedure_date.year and
+            request_date.month == procedure_date.month
+        )
+
+        if not same_year_and_month:
+            raise DomainException("A data do procedimento deve estar no mesmo ano e mês da competência selecionada.")
+        
         # Obtém o requester pelo ID 
         requester = GetUserRequesterOrAdministratorUseCase(self.repo_user).execute(data.requester_id)
 

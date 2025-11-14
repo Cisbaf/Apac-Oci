@@ -161,4 +161,43 @@ class TestCreateApacRequest:
         assert request.establishment.id == establishment.id
         assert request.authorizer is None
         assert request.justification is None
-        
+
+
+def test_procedure_date_not_in_same_competency_month(repos, requester, establishment, cid, medical_procedures):
+    """
+    Deve lançar erro quando a data do procedimento NÃO estiver
+    no mesmo ano e mês da request_date.
+    """
+    
+    dto = generate_apac_request_dto(
+        requester,
+        establishment,
+        medical_procedures,
+        cid
+    )
+
+    # request_date = 2025-07-01 (fixo no helper)
+    # Vamos colocar procedure_date em outro mês
+    dto.apac_data.procedure_date = "2025-08-05"
+
+    with pytest.raises(DomainException):
+        create_apac_request(repos, dto)
+
+def test_discharge_date_cannot_be_before_procedure_date(repos, requester, establishment, cid, medical_procedures):
+    """
+    Deve lançar erro quando a data de alta for menor que a data do procedimento.
+    """
+
+    dto = generate_apac_request_dto(
+        requester,
+        establishment,
+        medical_procedures,
+        cid
+    )
+
+    # procedure_date = 2025-07-30 (fixo no helper)
+    # Vamos colocar discharge_date antes disso
+    dto.apac_data.discharge_date = "2025-07-20"
+
+    with pytest.raises(DomainException):
+        create_apac_request(repos, dto)
