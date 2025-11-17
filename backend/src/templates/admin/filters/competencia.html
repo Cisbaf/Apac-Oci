@@ -1,0 +1,75 @@
+{% load i18n %}
+
+<details data-filter-title="{{ title }}" open="">
+  <summary>{{ title }}</summary>
+
+  <form method="GET" id="competenciaForm" style="padding: 8px;">
+
+      <!-- inputs gerados via JS -->
+      <div id="competenciaHiddenInputs"></div>
+
+      <input type="month"
+             name="competencia"
+             id="competenciaData"
+             class="form-control mb-2">
+
+      <button type="submit" class="btn btn-success w-100 mb-2">
+          Filtrar Competência
+      </button>
+
+      <button type="button"
+              id="competenciaClearBtn"
+              class="btn btn-secondary w-100">
+          Limpar Filtro
+      </button>
+
+  </form>
+</details>
+
+
+<!-- ===========================
+      SCRIPT
+=========================== -->
+<script>
+(function() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const hiddenContainer = document.getElementById("competenciaHiddenInputs");
+    const competenciaInput = document.getElementById("competenciaData");
+    const clearButton = document.getElementById("competenciaClearBtn");
+
+    // Se já existir competência no GET, preenche o input
+    if (searchParams.has("competencia")) {
+        competenciaInput.value = searchParams.get("competencia");
+    }
+
+    // Cria hidden inputs para TODOS os parâmetros exceto 'competencia'
+    for (const [key, value] of searchParams.entries()) {
+        if (key === "competencia") continue;
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        hiddenContainer.appendChild(input);
+    }
+
+    // -----------------------------
+    // Botão "Limpar Filtro"
+    // -----------------------------
+    clearButton.addEventListener("click", function() {
+        const cleaned = new URLSearchParams();
+
+        // Recria a querystring sem o parâmetro "competencia"
+        for (const [key, value] of searchParams.entries()) {
+            if (key !== "competencia") {
+                cleaned.append(key, value);
+            }
+        }
+
+        // Redireciona para a mesma página sem o filtro
+        const newUrl = window.location.pathname + "?" + cleaned.toString();
+        window.location.href = newUrl;
+    });
+
+})();
+</script>
