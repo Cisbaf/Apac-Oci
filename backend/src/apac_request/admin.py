@@ -7,6 +7,8 @@ from apac_batch.models import ApacBatchModel
 from .models import ApacRequestModel
 from establishment.models import EstablishmentModel
 from django.utils.formats import date_format
+from apac_request.admin_helpers.campo_buscar import CampoBuscaFilter
+from apac_request.admin_helpers.competencia_filter import CompetenciaFilter
 
 
 # Personaliza o cabeçalho e títulos do painel administrativo do Django
@@ -14,22 +16,6 @@ admin.site.site_header = "Painel Administrativo"
 admin.site.index_title = "Administração"
 admin.site.site_title = "Admin"
 
-
-
-class CampoBuscaFilter(admin.SimpleListFilter):
-    title = 'Campo de busca'
-    parameter_name = 'campo_busca'
-
-    def lookups(self, request, model_admin):
-        return [
-            ('apac_data__patient_name', 'Nome do paciente'),
-            ('apac_data__supervising_physician_name', 'Nome do Medico Supervisor'),
-            ('apac_data__authorizing_physician_name', 'Nome do Medico Autorizador'),
-        ]
-
-    def queryset(self, request, queryset):
-        # Não filtramos nada aqui, pois o filtro só serve para escolher o campo
-        return queryset
 
 
 
@@ -200,6 +186,7 @@ class ApacRequestAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
+        CompetenciaFilter,
         CampoBuscaFilter,
         'status',
         FinishedFilter,
@@ -260,9 +247,9 @@ class ApacRequestAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return qs.filter(establishment__city=request.user.city)
+        if not request.user.is_superuser:
+            qs = qs.filter(establishment__city=request.user.city)
+        return qs
     
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
@@ -286,10 +273,10 @@ class ApacRequestAdmin(admin.ModelAdmin):
         filters = list(self.list_filter)  # copia base
 
         if request.user.is_superuser:
-            filters.insert(1, 'establishment__city')  # adiciona antes de 'establishment'
-            filters.insert(2, 'establishment')
+            filters.insert(3, 'establishment__city')  # adiciona antes de 'establishment'
+            filters.insert(4, 'establishment')
         else:
-            filters.insert(1, EstablishmentCityFilter)  # só mostra o filtro limitado
+            filters.insert(3, EstablishmentCityFilter)  # só mostra o filtro limitado
         return filters
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -300,3 +287,4 @@ class ApacRequestAdmin(admin.ModelAdmin):
         if db_field.name == "establishment" and not request.user.is_superuser:
             kwargs["queryset"] = EstablishmentModel.objects.filter(city=request.user.city)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
