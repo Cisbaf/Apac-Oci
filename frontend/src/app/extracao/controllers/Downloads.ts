@@ -1,16 +1,16 @@
-
 export function GenerateStringToDownloadFile(filename: string, content: string) {
-        const contentWindows = content.replace(/\n/g, "\r\n");
-        const blob = new Blob([contentWindows], { type: "application/octet-stream" });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
+    filename = filename.replace(/\.+$/, ""); // remove pontos no final
 
-        a.href = url;
-        a.download = filename; // nome do arquivo
-        document.body.appendChild(a);
-        a.click();
+    const contentWindows = content.replace(/\n/g, "\r\n");
+    const blob = new Blob([contentWindows], { type: "application/octet-stream" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
 
-        // limpa recursos
-        a.remove();
-        window.URL.revokeObjectURL(url);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
 }
