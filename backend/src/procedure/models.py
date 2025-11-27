@@ -44,13 +44,20 @@ class ProcedureModel(models.Model):
         return self.name
 
 class CidModel(models.Model):
-    code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_sig_tap')
+    code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_cid')
     name = models.CharField(verbose_name="Nome CID", max_length=255)
     procedure = models.ForeignKey(
         verbose_name="Procedimento",
         to=ProcedureModel,
         on_delete=models.CASCADE,
-        related_name='cid'
+        related_name='cid',
+        null=True
+    )
+    parents = models.ManyToManyField(
+        to=ProcedureModel,
+        symmetrical=False,
+        related_name="cids",
+        blank=True
     )
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)
 
