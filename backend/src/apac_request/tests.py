@@ -78,9 +78,9 @@ class BaseApacTest(APITestCase):
         self.procedure, self.sub_procedure = self.create_procedure_hierarchy()
         self.cid = CidModel.objects.create(
             code=random_str(), 
-            name="A00", 
-            procedure=self.procedure
+            name="A00"
         )
+        self.cid.procedure.add(self.procedure)
         
         # URLs e dados base
         self.base_data = self.build_apac_data()

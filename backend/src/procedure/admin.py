@@ -58,11 +58,11 @@ class ProcedureAdmin(admin.ModelAdmin):
 
 @admin.register(CidModel)
 class CidAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name', 'procedure', 'is_active']
+    list_display = ['code', 'name', 'is_active']
     list_filter = [CidFilter]
     search_fields = ['code', 'name']
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "procedure":
-            kwargs["queryset"] = ProcedureModel.objects.filter(parents__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    #     if db_field.name == "procedure":
+    #         kwargs["queryset"] = ProcedureModel.objects.filter(parents__isnull=True)
+    #     return super().formfield_for_foreignkey(db_field, request, **kwargs)

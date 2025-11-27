@@ -20,5 +20,5 @@ class CreateCidUseCase:
         return self.repo_cid.save(Cid(
             code=code,
             name=name,
-            procedure=procedure
+            procedure=[procedure]
         ))

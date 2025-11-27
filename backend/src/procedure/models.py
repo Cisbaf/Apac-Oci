@@ -46,14 +46,8 @@ class ProcedureModel(models.Model):
 class CidModel(models.Model):
     code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_cid')
     name = models.CharField(verbose_name="Nome CID", max_length=255)
-    procedure = models.ForeignKey(
-        verbose_name="Procedimento",
-        to=ProcedureModel,
-        on_delete=models.CASCADE,
-        related_name='cid',
-        null=True
-    )
-    parents = models.ManyToManyField(
+
+    procedure = models.ManyToManyField(
         to=ProcedureModel,
         symmetrical=False,
         related_name="cids",
@@ -63,11 +57,13 @@ class CidModel(models.Model):
 
     def to_entity(self, **kwargs):
         exclude = kwargs.get("exclude_cid_procedures", None)
- 
+        procedures = []
+        if not exclude:
+            procedures = [children.to_entity(**kwargs) for children in ProcedureModel.objects.filter(cids=self)]
         return Cid(
             code=self.code,
             name=self.name,
-            procedure=None if exclude else self.procedure.to_entity(),
+            procedure=None if exclude else procedures,
             id=self.pk
         )
 

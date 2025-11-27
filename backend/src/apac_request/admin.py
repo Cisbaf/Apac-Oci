@@ -10,6 +10,9 @@ from django.utils.formats import date_format
 from apac_request.admin_helpers.campo_buscar import CampoBuscaFilter
 from apac_request.admin_helpers.competencia_filter import CompetenciaFilter
 
+from django import forms
+from django.shortcuts import render
+from django.utils import timezone
 
 # Personaliza o cabeçalho e títulos do painel administrativo do Django
 admin.site.site_header = "Painel Administrativo"
@@ -17,6 +20,40 @@ admin.site.index_title = "Administração"
 admin.site.site_title = "Admin"
 
 
+class StatusForm(forms.Form):
+    novo_status = forms.ChoiceField(
+        choices=ApacRequestModel.Status.choices,
+        label="Novo status"
+    )
+
+
+@admin.action(description="Alterar status...")
+def alterar_status(modeladmin, request, queryset):
+
+    if "apply" in request.POST:
+        # Aplicar alteração
+        novo_status = request.POST["novo_status"]
+        ids = request.POST.getlist("selected_ids")
+
+        registros = queryset.filter(pk__in=ids)
+        registros.update(
+            status=novo_status,
+            review_date=timezone.now(),
+            authorizer=request.user
+        )
+
+        modeladmin.message_user(request, f"{registros.count()} registros atualizados!")
+        return
+
+    else:
+        # Mostrar página para pedir valor
+        form = StatusForm()
+
+        return render(request, "admin/change_status.html", {
+            "form": form,
+            "queryset": queryset,
+            "action": "alterar_status",
+        })
 
 
 # ==========================
@@ -153,7 +190,6 @@ class FinishedFilter(admin.SimpleListFilter):
             return queryset.filter(status="pending")  # apenas pendentes
         return queryset
 
-
 # ==========================
 # ADMIN: APAC REQUEST
 # ==========================
@@ -165,6 +201,8 @@ class ApacRequestAdmin(admin.ModelAdmin):
     Exibe inlines de Batch e Data, campos calculados e filtros úteis.
     """
     inlines = [ApacBatchInline, ApacDataInline]
+
+    # actions = [alterar_status]
 
     list_display = [
         '__str__', 'competencia_format', 'requester', 'establishment', 'paciente_name',
