@@ -125,7 +125,7 @@ class ApacDataInline(admin.StackedInline):
         editable_fields = [
             'cid', 'main_procedure', 'patient_name', 'patient_cns',
             'patient_cpf', 'patient_birth_date',
-            'patient_gender', 'establishment'
+            'patient_gender'
         ]
 
         if request.user.is_superuser:
