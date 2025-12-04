@@ -125,12 +125,12 @@ class ApacDataInline(admin.StackedInline):
         editable_fields = [
             'cid', 'main_procedure', 'patient_name', 'patient_cns',
             'patient_cpf', 'patient_birth_date',
-            'patient_gender'
+            'patient_gender', 'establishment'
         ]
 
         if request.user.is_superuser:
             return []  # superusuário pode editar tudo
-
+        
         # Retorna apenas os campos definidos acima + o campo calculado
         base_fields = [
             field.name for field in self.model._meta.fields
@@ -270,7 +270,7 @@ class ApacRequestAdmin(admin.ModelAdmin):
         mas permite edição total para superusuários.
         """
         editable_fields = [
-            'request_date'
+            'request_date', 'establishment'
         ]
 
         if request.user.is_superuser:
