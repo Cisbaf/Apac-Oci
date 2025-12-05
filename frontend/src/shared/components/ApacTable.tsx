@@ -43,7 +43,7 @@ export default function ApacTable({ onlyView }: TableProps) {
       },
       { field: "name", headerName: "Nome Paciente", width: 150 },
       { field: "cns", headerName: "CNS Paciente", width: 150 },
-      { field: "request_date", headerName: "Data da Solicitação", width: 180 },
+      { field: "establishment", headerName: "Estabelecimento", width: 220},
       { field: "procedure", headerName: "Procedimento", width: 180 },
       { field: "status", headerName: "Status", width: 100 },
     ];
@@ -85,7 +85,7 @@ export default function ApacTable({ onlyView }: TableProps) {
       id: apac.id,
       name: apac.apac_data.patient_data.name,
       cns: apac.apac_data.patient_data.cns,
-      request_date: formatDateBr(apac.request_date),
+      establishment: apac.establishment.name,
       procedure: apac.apac_data.main_procedure.name,
       status: ApacStatusTranslation[apac.status],
     }));
