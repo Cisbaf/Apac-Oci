@@ -41,8 +41,6 @@ class ExportApacBatchController:
             data_fim = get_end_of_next_month(self.date_production)
             bodys.append(ApacBody(
                 apac_model=adaptar_oci( # essa nova linha está adaptando o apac model para o caso de duque de caxias
-                    establishment=self.establishment,
-                    procedure=apac_data.main_procedure,
                     apac_model=ApacModel(
                         competencia=self.date_production.strftime("%Y%m"),
                         numero_apac=apac_batch.batch_number,
