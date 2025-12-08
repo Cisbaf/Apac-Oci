@@ -62,7 +62,8 @@ class CidAdmin(admin.ModelAdmin):
     list_filter = [CidFilter]
     search_fields = ['code', 'name']
 
-    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
-    #     if db_field.name == "procedure":
-    #         kwargs["queryset"] = ProcedureModel.objects.filter(parents__isnull=True)
-    #     return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "procedure":
+            # só permite escolher procedimentos principais como pais
+            kwargs["queryset"] = ProcedureModel.objects.filter(parents__isnull=True)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
