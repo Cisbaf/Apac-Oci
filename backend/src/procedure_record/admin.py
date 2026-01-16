@@ -6,6 +6,7 @@ from procedure.models import ProcedureModel
 @admin.register(ProcedureRecordModel)
 class ProcedureRecordAdmin(admin.ModelAdmin):
     list_display = ['pk', 'apac_data']
+    search_fields = ['apac_data__pk']
     
     def has_module_permission(self, request):
         """Controla se o app aparece no menu lateral."""
