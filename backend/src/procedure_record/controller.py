@@ -14,5 +14,7 @@ class ProcedureRecordController(ProcedureRecordRepository):
     def save(self, procedure_record):
         return ProcedureRecordModel.objects.create(
             procedure=ProcedureModel.objects.get(pk=procedure_record.procedure.id),
-            quantity=procedure_record.quantity
+            quantity=procedure_record.quantity,
+            cbo=procedure_record.cbo,
+            cnes=procedure_record.cnes
         ).to_entity()
