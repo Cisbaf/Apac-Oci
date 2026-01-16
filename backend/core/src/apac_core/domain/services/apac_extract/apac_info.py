@@ -9,12 +9,12 @@ class ApacInfo(FixedWidthBaseModel):
         "mes_fim_validate": 6,
         "o_que_e": 2,
         "numero_apac": 13,
-        "cid": 4,
+        # "cid": 4, # removendo cid para testes
     }
     mes_fim_validate: str
     o_que_e: str # antigo "o_que_e"
     numero_apac: str
-    cid: str
+    # cid: str
 
     @field_validator("*", mode="before")
     @classmethod

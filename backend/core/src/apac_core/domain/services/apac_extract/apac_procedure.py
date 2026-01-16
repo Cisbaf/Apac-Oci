@@ -11,7 +11,11 @@ class ApacProcedure(FixedWidthBaseModel):
         "numero_apac_seq": 13,
         "cod_procedimento": 10,
         "cbo": 6,
-        "quantity": 6
+        "quantity": 7,
+        "cnpj": 14,
+        "n_fiscal": 6,
+        "cid_principal": 4,
+        "cid_secundario": 4
     }
     identificador: Optional[str] = Field(default="13")
     competencia: str
@@ -19,6 +23,10 @@ class ApacProcedure(FixedWidthBaseModel):
     cod_procedimento: str
     cbo: str
     quantity: str
+    cnpj: Optional[str] = ""
+    n_fiscal: Optional[str] = ""
+    cid_principal: str
+    cid_secundario: Optional[str] = ""
 
     @field_validator("*", mode="before")
     @classmethod

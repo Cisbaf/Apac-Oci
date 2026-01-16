@@ -95,7 +95,6 @@ class ExportApacBatchController:
                     mes_fim_validate=data_fim.strftime("%m%Y"),
                     o_que_e=self.date_production.strftime("%m"),
                     numero_apac=apac_batch.batch_number,
-                    cid=apac_data.cid.code,
                 ),
                 apac_procedures=[
                     ApacProcedure(
@@ -104,7 +103,8 @@ class ExportApacBatchController:
                         numero_apac_seq=apac_batch.batch_number,
                         cod_procedimento=apac_data.main_procedure.code,
                         cbo=apac_data.supervising_physician_data.cbo.value,
-                        quantity=format_with_zeros(1, 6),
+                        quantity=format_with_zeros(1, 7),
+                        cid_principal=apac_data.cid.code
                     )
                 ] + [
                     ApacProcedure(
@@ -112,8 +112,9 @@ class ExportApacBatchController:
                         competencia=self.date_production.strftime("%Y%m"),
                         numero_apac_seq=apac_batch.batch_number,
                         cod_procedimento=sub_procedure.procedure.code,
-                        cbo=apac_data.supervising_physician_data.cbo.value,
-                        quantity=format_with_zeros(sub_procedure.quantity, 6),
+                        cbo=sub_procedure.cbo if sub_procedure.cbo else apac_data.supervising_physician_data.cbo.value,
+                        quantity=format_with_zeros(sub_procedure.quantity, 7),
+                        cid_principal=apac_data.cid.code
                     ) for sub_procedure in apac_data.sub_procedures
                 ]
             ))
