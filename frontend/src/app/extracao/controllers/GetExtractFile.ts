@@ -9,8 +9,6 @@ export default async function GetExtractFile(data: ExtractFormData) {
         apac_batchs: data.apacBatchs
     };
 
-    console.log(newData)
-
     const response = await fetch("/api/proxy/apac_batch/extract", {
         method: "POST",
         headers: {

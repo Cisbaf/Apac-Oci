@@ -109,11 +109,44 @@ class ApacDataInline(admin.StackedInline):
             return "Nenhum procedimento registrado."
 
         # Renderiza cada subprocedimento em HTML (nome e quantidade)
-        return format_html_join(
-            '\n',
-            "<div><b>{}</b>: {}</div>",
-            ((record.procedure.name, record.quantity) for record in records)
+        header = """
+            <table style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Procedimento</th>
+                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">Qtd</th>
+                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">CBO</th>
+                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">CNES</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+
+        rows = format_html_join(
+            "",
+            """
+            <tr>
+                <td style="padding:4px;">{}</td>
+                <td style="text-align:center;">{}</td>
+                <td style="text-align:center; color:#555;">{}</td>
+                <td style="text-align:center; color:#555;">{}</td>
+            </tr>
+            """,
+            (
+                (
+                    r.procedure.name,
+                    r.quantity,
+                    r.cbo or "—",
+                    r.cnes or "—",
+                )
+                for r in records
+            ),
         )
+
+        footer = "</tbody></table>"
+
+        return format_html(header) + rows + format_html(footer)
+
 
     sub_procedures_readonly.short_description = "Sub Procedimentos"
 

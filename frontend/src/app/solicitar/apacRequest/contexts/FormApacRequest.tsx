@@ -59,12 +59,28 @@ export function ApacRequestFormProvider({
             append({
                 procedure: p,
                 quantity: 0,
+                cbo: "",
+                cnes: "",
                 checked: false
             });
         })
     }
 
   }, [mainProcedureField]);
+
+
+  React.useEffect(()=>{
+    if (disabled && initialData) {
+
+      initialData.apacData.subProcedures.forEach((procedure, i)=>{
+        if (procedure.checked && procedure.cbo || procedure.cnes ) {
+          setValue(`apacData.subProcedures.${i}.useThirdPartyData`, true);
+          setValue(`apacData.subProcedures.${i}.cbo`, procedure.cbo);
+          setValue(`apacData.subProcedures.${i}.cnes`, procedure.cnes);
+        }
+      })
+    }
+  }, [])
 
   return (
     <ApacRequestFormContext.Provider value={{ form, disabled, textMode }}>

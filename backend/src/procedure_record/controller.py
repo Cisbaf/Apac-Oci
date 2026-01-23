@@ -15,6 +15,6 @@ class ProcedureRecordController(ProcedureRecordRepository):
         return ProcedureRecordModel.objects.create(
             procedure=ProcedureModel.objects.get(pk=procedure_record.procedure.id),
             quantity=procedure_record.quantity,
-            cbo=procedure_record.cbo,
+            cbo=procedure_record.cbo.value if procedure_record.cbo else None,
             cnes=procedure_record.cnes
         ).to_entity()

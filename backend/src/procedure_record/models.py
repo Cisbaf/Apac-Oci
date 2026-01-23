@@ -2,6 +2,7 @@ from django.db import models
 from procedure.models import ProcedureModel
 from apac_core.domain.entities.procedure_record import ProcedureRecord
 from apac_data.models import ApacDataModel
+from apac_core.domain.value_objects.cbo import CboField
 
 
 class ProcedureRecordModel(models.Model):
@@ -42,7 +43,7 @@ class ProcedureRecordModel(models.Model):
         return ProcedureRecord(
             procedure=self.procedure.to_entity(),
             quantity=self.quantity,
-            cbo=self.cbo,
+            cbo=CboField(value=self.cbo) if self.cbo else None,
             cnes=self.cnes,
             id=self.pk
         )

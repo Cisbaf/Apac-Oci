@@ -30,7 +30,7 @@ export default function ApacRequestFinishForm() {
         data.apacData.procedureDate = formatDateToISO(data.apacData.procedureDate);
         data.apacData.dischargeDate = formatDateToISO(data.apacData.dischargeDate);
         data.apacData.patientBirthDate = formatDateToISO(data.apacData.patientBirthDate);
-        const data_json = JSON.stringify(ToSnakeCase(data))
+        const data_json = JSON.stringify(ToSnakeCase(data));
         const response = await fetch('/api/proxy/apac_request/api', {
             method: "POST",
             body: data_json

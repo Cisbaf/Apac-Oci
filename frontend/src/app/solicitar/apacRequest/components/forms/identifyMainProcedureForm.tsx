@@ -103,6 +103,7 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                 >
                                 <Typography
                                     variant="body1"
+                                    key={`tp-${option.id}`}
                                     sx={{
                                     fontWeight: 500,
                                     whiteSpace: "normal",
@@ -113,6 +114,7 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>((props
                                     {option.name}
                                 </Typography>
                                 <Typography
+                                    key={`tp2-${option.id}`}
                                     variant="body2"
                                     sx={{
                                     color: "#777",

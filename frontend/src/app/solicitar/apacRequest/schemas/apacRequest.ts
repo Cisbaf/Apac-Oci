@@ -16,6 +16,8 @@ export const ApacStatusTranslation: Record<ApacStatus, string> = {
 interface SubProcedure {
     procedure: Procedure;
     quantity: number;
+    cbo?: string;
+    cnes?: string;
     id: number;
 }
 

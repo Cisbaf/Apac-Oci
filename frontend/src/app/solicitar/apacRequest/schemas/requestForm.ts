@@ -3,7 +3,10 @@ import { Procedure } from "@/shared/schemas";
 export interface SubProceduresForm {
   procedure: Procedure;
   quantity: number;
+  cbo?: string;
+  cnes?: string;
   checked: boolean;
+  useThirdPartyData?: boolean; // 👈 NOVO
 }
 
 export  interface ApacData {

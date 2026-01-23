@@ -6,7 +6,9 @@ export function adapterFormSubProcedures(subProcedures: SubProceduresForm[]): un
     return sub_checkeds.map(p=>{
          return {
             procedure_id: p.procedure.id,
-            quantity: p.quantity
+            quantity: p.quantity,
+            cbo: p.cbo,
+            cnes: p.cnes
         } 
     })
 }

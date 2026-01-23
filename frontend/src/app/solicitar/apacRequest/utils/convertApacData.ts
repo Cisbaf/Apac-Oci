@@ -34,6 +34,8 @@ export function convertApacDataToForm(data: ApacData): ApacDataForm {
     subProcedures: data.sub_procedures.map(sp => ({
       procedure: sp.procedure,
       quantity: sp.quantity,
+      cbo: sp.cbo,
+      cnes: sp.cnes,
       checked: true,
     })),
   };
