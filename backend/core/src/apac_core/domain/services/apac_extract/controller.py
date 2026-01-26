@@ -8,6 +8,7 @@ from apac_core.domain.services.apac_extract.apac_model import ApacModel
 from apac_core.domain.services.apac_extract.apac_body import ApacBody
 from apac_core.domain.services.apac_extract.apac_procedure import ApacProcedure
 from apac_core.domain.services.apac_extract.apac_info import ApacInfo
+from apac_core.domain.services.apac_extract.apac_variavel import ApacVariavel
 from apac_core.domain.services.apac_extract.utils import (
     format_with_zeros, get_end_of_next_month
 )
@@ -91,11 +92,10 @@ class ExportApacBatchController:
                         situacao_rua="N"
                     )
                 ),
-                apac_info=ApacInfo(
-                    mes_fim_validate=data_fim.strftime("%m%Y"),
-                    o_que_e=self.date_production.strftime("%m"),
-                    numero_apac=apac_batch.batch_number,
-                    cid=apac_data.cid.code
+                apac_info=ApacVariavel(
+                    apa_cmp=self.date_production.strftime("%Y%m"),
+                    apa_num=apac_batch.batch_number,
+                    apa_cidpri=apac_data.cid.code
                 ),
                 apac_procedures=[
                     ApacProcedure(
