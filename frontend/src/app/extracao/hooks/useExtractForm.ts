@@ -35,7 +35,11 @@ export default function useExtractForm() {
         setValue("establishmentName", name);
     }
 
+    const resetSelection = () => {
+        setValue("apacBatchs", []);
+    }
 
-    return {addBatchId, removeBatchId, setProduction, productionValue, control, setEstablishmentName, batchsSelected, getValues, establishmentIdValue}
+
+    return {addBatchId, removeBatchId, setProduction, productionValue, control, setEstablishmentName, batchsSelected, getValues, establishmentIdValue, resetSelection}
 
 }

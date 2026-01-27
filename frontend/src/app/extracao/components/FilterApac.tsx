@@ -28,7 +28,7 @@ export default function FilterApacForExtract() {
             } else {
                 showAlert({message: `${data.length} registros encontrado!`, color: "info"})
             }
-            
+            hookExtractForm.resetSelection();
             hookBatchsList.setBatchs(data);
         } catch (err) {
             showAlert({message: String(err), color: "error"})
