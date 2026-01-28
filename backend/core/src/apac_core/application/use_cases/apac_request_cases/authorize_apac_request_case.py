@@ -25,9 +25,10 @@ class ApprovedApacRequestUseCase:
         today = today or date.today()
 
         apac_request = GetApacRequestPedingUseCase(self.repo_apac_request).execute(data.apac_request_id)
+        
         authorizer = GetUserAuthorizerOrAdministratorUseCase(self.repo_user).execute(data.authorizer_id)
 
-        apac_batch = self.repo_apac_batch.search_for_available_batch(authorizer.city.id)
+        apac_batch = self.repo_apac_batch.search_for_available_batch(authorizer.city.id, apac_request.request_date)
         if not apac_batch.is_available(today):
             raise DomainException(NO_BATCH_AVAILABLE)
         
