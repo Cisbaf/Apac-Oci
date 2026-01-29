@@ -5,6 +5,7 @@ import { useGlobalComponents } from "./GlobalUIContext";
 interface ApacViewType {
     listApac: ApacRequest[];
     searchApacs: (params: string) => Promise<void>;
+    getApacById: (id: number | string) => ApacRequest | undefined;
     removeApac: (apac: ApacRequest) => void;
 }
 
@@ -31,15 +32,20 @@ export default function ApacViewProvider({children}: ApacViewProps) {
         showBackdrop(false);
     }
 
+    const getApacById = (id: number | string): ApacRequest | undefined => {
+        return listApac.find(apac => apac.id === id);
+    };
+
     const removeApac = (apac: ApacRequest) => {
-        setList(listApac.filter(obj=>obj.id != apac.id));
-    }
+    setList(prev => prev.filter(obj => obj.id !== apac.id));
+    };
 
     return (
         <ApacViewContext.Provider value={{
             listApac,
             searchApacs,
-            removeApac
+            removeApac,
+            getApacById
             }}>
             {children}
         </ApacViewContext.Provider>

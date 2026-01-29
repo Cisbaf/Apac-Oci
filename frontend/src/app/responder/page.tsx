@@ -5,9 +5,9 @@ import ApacTable from "@/shared/components/ApacTable";
 import ApacViewProvider from "@/shared/context/ApacViewContext";
 import { AuthorizationProvider } from "../responder/apacAuthorization/context/authorizationContext";
 import { Box, Typography, Divider } from "@mui/material";
-import { HowToReg } from "@mui/icons-material";
 import { RouteGuard } from "@/shared/components/RouteGuard";
 import { UserRole } from "@/shared/schemas/user";
+import AutorizeMultiplesApacProvider from "@/shared/context/AutorizeMultiplesApac";
 
 export default function ApacAuthorizePage() {
     return(
@@ -16,8 +16,10 @@ export default function ApacAuthorizePage() {
             <Box sx={{ display: "flex", flexDirection: "column"}}>
                 <ApacViewProvider>
                     <AuthorizationProvider>
-                        <ApacFilter/>
-                        <ApacTable/>
+                        <AutorizeMultiplesApacProvider>
+                            <ApacFilter/>
+                            <ApacTable/>
+                        </AutorizeMultiplesApacProvider>
                     </AuthorizationProvider>
                 </ApacViewProvider>
             </Box>

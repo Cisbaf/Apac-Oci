@@ -9,6 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import { useApacViewContext } from "../context/ApacViewContext";
+import { useAutorizeMultiplesApac } from "../context/AutorizeMultiplesApac";
 
 const statusOptions = [
   { label: "Solicitadas", value: "pending" },
@@ -17,6 +18,8 @@ const statusOptions = [
 ];
 
 export default function ApacFilter() {
+
+  const {clearSelection} = useAutorizeMultiplesApac();
   // Obtem a data atual
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
@@ -32,6 +35,7 @@ export default function ApacFilter() {
   const { searchApacs } = useApacViewContext();
 
   const makeParams = () => {
+    clearSelection();
     const params = `start_date=${dataInicio}&end_date=${dataFim}&status=${status}`;
     searchApacs(params);
   };
