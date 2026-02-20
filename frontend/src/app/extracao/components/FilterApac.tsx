@@ -9,6 +9,10 @@ import { GetBatchsAvailable } from "../controllers/GetBatchsAvailable";
 export default function FilterApacForExtract() {
     const { hookBatchsList, hookExtractForm } = useExportContext();
     const { showAlert, showBackdrop } = useGlobalComponents();
+    const now = new Date();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+    const currentYear = now.getFullYear();
+    const maxDate = `${currentYear}-${currentMonth}`;
 
     const SearchBatchs = async() => {
         const form = hookExtractForm.getValues();
@@ -45,7 +49,7 @@ export default function FilterApacForExtract() {
             <Grid size={{lg: 3}}>
                 <MonthYearInput
                     minDate="2024-01"
-                    maxDate="2025-12"
+                    maxDate={maxDate}
                     label="Período de Produção"
                     />
             </Grid>

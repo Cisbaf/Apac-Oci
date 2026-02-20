@@ -5,7 +5,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
 
+dayjs.locale("pt-br");
 
 interface MonthYearInputProps {
   /** Limite mínimo do campo (formato YYYY-MM) */
