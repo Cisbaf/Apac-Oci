@@ -87,5 +87,5 @@ class ApacRequestModel(models.Model):
         )
 
     def __str__(self):
-        return f"({self.pk}) {self.establishment.name}"
+        return f"({self.pk})"
 

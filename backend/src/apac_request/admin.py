@@ -229,31 +229,34 @@ class FinishedFilter(admin.SimpleListFilter):
 
 @admin.register(ApacRequestModel)
 class ApacRequestAdmin(admin.ModelAdmin):
-    """
-    Configuração principal do modelo ApacRequestModel no painel admin.
-    Exibe inlines de Batch e Data, campos calculados e filtros úteis.
-    """
+
     inlines = [ApacBatchInline, ApacDataInline]
 
-    # actions = [alterar_status]
-
     list_display = [
-        '__str__', 'competencia_format', 'requester', 'establishment', 'paciente_name',
-        'procedimento_name', 'data_preenchimento', 'review_date', 'status', 'finished'
+        '__str__',
+        'competencia_format',
+        'requester_user',
+        'establishment',
+        'paciente_name',
+        'procedimento_name',
+        'data_preenchimento',
+        'review_date',
+        'status',
+        'finished'
     ]
 
     search_fields = [
-    'apac_batch__batch_number',
-    'apac_data__patient_name',
-    'apac_data__patient_cpf',
-    'apac_data__patient_address_street_name',
-    'apac_data__supervising_physician_name',
-    'apac_data__authorizing_physician_name',
-    'apac_data__main_procedure__name',
-    'apac_data__procedure_date',
-    'apac_data__discharge_date',
-    'request_date',
-    'updated_at'
+        'apac_batch__batch_number',
+        'apac_data__patient_name',
+        'apac_data__patient_cpf',
+        'apac_data__patient_address_street_name',
+        'apac_data__supervising_physician_name',
+        'apac_data__authorizing_physician_name',
+        'apac_data__main_procedure__name',
+        'apac_data__procedure_date',
+        'apac_data__discharge_date',
+        'request_date',
+        'updated_at'
     ]
 
     list_filter = [
@@ -263,99 +266,154 @@ class ApacRequestAdmin(admin.ModelAdmin):
         FinishedFilter,
     ]
 
+    # ==========================
+    # OTIMIZAÇÃO PRINCIPAL
+    # ==========================
+
+    def get_queryset(self, request):
+
+        qs = super().get_queryset(request)
+
+        qs = qs.select_related(
+            "establishment",
+            "establishment__city",
+            "requester",
+            "apac_data",
+            "apac_data__main_procedure"
+        ).prefetch_related(
+            "apac_data__records"
+        )
+
+        if not request.user.is_superuser:
+            qs = qs.filter(establishment__city=request.user.city)
+
+        return qs
+
+    # ==========================
+    # CAMPOS EXIBIDOS
+    # ==========================
+
     @admin.display(description="Procedimento")
     def procedimento_name(self, obj):
-        return obj.apac_data.main_procedure.name
-    
+        if obj.apac_data and obj.apac_data.main_procedure:
+            return obj.apac_data.main_procedure.name
+        return "-"
+
     @admin.display(description="Paciente")
     def paciente_name(self, obj):
-        return obj.apac_data.patient_name
+        if obj.apac_data:
+            return obj.apac_data.patient_name
+        return "-"
 
     @admin.display(description="Data Preenchimento")
     def data_preenchimento(self, obj):
         return obj.updated_at
 
-    @admin.display(description="Data Preenchimento")
-    def data_preenchimento(self, obj):
-        return obj.updated_at
-    
     @admin.display(description="Competencia")
     def competencia_format(self, obj):
-        return date_format(obj.request_date, "F/Y")  # Ex.: Outubro/2025
+        return date_format(obj.request_date, "F/Y")
 
     @admin.display(description="Solicitante")
     def requester_user(self, obj):
-        url = reverse("admin:customuser_customuser_change", args=[obj.requester.pk])
+
+        if not obj.requester:
+            return "-"
+
+        url = reverse(
+            "admin:customuser_customuser_change",
+            args=[obj.requester.pk]
+        )
+
         full_name = f"{obj.requester.first_name} {obj.requester.last_name}"
+
         return format_html('<a href="{}">{}</a>', url, full_name)
 
     @admin.display(description="Cidade")
     def city(self, obj):
-        return obj.establishment.city.name
+        if obj.establishment and obj.establishment.city:
+            return obj.establishment.city.name
+        return "-"
 
     @admin.display(description="Autorizado? (Aprovado/Rejeitado)", boolean=True)
     def finished(self, obj):
         return obj.status != "pending"
 
+    # ==========================
+    # READONLY FIELDS
+    # ==========================
+
     def get_readonly_fields(self, request, obj=None):
-        """
-        Define campos como somente leitura para usuários comuns,
-        mas permite edição total para superusuários.
-        """
+
         editable_fields = [
-            'request_date', 'establishment'
+            'request_date',
+            'establishment'
         ]
 
         if request.user.is_superuser:
-            return []  # superusuário pode editar tudo
+            return []
 
         base_fields = [
-            field.name for field in self.model._meta.fields
-            if not field.name in editable_fields
+            field.name
+            for field in self.model._meta.fields
+            if field.name not in editable_fields
         ]
 
         return base_fields
-    
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if not request.user.is_superuser:
-            qs = qs.filter(establishment__city=request.user.city)
-        return qs
-    
+
+    # ==========================
+    # BUSCA CUSTOM
+    # ==========================
+
     def get_search_results(self, request, queryset, search_term):
-        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+
+        queryset, use_distinct = super().get_search_results(
+            request,
+            queryset,
+            search_term
+        )
 
         campo = request.GET.get('campo_busca')
+
         if campo and search_term:
-            filtro = {f"{campo}__icontains": search_term}
-            queryset = self.model.objects.filter(**filtro)
+
+            filtro = {
+                f"{campo}__icontains": search_term
+            }
+
+            queryset = queryset.filter(**filtro)
 
         return queryset, use_distinct
 
     # ==========================
-    # NOVAS CONFIGURAÇÕES
+    # FILTROS DINÂMICOS
     # ==========================
 
     def get_list_filter(self, request):
-        """
-        Exibe o filtro 'establishment__city' apenas para superusuários.
-        Todos veem o filtro 'establishment', mas com queryset restrito.
-        """
-        filters = list(self.list_filter)  # copia base
+
+        filters = list(self.list_filter)
 
         if request.user.is_superuser:
-            filters.insert(3, 'establishment__city')  # adiciona antes de 'establishment'
+            filters.insert(3, 'establishment__city')
             filters.insert(4, 'establishment')
         else:
-            filters.insert(3, EstablishmentCityFilter)  # só mostra o filtro limitado
+            filters.insert(3, EstablishmentCityFilter)
+
         return filters
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """
-        Limita o campo 'establishment' aos estabelecimentos da cidade do usuário,
-        exceto para superusuários.
-        """
-        if db_field.name == "establishment" and not request.user.is_superuser:
-            kwargs["queryset"] = EstablishmentModel.objects.filter(city=request.user.city)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    # ==========================
+    # LIMITAR ESTABELECIMENTOS
+    # ==========================
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+
+        if db_field.name == "establishment" and not request.user.is_superuser:
+
+            kwargs["queryset"] = EstablishmentModel.objects.filter(
+                city=request.user.city
+            )
+
+        return super().formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
