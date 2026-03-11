@@ -117,7 +117,7 @@ class ApacBatchAdmin(admin.ModelAdmin):
 
     @admin.display(description="Data de uso da Faixa")
     def assignment(self, obj):
-        return getattr(obj.apac_request, 'request_date', '')
+        return getattr(obj.apac_request, 'review_date', '')
 
     @admin.display(boolean=True, description='Disponível para uso?')
     def available(self, obj):
