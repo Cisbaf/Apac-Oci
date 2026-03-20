@@ -28,6 +28,7 @@ export default function CnsInput(props: CnsInputProps) {
         if (cns && cns.length === 15) {
             showBackdrop(true, "Buscando dados...");
             try {
+                console.log("al?")
                 const response = await fetch("/api/cadsus",{
                     method: "POST",
                     body: JSON.stringify({
@@ -35,14 +36,24 @@ export default function CnsInput(props: CnsInputProps) {
                         value: cns
                     })
                 })
-                const patient_info = await showResponseApi(response);
-                if (response.ok && props.formKey == "patient") {
-                    fillRequestFormFromPatient(patient_info, setValue);
-                } else if (response.ok && props.formKey == "supervising") {
-                    setValue("apacData.supervisingPhysicianName", patient_info.full_name);
-                } else if (response.ok && props.formKey == "authorizing") {
-                    setValue("apacData.authorizingPhysicianName", patient_info.full_name);
+
+                if (response.status == 422) {
+                    const errorJson = await response.json();
+                    const errorMessage = errorJson.detail[0].msg;
+                    console.log(errorMessage);
+                    showAlert({ color: "error", message: errorMessage})
                 }
+                else {
+                    const patient_info = await showResponseApi(response);
+                    if (response.ok && props.formKey == "patient") {
+                        fillRequestFormFromPatient(patient_info, setValue);
+                    } else if (response.ok && props.formKey == "supervising") {
+                        setValue("apacData.supervisingPhysicianName", patient_info.full_name);
+                    } else if (response.ok && props.formKey == "authorizing") {
+                        setValue("apacData.authorizingPhysicianName", patient_info.full_name);
+                    }
+                }
+           
                 
             } catch (e) {
                 showAlert({ color: "error", message: "Erro ao tentar preencher dados automáticos, por favor preencha manualmente!"})
