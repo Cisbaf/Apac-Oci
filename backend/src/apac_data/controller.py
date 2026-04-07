@@ -40,6 +40,7 @@ class ApacDataController(ApacDataRepository):
             cid=CidModel.objects.get(pk=apac_data.cid.id),
             procedure_date=apac_data.procedure_date,
             discharge_date=apac_data.discharge_date,
+            diagnostic_date=apac_data.diagnostic_date,
             main_procedure=ProcedureModel.objects.get(pk=apac_data.main_procedure.id)
         )
         for sub in apac_data.sub_procedures:

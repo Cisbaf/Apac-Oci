@@ -18,6 +18,7 @@ class ApacData(BaseModel):
     discharge_date: date
     main_procedure: Procedure
     sub_procedures: List[ProcedureRecord]
+    diagnostic_date: Optional[date] = None # data do diasgnostico
     id: Optional[int] = None
 
     @field_validator('procedure_date', 'discharge_date', mode='after')

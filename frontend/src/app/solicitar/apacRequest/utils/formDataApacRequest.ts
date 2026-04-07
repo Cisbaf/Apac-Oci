@@ -31,6 +31,7 @@ export const emptyRequestForm: RequestForm = {
     cidId: 0,
     procedureDate: "",
     dischargeDate: "",
+    diagnosticDate: "",
     mainProcedureId: 0,
     subProcedures: []
   }

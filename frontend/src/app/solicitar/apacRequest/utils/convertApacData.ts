@@ -30,6 +30,7 @@ export function convertApacDataToForm(data: ApacData): ApacDataForm {
     cidId: data.cid.id, // assumindo que Cid tem propriedade id do tipo number
     procedureDate: formatDateBr(data.procedure_date),
     dischargeDate: formatDateBr(data.discharge_date),
+    diagnosticDate: data.diagnostic_date,
     mainProcedureId: data.main_procedure.id, // assumindo que Procedure tem id
     subProcedures: data.sub_procedures.map(sp => ({
       procedure: sp.procedure,

@@ -53,9 +53,11 @@ export interface ApacData {
   cid: Cid;
   procedure_date: string;
   discharge_date: string;
+  diagnostic_date: string;
   main_procedure: Procedure;
   sub_procedures: SubProcedure[];
 }
+
 export type ApacRequest = {
     establishment: Establishment;
     requester: User;

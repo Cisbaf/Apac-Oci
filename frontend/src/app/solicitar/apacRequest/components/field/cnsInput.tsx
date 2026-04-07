@@ -28,7 +28,6 @@ export default function CnsInput(props: CnsInputProps) {
         if (cns && cns.length === 15) {
             showBackdrop(true, "Buscando dados...");
             try {
-                console.log("al?")
                 const response = await fetch("/api/cadsus",{
                     method: "POST",
                     body: JSON.stringify({
@@ -40,7 +39,6 @@ export default function CnsInput(props: CnsInputProps) {
                 if (response.status == 422) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.detail[0].msg;
-                    console.log(errorMessage);
                     showAlert({ color: "error", message: errorMessage})
                 }
                 else {

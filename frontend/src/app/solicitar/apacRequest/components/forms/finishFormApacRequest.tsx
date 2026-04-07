@@ -25,11 +25,15 @@ export default function ApacRequestFinishForm() {
     const finish = async() => {
         showBackdrop(true, "Solicitando apac!");
         const data = structuredClone(getValues());
+
         // @ts-ignore
         data.apacData.subProcedures = adapterFormSubProcedures(data.apacData.subProcedures);
         data.apacData.procedureDate = formatDateToISO(data.apacData.procedureDate);
         data.apacData.dischargeDate = formatDateToISO(data.apacData.dischargeDate);
         data.apacData.patientBirthDate = formatDateToISO(data.apacData.patientBirthDate);
+        // @ts-ignore
+        data.apacData.diagnosticDate = data.apacData.diagnosticDate? data.apacData.diagnosticDate : null
+        // data.apacData.diagnosticDate = formatDateToISO(data.apacData.diagnosticDate);
         const data_json = JSON.stringify(ToSnakeCase(data));
         const response = await fetch('/api/proxy/apac_request/api', {
             method: "POST",

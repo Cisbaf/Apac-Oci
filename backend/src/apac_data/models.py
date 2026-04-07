@@ -56,6 +56,7 @@ class ApacDataModel(models.Model):
     main_procedure = models.ForeignKey(to=ProcedureModel, on_delete=models.DO_NOTHING, verbose_name="Procedimento principal")
     procedure_date = models.DateField(verbose_name="Data do procedimento")
     discharge_date = models.DateField(verbose_name="Data da alta")
+    diagnostic_date = models.DateField(verbose_name="Data do Diagonóstico", blank=True, null=True)
     cid = models.ForeignKey(to=CidModel, on_delete=models.DO_NOTHING, verbose_name="CID")
 
     class Meta:
@@ -105,5 +106,6 @@ class ApacDataModel(models.Model):
             discharge_date=self.discharge_date,
             main_procedure=self.main_procedure.to_entity(**kwargs),
             sub_procedures=[record.to_entity() for record in records if record] if records else [],
+            diagnostic_date=self.diagnostic_date if self.diagnostic_date else None,
             id=self.pk
         )

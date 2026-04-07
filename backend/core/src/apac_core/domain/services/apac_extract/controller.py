@@ -95,7 +95,9 @@ class ExportApacBatchController:
                 apac_info=ApacVariavel(
                     apa_cmp=self.date_production.strftime("%Y%m"),
                     apa_num=apac_batch.batch_number,
-                    apa_cidpri=apac_data.cid.code
+                    apa_cidpri=apac_data.cid.code,
+                    apa_cidsec="",
+                    apa_dtiden=apac_data.diagnostic_date.strftime("%Y%m%d") if apac_data.diagnostic_date else ""
                 ),
                 apac_procedures=[
                     ApacProcedure(

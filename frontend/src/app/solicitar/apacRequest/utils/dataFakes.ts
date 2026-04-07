@@ -31,6 +31,7 @@ export const fakeRequestForm: RequestForm = {
         cidId: 6,
         procedureDate: "01/08/2025",
         dischargeDate: "02/08/2025",
+        diagnosticDate: "01/08/2025",
         mainProcedureId: 231,
         subProcedures: subProcedures
     }
@@ -66,6 +67,7 @@ export const fakeDataRequestFillingPart: RequestForm = {
       cidId: 0,
       procedureDate: "01/08/2025",
       dischargeDate: "02/08/2025",
+      diagnosticDate: "01/08/2025",
       mainProcedureId: 0,
       subProcedures: []
   }

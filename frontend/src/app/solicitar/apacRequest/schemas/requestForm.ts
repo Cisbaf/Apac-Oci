@@ -35,6 +35,7 @@ export  interface ApacData {
     cidId: number;
     procedureDate: string;
     dischargeDate: string;
+    diagnosticDate: string;
     mainProcedureId: number;
     subProcedures: SubProceduresForm[];
 }

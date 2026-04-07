@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from apac_core.domain.repositories.apac_data_repository import ApacDataRepository
 from apac_core.domain.repositories.cid_repository import CidRepository
@@ -47,6 +47,7 @@ class CreateApacDataDTO(BaseModel):
     discharge_date: str
     main_procedure_id: int
     sub_procedures: List[CreateProcedureRecordDTO]
+    diagnostic_date: Optional[str] = None
 
 
 @dataclass
@@ -117,6 +118,7 @@ class CreateApacDataUseCase:
             cid=cid,
             procedure_date=data.procedure_date,
             discharge_date=data.discharge_date,
+            diagnostic_date=data.diagnostic_date,
             main_procedure=main_procedure,
             sub_procedures=sub_procedures
         ))
