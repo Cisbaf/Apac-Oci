@@ -84,77 +84,95 @@ class EstablishmentCityFilter(admin.SimpleListFilter):
 # ==========================
 # INLINE: APAC DATA
 # ==========================
+from django.urls import reverse
+from django.utils.html import format_html, format_html_join
+
 
 class ApacDataInline(admin.StackedInline):
-    """
-    Exibe e gerencia os dados da APAC (ApacDataModel) diretamente
-    dentro da tela de edição da requisição (ApacRequestModel).
-    """
     model = ApacDataModel
     verbose_name = "Dados Apac"
-    extra = 0  # não adiciona formulários extras automaticamente
-    can_delete = False  # impede remoção via admin
+    extra = 0
+    can_delete = False
     readonly_fields = ['sub_procedures_readonly']
 
     def sub_procedures_readonly(self, instance):
-        """
-        Exibe uma lista dos subprocedimentos relacionados ao registro atual.
-        É apenas leitura, usada como resumo visual dentro do admin.
-        """
         if not instance.pk:
-            return "Salve os dados primeiro para ver os subprocedimentos."
+            return "Salve primeiro para gerenciar os subprocedimentos."
 
         records = instance.records.all()
-        if not records:
-            return "Nenhum procedimento registrado."
 
-        # Renderiza cada subprocedimento em HTML (nome e quantidade)
-        header = """
-            <table style="border-collapse: collapse; width: 100%;">
-                <thead>
-                    <tr>
-                        <th style="text-align:left; padding:4px; border-bottom:1px solid #ccc;">Procedimento</th>
-                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">Qtd</th>
-                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">CBO</th>
-                        <th style="text-align:center; padding:4px; border-bottom:1px solid #ccc;">CNES</th>
-                    </tr>
-                </thead>
-                <tbody>
+        # botão adicionar
+        # add_url = (
+        #     reverse("admin:procedure_record_procedurerecordmodel_add")
+        #     + f"?apac_data={instance.pk}"
+        # )
+
+        # <div style="margin-bottom:10px;">
+        #     <a href="{add_url}" class="button" target="_blank">
+        #         ➕ Adicionar Subprocedimento
+        #     </a>
+        # </div>
+
+        header = f"""
+ 
+
+        <table style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr>
+                    <th style="text-align:left; padding:6px; border-bottom:1px solid #ccc;">Procedimento</th>
+                    <th style="text-align:center;">Qtd</th>
+                    <th style="text-align:center;">CBO</th>
+                    <th style="text-align:center;">CNES</th>
+                    <th style="text-align:center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
         """
 
-        rows = format_html_join(
-            "",
+        if not records:
+            rows = """
+                <tr>
+                    <td colspan="5" style="text-align:center; padding:10px;">
+                        Nenhum subprocedimento.
+                    </td>
+                </tr>
             """
-            <tr>
-                <td style="padding:4px;">{}</td>
-                <td style="text-align:center;">{}</td>
-                <td style="text-align:center; color:#555;">{}</td>
-                <td style="text-align:center; color:#555;">{}</td>
-            </tr>
-            """,
-            (
+        else:
+            rows = format_html_join(
+                "",
+                """
+                <tr>
+                    <td style="padding:6px;">{}</td>
+                    <td style="text-align:center;">{}</td>
+                    <td style="text-align:center;">{}</td>
+                    <td style="text-align:center;">{}</td>
+                    <td style="text-align:center;">
+                        <a href="{}" target="_blank">✏️ Editar</a>
+                    </td>
+                </tr>
+                """,
                 (
-                    r.procedure.name,
-                    r.quantity,
-                    r.cbo or "—",
-                    r.cnes or "—",
-                )
-                for r in records
-            ),
-        )
+                    (
+                        r.procedure.name,
+                        r.quantity,
+                        r.cbo or "—",
+                        r.cnes or "—",
+                        reverse(
+                            "admin:procedure_record_procedurerecordmodel_change",
+                            args=[r.pk]
+                        )
+                    )
+                    for r in records
+                ),
+            )
 
         footer = "</tbody></table>"
 
         return format_html(header) + rows + format_html(footer)
 
-
     sub_procedures_readonly.short_description = "Sub Procedimentos"
 
     def get_readonly_fields(self, request, obj=None):
-        """
-        Define campos como somente leitura para usuários comuns,
-        mas permite edição total para superusuários.
-        """
         editable_fields = [
             'cid', 'main_procedure', 'patient_name', 'patient_cns',
             'patient_cpf', 'patient_birth_date',
@@ -162,16 +180,14 @@ class ApacDataInline(admin.StackedInline):
         ]
 
         if request.user.is_superuser:
-            return []  # superusuário pode editar tudo
-        
-        # Retorna apenas os campos definidos acima + o campo calculado
+            return [] + ['sub_procedures_readonly']
+
         base_fields = [
             field.name for field in self.model._meta.fields
             if field.name in editable_fields
         ]
+
         return base_fields + ['sub_procedures_readonly']
-
-
 # ==========================
 # INLINE: APAC BATCH
 # ==========================
