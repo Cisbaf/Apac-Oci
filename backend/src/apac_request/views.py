@@ -91,13 +91,17 @@ class ApacRequestApprovedAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     @transaction.atomic
-    def post(self, request):
-        try:
-            ApprovedApacRequestUseCase(
+    def approve(self, request):
+        ApprovedApacRequestUseCase(
                 repo_apac_request=ApacRequestController(),
                 repo_user=UserController(),
                 repo_apac_batch=ApacBatchController()
-            ).execute(ApprovedApacRequestDTO(**request.data))
+        ).execute(ApprovedApacRequestDTO(**request.data))
+
+
+    def post(self, request):
+        try:
+            self.approve(request)
             return Response({"message": "Solicitação aprovada!"})
         except Exception as e:
             return Response({"message": str(e)}, status=403)
