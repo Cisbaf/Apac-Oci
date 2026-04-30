@@ -49,6 +49,8 @@ class ApacRequestListCreate(APIView):
             establishment__city=request.user.city,
             status=status,
             apac_data__procedure_date__range=(start_date, end_date)
+        ).exclude(
+            establishment__restricted_user=request.user
         )
         lenght = len(models_apac)
         if lenght < 1:
