@@ -12,7 +12,7 @@ from apac_core.domain.repositories.procedure_record_repository import ProcedureR
 from apac_core.domain.exceptions import DomainException
 from dataclasses import dataclass
 from datetime import datetime
-
+from dateutil.relativedelta import relativedelta
 
 class CreateApacRequestDTO(BaseModel):
     requester_id: int
@@ -32,21 +32,27 @@ class CreateApacRequestUseCase:
 
     def execute(self, data: CreateApacRequestDTO) -> ApacRequest:
 
-        # Verifica se a competencia e a data do procedimento estão no mesmo ano e mês
         try:
             request_date = datetime.strptime(data.request_date, "%Y-%m-%d")
             procedure_date = datetime.strptime(data.apac_data.procedure_date, "%Y-%m-%d")
+            discharge_date = datetime.strptime(data.apac_data.discharge_date, "%Y-%m-%d")
         except ValueError:
             raise DomainException("Formato de data inválido.#1")
 
-        same_year_and_month = (
-            request_date.year == procedure_date.year and
-            request_date.month == procedure_date.month
-        )
+        # 1. Procedimento não pode ser depois da alta
+        if procedure_date > discharge_date:
+            raise DomainException("A data do procedimento não pode ser posterior à data de alta.")
 
-        if not same_year_and_month:
-            raise DomainException("A data do procedimento deve estar no mesmo ano e mês da competência selecionada.")
-        
+        # 2. Solicitação não pode ser depois da alta
+        if request_date > discharge_date:
+            raise DomainException("A data de solicitação não pode ser posterior à data de alta.")
+
+        # 4. Regra dos 2 meses
+        limit_date = (procedure_date + relativedelta(months=2)).replace(day=1) - relativedelta(days=1)
+
+        if discharge_date > limit_date:
+            raise DomainException("A data de alta excede o limite de 2 meses da APAC.")
+            
         # Obtém o requester pelo ID 
         requester = GetUserRequesterOrAdministratorUseCase(self.repo_user).execute(data.requester_id)
 
