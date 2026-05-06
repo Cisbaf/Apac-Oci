@@ -73,7 +73,8 @@ class ExportApacBatchController:
                         numero_pronturario="",
                         cnes_solicitate=self.establishment.cnes,
                         data_solicitacao=self.date_production.strftime("%Y%m%d"), # Data da solicitação deverá ser igual a data de inicio da validade da APAC - Hoje a data de solicitação está replicando a data do procedimento   apac_request.apac_data.procedure_date.strftime("%Y%m%d")
-                        data_autorizacao=apac_request.apac_data.procedure_date.strftime("%Y%m%d"), # por enquanto fixo
+                        # data_autorizacao=apac_request.apac_data.procedure_date.strftime("%Y%m%d"), # por enquanto fixo
+                        data_autorizacao = self.date_production.strftime("%Y%m%d"),
                         codigo_emissor=f"M{apac_batch.city.ibge_code}01",
                         caracter_atendimento="01",
                         apac_anterior="0000000000000",
