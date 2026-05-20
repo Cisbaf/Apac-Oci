@@ -3,7 +3,8 @@ from django.db.models import Q
 from datetime import date
 from .models import ApacBatchModel
 from city.models import CityModel
-
+from django.urls import reverse
+from django.utils.html import format_html
 
 class AvailableFilter(admin.SimpleListFilter):
     title = 'Disponível para uso?'
@@ -59,7 +60,7 @@ class ApacBatchAdmin(admin.ModelAdmin):
     list_display = [
         'batch_number',
         'nome_paciente',
-        'apac_request',
+        'preenchimento_apac',
         'created_in',
         'expire_in',
         'assignment',
@@ -108,6 +109,18 @@ class ApacBatchAdmin(admin.ModelAdmin):
     # ==========================
     # CAMPOS CALCULADOS
     # ==========================
+
+    @admin.display(description="Preenchimento Apac")
+    def preenchimento_apac(self, obj):
+        if not obj.apac_request:
+            return "-"
+
+        url = reverse(
+            f"admin:{obj.apac_request._meta.app_label}_{obj.apac_request._meta.model_name}_change",
+            args=[obj.apac_request.pk]
+        )
+
+        return format_html('<a href="{}">Ver preenchimento</a>', url)
 
     @admin.display(description="Paciente")
     def nome_paciente(self, obj):
