@@ -4,7 +4,7 @@ from customuser.models import CustomUser
 from apac_data.models import ApacDataModel
 from apac_core.domain.repositories.apac_request_repository import ApacRequestRepository
 from apac_core.domain.exceptions import NotFoundException
-
+import re
 
 class ApacRequestController(ApacRequestRepository):
 
@@ -13,6 +13,13 @@ class ApacRequestController(ApacRequestRepository):
         if apac_request:
             return apac_request.to_entity()
         raise NotFoundException()
+    
+    def check_duplicates(self, establishment_id: int, patient_cpf: str, main_procedure: int):
+        return ApacRequestModel.objects.filter(
+            establishment__pk=establishment_id,
+            apac_data__patient_cpf=re.sub(r'\D', '', patient_cpf),  # Remove caracteres não numéricos do CPF
+            apac_data__main_procedure__pk=main_procedure,
+        ).exists()
     
     def save(self, apac_request):
         if apac_request.id:

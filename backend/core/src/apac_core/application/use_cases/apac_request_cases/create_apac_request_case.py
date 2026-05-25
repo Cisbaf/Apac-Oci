@@ -61,6 +61,14 @@ class CreateApacRequestUseCase:
         if establishment.city.id != requester.city.id:
             raise DomainException(f"O requester pertence a cidade {requester.city.name} e está tentando registrar apac na cidade {establishment.city.name}")
 
+        # checar duplicidade
+        if self.repo_apac_request.check_duplicates(
+            data.establishment_id,
+            data.apac_data.patient_cpf,
+            data.apac_data.main_procedure_id
+        ):
+            raise DomainException("Já existe uma solicitação aprovada para esse paciente com o mesmo procedimento principal nesse estabelecimento, consulte no painel administratio!.")
+
         # Registra o Apac Data via Use Case Apac Dara
         apac_data = CreateApacDataUseCase(
             self.repo_apac_data,

@@ -9,5 +9,9 @@ class ApacRequestRepository(ABC):
         pass
 
     @abstractmethod
+    def check_duplicates(self, establishment_id: int, patient_cpf: str, main_procedure: int):
+        pass
+    
+    @abstractmethod
     def get_by_id(self, id: int) -> ApacRequest:
         pass
