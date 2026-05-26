@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useApacViewContext } from "../context/ApacViewContext";
 import { useAutorizeMultiplesApac } from "../context/AutorizeMultiplesApac";
+import MonthYearInputGeneric from "./MontYearInputGeneric";
 
 const statusOptions = [
   { label: "Solicitadas", value: "pending" },
@@ -18,27 +19,32 @@ const statusOptions = [
 ];
 
 export default function ApacFilter() {
-
   const {clearSelection} = useAutorizeMultiplesApac();
-  // Obtem a data atual
-  const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
-
-  // Define o primeiro dia do mês atual
-  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-    .toISOString()
-    .split("T")[0];
-
-  const [dataInicio, setDataInicio] = React.useState<string>(firstDayOfMonth);
-  const [dataFim, setDataFim] = React.useState<string>(todayStr);
   const [status, setStatus] = React.useState<string>("pending");
   const { searchApacs } = useApacViewContext();
+  const [productionValue, setProductionValue] = React.useState<Date | null>(null);
 
   const makeParams = () => {
     clearSelection();
-    const params = `start_date=${dataInicio}&end_date=${dataFim}&status=${status}`;
+    console.log(productionValue)
+    const params = new URLSearchParams({
+      competencia_month: productionValue
+        ? String(productionValue.getMonth() + 1).padStart(2, "0")
+        : "",
+        
+      competencia_year: productionValue
+        ? String(productionValue.getFullYear())
+        : "",
+
+      status,
+    }).toString();
     searchApacs(params);
   };
+
+    const now = new Date();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+    const currentYear = now.getFullYear();
+    const maxDate = `${currentYear}-${currentMonth}`;
 
   return (
     <Box
@@ -53,22 +59,14 @@ export default function ApacFilter() {
         borderRadius: 1,
       }}
     >
-      <TextField
-        size="small"
-        label="Data Início"
-        type="date"
-        value={dataInicio}
-        onChange={(e) => setDataInicio(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-      />
-      <TextField
-        size="small"
-        label="Data Fim"
-        type="date"
-        value={dataFim}
-        onChange={(e) => setDataFim(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-      />
+    <Box flex={0.5}>
+    <MonthYearInputGeneric
+      minDate="2024-01"
+      maxDate={maxDate}
+      value={productionValue}
+      setValue={setProductionValue}
+      label="Período de Produção"/>
+      </Box>
       <FormControl sx={{ minWidth: 150 }}>
         <InputLabel id="select-status-label">Status</InputLabel>
         <Select

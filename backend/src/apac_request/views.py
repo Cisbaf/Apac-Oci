@@ -31,8 +31,8 @@ class ApacRequestListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        start_date = request.query_params.get('start_date')
-        end_date = request.query_params.get('end_date')
+        competencia_month = request.query_params.get('competencia_month')
+        competencia_year = request.query_params.get('competencia_year')
         status = request.query_params.get('status')
         id = request.query_params.get('id')
         if id:
@@ -48,7 +48,8 @@ class ApacRequestListCreate(APIView):
         models_apac = ApacRequestModel.objects.filter(
             establishment__city=request.user.city,
             status=status,
-            apac_data__discharge_date__range=(start_date, end_date),
+            request_date__year=competencia_year,
+            request_date__month=competencia_month
         )
         lenght = len(models_apac)
         if lenght < 1:

@@ -16,6 +16,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { Menu, MenuItem } from "@mui/material";
 import AppsIcon from '@mui/icons-material/Apps';
+import { getMonthNamePtBr } from "@/app/solicitar/apacRequest/utils/dateUtils";
 
 
 interface TableProps {
@@ -65,6 +66,7 @@ export default function ApacTable({ onlyView }: TableProps) {
       { field: "cns", headerName: "CNS Paciente", width: 150 },
       { field: "establishment", headerName: "Estabelecimento", width: 220},
       { field: "procedure", headerName: "Procedimento", width: 180 },
+      { field: "comp", headerName: "Competência", width: 180 },
       { field: "status", headerName: "Status", width: 100 },
     ];
 
@@ -118,6 +120,7 @@ export default function ApacTable({ onlyView }: TableProps) {
       cns: apac.apac_data.patient_data.cns,
       establishment: apac.establishment.name,
       procedure: apac.apac_data.main_procedure.name,
+      comp: getMonthNamePtBr(apac.request_date),
       status: ApacStatusTranslation[apac.status],
     }));
   }, [listApac]);
