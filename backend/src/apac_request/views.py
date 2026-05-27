@@ -31,8 +31,8 @@ class ApacRequestListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        competencia_month = request.query_params.get('competencia_month')
-        competencia_year = request.query_params.get('competencia_year')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
         status = request.query_params.get('status')
         id = request.query_params.get('id')
         if id:
@@ -45,11 +45,14 @@ class ApacRequestListCreate(APIView):
             except:
                 return Response("Não encontrado!", status=400)
 
-        models_apac = ApacRequestModel.objects.filter(
-            establishment__city=request.user.city,
-            status=status,
-            request_date__year=competencia_year,
-            request_date__month=competencia_month
+        models_apac = (
+            ApacRequestModel.objects
+            .filter(
+                establishment__city=request.user.city,
+                status=status,
+                apac_data__procedure_date__range=(start_date, end_date)
+            )
+            .exclude(establishment__restricted_user=request.user)
         )
         lenght = len(models_apac)
         if lenght < 1:
@@ -92,17 +95,13 @@ class ApacRequestApprovedAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     @transaction.atomic
-    def approve(self, request):
-        ApprovedApacRequestUseCase(
+    def post(self, request):
+        try:
+            ApprovedApacRequestUseCase(
                 repo_apac_request=ApacRequestController(),
                 repo_user=UserController(),
                 repo_apac_batch=ApacBatchController()
-        ).execute(ApprovedApacRequestDTO(**request.data))
-
-
-    def post(self, request):
-        try:
-            self.approve(request)
+            ).execute(ApprovedApacRequestDTO(**request.data))
             return Response({"message": "Solicitação aprovada!"})
         except Exception as e:
             return Response({"message": str(e)}, status=403)
