@@ -72,7 +72,12 @@ class EstablishmentCityFilter(admin.SimpleListFilter):
         if request.user.is_superuser:
             qs = EstablishmentModel.objects.all()
         else:
-            qs = EstablishmentModel.objects.filter(city=request.user.city)
+            qs = (
+                EstablishmentModel.objects
+                .filter(city=request.user.city)
+                .exclude(restricted_user=request.user)
+            )
+
         return [(e.id, e.name) for e in qs]
 
     def queryset(self, request, queryset):
@@ -301,7 +306,14 @@ class ApacRequestAdmin(admin.ModelAdmin):
         )
 
         if not request.user.is_superuser:
-            qs = qs.filter(establishment__city=request.user.city)
+            qs = (
+                qs.filter(
+                    establishment__city=request.user.city
+                )
+                .exclude(
+                    establishment__restricted_user=request.user
+                )
+            )
 
         return qs
 
@@ -424,8 +436,10 @@ class ApacRequestAdmin(admin.ModelAdmin):
 
         if db_field.name == "establishment" and not request.user.is_superuser:
 
-            kwargs["queryset"] = EstablishmentModel.objects.filter(
-                city=request.user.city
+            kwargs["queryset"] = (
+                EstablishmentModel.objects
+                .filter(city=request.user.city)
+                .exclude(restricted_user=request.user)
             )
 
         return super().formfield_for_foreignkey(
