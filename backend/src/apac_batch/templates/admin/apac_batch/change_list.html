@@ -1,0 +1,14 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+    {% if request.user.is_superuser or request.user.role == "admin" %}
+    <li>
+        <a href="{% url 'admin:apac_batch_importar_faixas' %}"
+           class="btn btn-success btn-sm">
+            ➕ Importar Faixas
+        </a>
+    </li>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

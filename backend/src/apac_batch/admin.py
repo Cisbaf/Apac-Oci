@@ -3,8 +3,13 @@ from django.db.models import Q
 from datetime import date
 from .models import ApacBatchModel
 from city.models import CityModel
-from django.urls import reverse
+from django.urls import path, reverse
 from django.utils.html import format_html
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import HttpResponseForbidden
+from customuser.models import UserRole
+from .forms import ImportFaixasForm
 
 class AvailableFilter(admin.SimpleListFilter):
     title = 'Disponível para uso?'
@@ -85,6 +90,50 @@ class ApacBatchAdmin(admin.ModelAdmin):
     ]
 
     readonly_fields = ('export_date',)
+
+    # ==========================
+    # IMPORTAÇÃO DE FAIXAS
+    # ==========================
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom = [
+            path(
+                'importar-faixas/',
+                self.admin_site.admin_view(self.importar_faixas_view),
+                name='apac_batch_importar_faixas'
+            ),
+        ]
+        return custom + urls
+
+    def importar_faixas_view(self, request):
+        user = request.user
+
+        if not (user.is_superuser or user.role == UserRole.ADMIN):
+            return HttpResponseForbidden("Acesso restrito a administradores.")
+
+        if request.method == 'POST':
+            form = ImportFaixasForm(request.POST, user=user)
+            if form.is_valid():
+                total = form.salvar()
+                cidade = form.get_city().name
+                messages.success(
+                    request,
+                    f"{total} faixa(s) importadas com sucesso para {cidade}."
+                )
+                return redirect(
+                    reverse('admin:apac_batch_apacbatchmodel_changelist')
+                )
+        else:
+            form = ImportFaixasForm(user=user)
+
+        context = {
+            **self.admin_site.each_context(request),
+            'title': 'Importar Faixas APAC',
+            'form': form,
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/apac_batch/importar_faixas.html', context)
 
     # ==========================
     # OTIMIZAÇÃO PRINCIPAL

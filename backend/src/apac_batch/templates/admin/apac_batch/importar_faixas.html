@@ -1,0 +1,82 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Importar Faixas APAC{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'admin:apac_batch_apacbatchmodel_changelist' %}">Lotes Apac</a>
+    </li>
+    <li class="breadcrumb-item active">Importar Faixas</li>
+</ol>
+<br>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <h5><i class="icon fas fa-ban"></i> Erros encontrados — nenhuma faixa foi inserida</h5>
+        <ul>
+            {% for erro in form.non_field_errors %}
+            <li>{{ erro }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Importar Faixas APAC</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    {% if form.fixed_city %}
+                    <label>Cidade</label>
+                    <input type="text" class="form-control" value="{{ form.fixed_city.name }}" disabled>
+                    <small class="form-text text-muted">A importação será feita para a cidade do seu usuário.</small>
+                    {% else %}
+                    <label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                    <div class="text-danger">{{ form.city.errors }}</div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.quantidade_esperada.id_for_label }}">{{ form.quantidade_esperada.label }}</label>
+                    {{ form.quantidade_esperada }}
+                    {% if form.quantidade_esperada.help_text %}
+                    <small class="form-text text-muted">{{ form.quantidade_esperada.help_text }}</small>
+                    {% endif %}
+                    {% if form.quantidade_esperada.errors %}
+                    <div class="text-danger">{{ form.quantidade_esperada.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.faixas_raw.id_for_label }}">{{ form.faixas_raw.label }}</label>
+                    {{ form.faixas_raw }}
+                    {% if form.faixas_raw.help_text %}
+                    <small class="form-text text-muted">{{ form.faixas_raw.help_text }}</small>
+                    {% endif %}
+                    {% if form.faixas_raw.errors %}
+                    <div class="text-danger">{{ form.faixas_raw.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Importar</button>
+                <a href="{% url 'admin:apac_batch_apacbatchmodel_changelist' %}"
+                   class="btn btn-default float-right">Cancelar</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
