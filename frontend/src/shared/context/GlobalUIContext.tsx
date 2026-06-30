@@ -36,6 +36,8 @@ export function GlobalComponentsProvider({ children }: { children: React.ReactNo
     const json = await response.json();
     if (json.message){
       showAlert({color: response.ok? "success":"error", message: json.message});
+    } else if (!response.ok) {
+      showAlert({color: "error", message: "Erro ao processar requisição. Tente novamente."});
     }
     return json;
   }
