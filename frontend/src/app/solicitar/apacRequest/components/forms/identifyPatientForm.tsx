@@ -5,7 +5,7 @@ import { Controller } from 'react-hook-form';
 import { useFormRequest } from "@/app/solicitar/apacRequest/contexts/FormApacRequest";
 import { FormRepository, FormProps } from "@/shared/repositories/formRepository";
 import { useMask } from "@react-input/mask";
-import { BirdDateMsk, CepMask } from "@/shared/utils/mask";
+import { BirdDateMsk } from "@/shared/utils/mask";
 import { isValidCPF, isValidCNS } from "@/shared/utils/validate";
 import { MESSAGENOTCHECKVALIDITY, MESSAGECPFINVALIDITY, MESSAGEBIRTDATEINVALIDY, MESSAGECNSINVALIDITY } from "@/app/solicitar/apacRequest/utils/messages";
 import RaceColorSelector from "../field/raceColorSelector";
@@ -13,11 +13,11 @@ import GenderSelector from "../field/genderSelector";
 import CpfInput from "../field/cpfInput";
 import CnsInput from "../field/cnsInput";
 import FormLogradouro from "../field/logradouroSelector";
+import CepInput from "../field/cepInput";
 
 const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, ref)=>{
-    const formRef = React.useRef<HTMLFormElement>(null); 
+    const formRef = React.useRef<HTMLFormElement>(null);
     const birdDateMaskRef = useMask(BirdDateMsk);
-    const cepMask = useMask(CepMask);
     const { form , disabled: disabledForm } = useFormRequest();
     const { control, getValues } = form;
     const disabled = props.disabled? props.disabled : disabledForm;
@@ -165,18 +165,7 @@ const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, 
                     </Grid>
                     
                     <Grid size={{xs:12, md:3, sm:6}}>
-                        <Controller
-                            name="apacData.patientAddressPostalCode"
-                            control={control}
-                            render={({ field }) => (
-                            <TextField   size="small" 
-                                inputRef={cepMask}
-                                label="CEP"
-                                disabled={disabled}
-                                fullWidth
-                                required
-                                {...field}/>
-                        )}/>
+                        <CepInput disabled={disabled}/>
                     </Grid>
 
                     <Grid size={{xs:12, md:3, sm:6}}>
