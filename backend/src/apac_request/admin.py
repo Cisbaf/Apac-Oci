@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 from apac_data.models import ApacDataModel
+from apac_data.forms import ApacDataInlineForm
 from apac_batch.models import ApacBatchModel
 from .models import ApacRequestModel
 from establishment.models import EstablishmentModel
@@ -95,10 +96,14 @@ from django.utils.html import format_html, format_html_join
 
 class ApacDataInline(admin.StackedInline):
     model = ApacDataModel
+    form = ApacDataInlineForm
     verbose_name = "Dados Apac"
     extra = 0
     can_delete = False
     readonly_fields = ['sub_procedures_readonly']
+
+    class Media:
+        js = ("apac_data/js/cep_admin.js",)
 
     def sub_procedures_readonly(self, instance):
         if not instance.pk:
