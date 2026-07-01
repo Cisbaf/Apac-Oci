@@ -1,4 +1,5 @@
 from django.db import models
+from .choices import STREET_TYPE_CHOICES
 from procedure.models import ProcedureModel, CidModel
 from apac_request.models import ApacRequestModel
 from apac_core.domain.entities.apac_data import ApacData
@@ -39,7 +40,11 @@ class ApacDataModel(models.Model):
     )
     patient_gender = models.CharField(max_length=255, verbose_name="Gênero do paciente")
     patient_mother_name = models.CharField(max_length=255, verbose_name="Nome da mãe do paciente")
-    patient_address_street_type = models.CharField(max_length=255, verbose_name="Tipo de logradouro")
+    patient_address_street_type = models.CharField(
+        max_length=255,
+        choices=STREET_TYPE_CHOICES,
+        verbose_name="Tipo de logradouro",
+    )
     patient_address_street_name = models.CharField(max_length=255, verbose_name="Nome do logradouro")
     patient_address_number = models.CharField(max_length=255, verbose_name="Número do endereço")
     patient_address_complement = models.CharField(max_length=255, verbose_name="Complemento do endereço", blank=True, default="")

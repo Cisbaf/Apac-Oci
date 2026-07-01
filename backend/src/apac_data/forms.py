@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.html import format_html
 
+from .choices import STREET_TYPE_CHOICES
 from .models import ApacDataModel
 
 
@@ -31,3 +32,15 @@ class ApacDataInlineForm(forms.ModelForm):
         widgets = {
             "patient_address_postal_code": CepSearchWidget(attrs={"data-cep-search": "true"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        valor_atual = self.instance.patient_address_street_type if self.instance.pk else None
+        codigos_validos = {code for code, _ in STREET_TYPE_CHOICES}
+
+        if valor_atual and valor_atual not in codigos_validos:
+            field = self.fields["patient_address_street_type"]
+            field.choices = [
+                (valor_atual, f"{valor_atual} (legado — não está na lista oficial)"),
+            ] + list(field.choices)
