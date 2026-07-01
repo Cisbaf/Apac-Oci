@@ -1,8 +1,11 @@
+import re
 from django import forms
 from django.db import transaction
 from datetime import date
 from city.models import CityModel
 from .models import ApacBatchModel
+
+FORMATO_FAIXA = re.compile(r'^\d{13}$')
 
 
 def parse_faixas(raw: str) -> list[str]:
@@ -78,14 +81,22 @@ class ImportFaixasForm(forms.Form):
         numeros = parse_faixas(raw)
         erros = []
 
-        # 1. Validação de quantidade
+        # 1. Validação de formato (deve ser exatamente 13 dígitos numéricos)
+        invalidos = [n for n in numeros if not FORMATO_FAIXA.match(n)]
+        if invalidos:
+            lista = ', '.join(invalidos)
+            erros.append(
+                f"As seguintes faixas estão em formato inválido (esperado: 13 dígitos numéricos): {lista}"
+            )
+
+        # 2. Validação de quantidade
         if len(numeros) != quantidade_esperada:
             erros.append(
                 f"Quantidade não confere: esperado {quantidade_esperada}, "
                 f"encontrado {len(numeros)} faixa(s)."
             )
 
-        # 2. Validação de duplicatas no banco
+        # 3. Validação de duplicatas no banco
         existentes = list(ApacBatchModel.objects.filter(
             batch_number__in=numeros
         ).values_list('batch_number', flat=True))
@@ -96,7 +107,7 @@ class ImportFaixasForm(forms.Form):
                 f"As seguintes faixas já estão registradas e não podem ser inseridas: {lista}"
             )
 
-        # 3. Validação de duplicatas dentro do próprio input
+        # 4. Validação de duplicatas dentro do próprio input
         vistos = set()
         duplicados_input = set()
         for n in numeros:
