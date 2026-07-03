@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from apac_core.domain.entities.apac_request import ApacRequest
 from apac_core.domain.entities.apac_status import ApacStatus
+from datetime import datetime
 
 class ApacRequestRepository(ABC):
 
@@ -9,7 +10,7 @@ class ApacRequestRepository(ABC):
         pass
 
     @abstractmethod
-    def check_duplicates(self, establishment_id: int, patient_cpf: str, main_procedure: int):
+    def check_duplicates(self, establishment_id: int, patient_cpf: str, main_procedure: int, request_date: datetime):
         pass
     
     @abstractmethod

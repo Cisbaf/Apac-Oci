@@ -65,9 +65,10 @@ class CreateApacRequestUseCase:
         if self.repo_apac_request.check_duplicates(
             data.establishment_id,
             data.apac_data.patient_cpf,
-            data.apac_data.main_procedure_id
+            data.apac_data.main_procedure_id,
+            request_date
         ):
-            raise DomainException("Já existe uma solicitação aprovada para esse paciente com o mesmo procedimento principal nesse estabelecimento, consulte no painel administratio!.")
+            raise DomainException("Já existe uma solicitação com o mesmo PACIENTE, PROCEDIMENTO, ESTABELECIMENTO E COMPETÊNCIA. Consulte o Painel Administrativo e busque pelo nome do paciente.")
 
         # Registra o Apac Data via Use Case Apac Dara
         apac_data = CreateApacDataUseCase(
