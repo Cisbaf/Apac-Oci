@@ -1,0 +1,24 @@
+# Overrides de desenvolvimento: hot-reload via bind mount, servidores de dev
+# (runserver/next dev) e SQLite (sem precisar de MySQL local).
+# Uso: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+services:
+  django:
+    volumes:
+      - ./logs:/app/src/logs
+      - ./backend/src:/app/src
+      - ./backend/core:/app/core
+    environment:
+      - DJANGO_ENV=development
+      - DJANGO_DEBUG=True
+    restart: "no"
+
+  nextjs:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    environment:
+      - NODE_ENV=development
+    restart: "no"

@@ -21,15 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-change-me-in-production")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://apac.cisbaf.org.br",
+    origin for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",") if origin
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -108,6 +108,12 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+# django-debug-toolbar só é ativado em desenvolvimento (DEBUG=True)
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'app.urls'
@@ -135,16 +141,26 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQL_DATABASE"),
-        'USER': os.getenv("MYSQL_USER"),
-        'PASSWORD': os.getenv("MYSQL_PASSWORD"),
-        'HOST': os.getenv("MYSQL_HOST"),
-        'PORT': os.getenv("MYSQL_PORT"),
+# Se as credenciais do MySQL não forem informadas (ambiente de desenvolvimento),
+# cai automaticamente para SQLite, sem precisar de um servidor de banco externo.
+if os.getenv("MYSQL_DATABASE"):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv("MYSQL_DATABASE"),
+            'USER': os.getenv("MYSQL_USER"),
+            'PASSWORD': os.getenv("MYSQL_PASSWORD"),
+            'HOST': os.getenv("MYSQL_HOST"),
+            'PORT': os.getenv("MYSQL_PORT"),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -192,7 +208,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # collectstatic vai colocar
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Domínios autorizados para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://apac.cisbaf.org.br']
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:3000").split(",") if origin
+]
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

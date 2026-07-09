@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+
 git pull
-docker compose build --pull --no-cache   # opcional, só se quiser garantir rebuild
-docker compose up -d --force-recreate
+./start-prod.sh
