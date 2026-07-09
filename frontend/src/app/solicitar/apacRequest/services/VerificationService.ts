@@ -48,7 +48,7 @@ export async function checkAgeProcedureAlert(
   }
 
   try {
-    const response = await fetch("/api/proxy/procedure/apac/check-age-alert/", {
+    const response = await fetch("/api/proxy/procedure/apac/check-age-alert", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
