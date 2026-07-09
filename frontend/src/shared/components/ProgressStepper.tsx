@@ -15,11 +15,19 @@ const ProgressBar = styled(LinearProgress)(({ theme }) => ({
 
 interface ProgressStepperProps {
   children: React.ReactNode;
+  /**
+   * Executado após a validação síncrona do step atual passar e antes de avançar
+   * para o próximo. Retornar `false` cancela o avanço (ex.: usuário recusou um
+   * aviso de confirmação). Erros/indisponibilidade devem ser tratados pelo
+   * próprio callback, que deve resolver `true` para não bloquear o usuário.
+   */
+  onBeforeNext?: (stepIndex: number) => Promise<boolean>;
 }
 
-export const ProgressStepper: FC<ProgressStepperProps> = ({ children }) => {
+export const ProgressStepper: FC<ProgressStepperProps> = ({ children, onBeforeNext }) => {
   const stepFormRef = useRef<StepFormValidate>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [isChecking, setIsChecking] = useState(false);
 
   const steps = Children.toArray(children).filter(
     (child): child is React.ReactElement<React.ComponentProps<typeof StepForm>> =>
@@ -34,10 +42,21 @@ export const ProgressStepper: FC<ProgressStepperProps> = ({ children }) => {
     return stepFormRef.current?.validateStep() ?? false;
   };
 
-  const nextStep = () => {
-    if (validateCurrentStep()) {
-      setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const nextStep = async () => {
+    if (!validateCurrentStep()) return;
+
+    if (onBeforeNext) {
+      setIsChecking(true);
+      let proceed = true;
+      try {
+        proceed = await onBeforeNext(activeStep);
+      } finally {
+        setIsChecking(false);
+      }
+      if (!proceed) return;
     }
+
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
   };
 
   const prevStep = () => {
@@ -62,8 +81,8 @@ export const ProgressStepper: FC<ProgressStepperProps> = ({ children }) => {
             </Button>
           )}
           {!isLastStep && (
-            <Button variant="contained"  onClick={nextStep}>
-              Próximo
+            <Button variant="contained" onClick={nextStep} disabled={isChecking}>
+              {isChecking ? "Verificando..." : "Próximo"}
             </Button>
           )}
         </Stack>

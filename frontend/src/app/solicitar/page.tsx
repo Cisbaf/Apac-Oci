@@ -18,7 +18,7 @@ import ApacRequestSkeleton from '@/app/solicitar/apacRequest/components/ApacRequ
 import { RouteGuard } from "@/shared/components/RouteGuard";
 import { UserRole } from "@/shared/schemas/user";
 import StepForm from '@/shared/components/StepComponent';
-import { ProgressStepper } from "@/shared/components/ProgressStepper";
+import ApacProgressStepper from './apacRequest/components/ApacProgressStepper';
 import { emptyRequestForm } from './apacRequest/utils/formDataApacRequest';
 import { fakeRequestForm } from '@/app/solicitar/apacRequest/utils/dataFakes';
 import IdentifyRequestDate from './apacRequest/components/forms/identifyRequestDate';
@@ -40,7 +40,7 @@ export default function PageApacRequest() {
                     allowedRoles={[UserRole.REQUESTER, UserRole.ADMIN]}>
                     <ApacRequestFormProvider
                         initialData={emptyRequestForm}>
-                        <ProgressStepper>
+                        <ApacProgressStepper>
                             <StepForm>
                                 <IdentifyRequestDate/>
                             </StepForm>
@@ -60,7 +60,7 @@ export default function PageApacRequest() {
                             <StepForm>
                                 <ApacRequestFinishForm/>
                             </StepForm>
-                        </ProgressStepper>
+                        </ApacProgressStepper>
                     </ApacRequestFormProvider>
                 </RouteGuard>
             </ApacRequestFillingData>
