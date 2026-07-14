@@ -99,9 +99,18 @@ class BaseApacTest(APITestCase):
             username=username or random_str()
         )
     
-    def create_batch(self, city):
+    def create_batch(self, city, competence=None):
+        """
+        search_for_available_batch (ApacBatchController) só considera faixas
+        cujo batch_number tenha o ano de competência (2 dígitos) nas posições
+        3-4 (ver Substr('batch_number', 3, 2) no controller). Sem isso, a
+        faixa nunca é encontrada e a aprovação falha com NO_BATCH_AVAILABLE.
+        `competence` default = ano do request_date usado em base_data.
+        """
+        competence = competence or date.fromisoformat(self.base_data.request_date)
+        year_2_digits = f"{competence.year % 100:02d}"
         return ApacBatchModel.objects.create(
-            batch_number=random_str(),
+            batch_number=f"33{year_2_digits}{random_str()}",
             city=city,
             expire_in=date.today()
         )
