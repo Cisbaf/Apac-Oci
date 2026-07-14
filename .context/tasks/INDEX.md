@@ -18,6 +18,9 @@
 | T-009 | Corrigir testes quebrados no frontend (import stale + URL sem barra) | todo | T-001 | `refactor/T-009-fix-frontend-tests` |
 | T-010 | Débito de lint do frontend (~81 erros pré-existentes, ESLint recém-configurado) | todo | T-001 | `refactor/T-010-lint-debt` |
 | T-011 | Atualizar Next.js (vulnerabilidade de segurança reportada pelo npm) | todo | — | `refactor/T-011-upgrade-nextjs` |
+| T-012 | Campo de controle do export hardcoded (`cbc-smt-vrf` = "1810" fixo) | todo | T-002 | `refactor/T-012-campo-controle-export` |
+| T-013 | `apa_munpcnte` usa cidade do estabelecimento, não do paciente | todo | T-002 | `refactor/T-013-municipio-paciente-export` |
+| T-014 | `apa_tipapac`/`apa_motsaida` hardcoded (sempre "Única"/"12") | todo | T-002 | `refactor/T-014-tipo-apac-motivo-saida-hardcoded` |
 
 ## Fase 1 — Fronteiras
 | ID | Tarefa | Status | Dep | Branch |
