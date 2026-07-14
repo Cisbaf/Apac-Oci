@@ -3,9 +3,13 @@
 # Falha (exit != 0) se QUALQUER gate falhar. Ver .context/workflow.md.
 #
 # Pré-requisitos:
-#   - venv do backend criada em backend/.venv (python3 -m venv backend/.venv;
-#     pip install -r backend/requirements.txt -r backend/core/requirements.txt).
+#   - venv do backend criada em backend/.venv:
+#       python3 -m venv backend/.venv && source backend/.venv/bin/activate
+#       (cd backend/core && pip install -r requirements.txt)
+#       (cd backend && pip install -r requirements.txt)
 #     Este script ativa a venv sozinho se ela existir.
+#     (os -e nos requirements.txt são relativos ao diretório de onde o pip
+#     roda — por isso a ordem/cd acima importa; ver commit da correção.)
 #   - node_modules do frontend instalado (cd frontend && npm ci).
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

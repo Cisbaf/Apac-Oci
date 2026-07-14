@@ -55,3 +55,4 @@ Fases 2–4 têm stubs (`T-201-*.md` etc.) que devem ser **expandidos com `/tare
 _(preencher ao concluir: `T-XXX — feito em AAAA-MM-DD — PR #NN — resumo de uma linha`)_
 
 - T-001 — feito em 2026-07-14 — `scripts/verify.sh` funcional (ativa venv, usa `manage.py test` em `backend/src`) e ESLint configurado no frontend; gates hoje vermelhos por débito pré-existente, registrado em T-007–T-010.
+- fix/ci-editable-install-paths — feito em 2026-07-14 — CI (T-001) quebrava 100% das PRs: `backend/requirements.txt` e `backend/core/requirements.txt` tinham `-e` com caminho absoluto específico de máquina/container (`/app/core`, `/home/daniel/...`). Trocado para caminhos relativos (`-e ./core`, `-e .`) + ajuste de `cd` no workflow e no `scripts/verify.sh`; validado com venv nova do zero e com `docker build` do backend.
