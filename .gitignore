@@ -783,3 +783,7 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.toptal.com/developers/gitignore/api/vs,python,node,nextjs,django
+# --- Cowork / agentes ---
+# Permissões locais do agente (por máquina) — não versionar.
+# A pasta .claude/commands/ (comandos compartilhados) DEVE ser versionada.
+.claude/settings.local.json
