@@ -7,12 +7,17 @@
 ## Fase 0 — Blindar
 | ID | Tarefa | Status | Dep | Branch |
 |---|---|---|---|---|
-| T-001 | Infra de gates (`scripts/verify.sh`, rodar pytest+jest) | todo | — | `refactor/T-001-gates` |
+| T-001 | Infra de gates (`scripts/verify.sh`, rodar pytest+jest) | done | — | `refactor/T-001-gates` |
 | T-002 | Golden file / teste de caracterização do export | todo | T-001 | `refactor/T-002-golden-export` |
 | T-003 | Autenticação em `ExportApacBatch` | todo | T-002 | `refactor/T-003-auth-export` |
 | T-004 | Corrigir bug regex em `formatCns` | todo | T-001 | `refactor/T-004-formatcns` |
 | T-005 | Limpeza de arquivos temporários + `.gitignore` | todo | — | `refactor/T-005-limpeza-repo` |
 | T-006 | Alinhar action de status do admin ao use case | todo | T-002 | `refactor/T-006-admin-status-usecase` |
+| T-007 | Corrigir testes quebrados em `backend/core` (fixture `ApacRequestFakeRepository`) | todo | T-001 | `refactor/T-007-fix-core-tests` |
+| T-008 | Corrigir teste quebrado em `backend/src` (403 em aprovação com faixa) | todo | T-001 | `refactor/T-008-fix-src-tests` |
+| T-009 | Corrigir testes quebrados no frontend (import stale + URL sem barra) | todo | T-001 | `refactor/T-009-fix-frontend-tests` |
+| T-010 | Débito de lint do frontend (~81 erros pré-existentes, ESLint recém-configurado) | todo | T-001 | `refactor/T-010-lint-debt` |
+| T-011 | Atualizar Next.js (vulnerabilidade de segurança reportada pelo npm) | todo | — | `refactor/T-011-upgrade-nextjs` |
 
 ## Fase 1 — Fronteiras
 | ID | Tarefa | Status | Dep | Branch |
@@ -48,3 +53,5 @@ Fases 2–4 têm stubs (`T-201-*.md` etc.) que devem ser **expandidos com `/tare
 
 ### Log de conclusão
 _(preencher ao concluir: `T-XXX — feito em AAAA-MM-DD — PR #NN — resumo de uma linha`)_
+
+- T-001 — feito em 2026-07-14 — `scripts/verify.sh` funcional (ativa venv, usa `manage.py test` em `backend/src`) e ESLint configurado no frontend; gates hoje vermelhos por débito pré-existente, registrado em T-007–T-010.

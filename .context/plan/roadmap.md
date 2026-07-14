@@ -4,7 +4,7 @@ Baseado em `../../ANALISE_COMPLEMENTAR_E_PLANO_REFATORACAO.md` (seção 4). Cada
 
 ## Fase 0 — Blindar o que está em produção
 **Objetivo:** poder refatorar sem medo. Rede de segurança + fechar buracos críticos.
-**Tarefas:** T-001 (infra de gates), T-002 (golden file do export), T-003 (auth no export), T-004 (bug formatCns), T-005 (limpeza do repo), T-006 (alinhar action de status do admin ao use case).
+**Tarefas:** T-001 (infra de gates), T-002 (golden file do export), T-003 (auth no export), T-004 (bug formatCns), T-005 (limpeza do repo), T-006 (alinhar action de status do admin ao use case), T-007/T-008/T-009 (destravar testes que já estavam quebrados em `backend/core`/`backend/src`/frontend, achados ao ligar o gate), T-010 (débito de lint do frontend, achado ao configurar ESLint pela primeira vez), T-011 (atualizar Next.js — vulnerabilidade reportada pelo npm).
 **Critério de saída:** `scripts/verify.sh` roda e passa; golden file protege o export; nenhum caminho de escrita diverge do use case; bugs críticos corrigidos.
 
 ## Fase 1 — Fronteiras e regra transversal centralizada
