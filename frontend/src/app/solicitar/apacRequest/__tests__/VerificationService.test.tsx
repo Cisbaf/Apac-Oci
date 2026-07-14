@@ -71,7 +71,7 @@ describe('checkAgeProcedureAlert', () => {
 
         expect(result).toEqual({ available: true, alert: true, message: 'Procedimento restrito por idade' });
         expect(global.fetch).toHaveBeenCalledWith(
-            '/api/proxy/procedure/apac/check-age-alert/',
+            '/api/proxy/procedure/apac/check-age-alert',
             expect.objectContaining({
                 method: 'POST',
                 body: JSON.stringify({ procedure_id: 5, birth_date: '2015-03-12' }),
