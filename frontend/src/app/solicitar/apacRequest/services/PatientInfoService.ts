@@ -25,7 +25,7 @@ export function formatCpf(cpf: string | null | undefined): string {
 
 export function formatCns(cns: string | null | undefined) {
   if (!cns) return '';
-  const digits = cns.replace('/\D/g', '');
+  const digits = cns.replace(/\D/g, '');
   if (digits.length !== 15) return '';
   return `${digits.slice(0, 3)} ${digits.slice(3, 7)} ${digits.slice(7, 11)} ${digits.slice(11, 15)}`;
 }
