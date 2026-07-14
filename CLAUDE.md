@@ -33,7 +33,8 @@ Cada comando está documentado em `.claude/commands/`.
 
 ## Como rodar e verificar (comandos reais)
 
-- Backend (testes): `cd backend/src && python -m pytest` (e `cd backend/core && python -m pytest` para o domínio).
+- Backend (testes de domínio, sem banco): `cd backend/core && python -m pytest`.
+- Backend (testes de integração Django, com banco): `cd backend/src && python manage.py test` (não há `pytest-django` configurado — `python -m pytest` aqui não encontra os testes).
 - Frontend (testes): `cd frontend && npm test`
 - Lint frontend: `cd frontend && npm run lint`
 - Gate completo: `bash scripts/verify.sh` (roda tudo e falha se qualquer parte falhar).
