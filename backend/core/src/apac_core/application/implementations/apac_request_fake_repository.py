@@ -1,3 +1,4 @@
+import re
 from typing import List
 from apac_core.domain.exceptions import NotFoundException
 from apac_core.domain.repositories.apac_request_repository import ApacRequestRepository
@@ -28,3 +29,14 @@ class ApacRequestFakeRepository(ApacRequestRepository):
             if apac_request.id == id:
                 return apac_request
         raise NotFoundException()
+
+    def check_duplicates(self, establishment_id, patient_cpf, main_procedure, request_date):
+        cpf_digits = re.sub(r"\D", "", patient_cpf)
+        return any(
+            apac_request.establishment.id == establishment_id
+            and apac_request.apac_data.patient_data.cpf.value == cpf_digits
+            and apac_request.apac_data.main_procedure.id == main_procedure
+            and apac_request.request_date.year == request_date.year
+            and apac_request.request_date.month == request_date.month
+            for apac_request in self.apac_requests
+        )

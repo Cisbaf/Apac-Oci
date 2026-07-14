@@ -17,7 +17,7 @@ class ApacBatchFakeRepository(ApacBatchRepository):
         raise NotFoundException("A Faixa Apac não foi encontrada!")
 
 
-    def search_for_available_batch(self, city_id) -> ApacBatch:
+    def search_for_available_batch(self, city_id, competence: date = None) -> ApacBatch:
         for batch in self.apac_batchs:
             if (
                 batch.city.id == city_id
