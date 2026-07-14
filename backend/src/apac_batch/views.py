@@ -38,6 +38,8 @@ class ApacBatchsAvailable(APIView):
     
 
 class ExportApacBatch(APIView):
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:

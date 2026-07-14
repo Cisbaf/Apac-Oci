@@ -2,6 +2,8 @@ from datetime import date
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import Permission
+from rest_framework.test import APITestCase
+from rest_framework import status
 from city.models import CityModel
 from customuser.models import CustomUser, UserRole
 from .models import ApacBatchModel
@@ -302,3 +304,17 @@ class ImportarFaixasViewTests(TestCase):
         self.client.force_login(self.regular_user)
         response = self.client.get(changelist_url)
         self.assertNotContains(response, "Importar Faixas")
+
+
+class ExportApacBatchAuthTests(APITestCase):
+    """T-003: o endpoint de export não pode aceitar requisição sem autenticação."""
+
+    def setUp(self):
+        self.url = reverse("extract_batch")
+
+    def test_post_sem_autenticacao_e_rejeitado(self):
+        response = self.client.post(self.url, {}, format="json")
+        self.assertIn(
+            response.status_code,
+            (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN)
+        )
