@@ -1,5 +1,4 @@
 import City from "./city";
-import Establishment from "./establishment";
 
 export enum UserRole {
   ADMIN = "admin",

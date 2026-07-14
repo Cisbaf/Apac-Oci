@@ -26,12 +26,12 @@ export default function ApacRequestFinishForm() {
         showBackdrop(true, "Solicitando apac!");
         const data = structuredClone(getValues());
 
-        // @ts-ignore
+        // @ts-expect-error adapterFormSubProcedures converte para o formato snake_case esperado pela API, incompatível com o tipo do form
         data.apacData.subProcedures = adapterFormSubProcedures(data.apacData.subProcedures);
         data.apacData.procedureDate = formatDateToISO(data.apacData.procedureDate);
         data.apacData.dischargeDate = formatDateToISO(data.apacData.dischargeDate);
         data.apacData.patientBirthDate = formatDateToISO(data.apacData.patientBirthDate);
-        // @ts-ignore
+        // @ts-expect-error campo é string no form, mas aceita null para "sem diagnóstico" no envio à API
         data.apacData.diagnosticDate = data.apacData.diagnosticDate? data.apacData.diagnosticDate : null
         // data.apacData.diagnosticDate = formatDateToISO(data.apacData.diagnosticDate);
         const data_json = JSON.stringify(ToSnakeCase(data));

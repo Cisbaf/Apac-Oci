@@ -1,11 +1,9 @@
 'use client'
 import React from 'react';
-import { Typography, Box, Divider } from '@mui/material';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { Box } from '@mui/material';
 import { ApacRequestFormProvider } from "@/app/solicitar/apacRequest/contexts/FormApacRequest";
 import { ApacRequestFillingData, DataApacRequest } from '@/app/solicitar/apacRequest/contexts/ApacRequestContext';
 import { ApacRequestFetchApi } from '@/app/solicitar/apacRequest/services/ApacRequestApi';
-import { fakeDataRequestFillingPart } from '@/app/solicitar/apacRequest/utils/dataFakes';
 import IdentifyEstablishmentForm from '@/app/solicitar/apacRequest/components/forms/identifyEstablishmentForm';
 import IdentifyPatientForm from '@/app/solicitar/apacRequest/components/forms/identifyPatientForm';
 import IdentifyMainProcedure from '@/app/solicitar/apacRequest/components/forms/identifyMainProcedureForm';
@@ -20,7 +18,6 @@ import { UserRole } from "@/shared/schemas/user";
 import StepForm from '@/shared/components/StepComponent';
 import ApacProgressStepper from './apacRequest/components/ApacProgressStepper';
 import { emptyRequestForm } from './apacRequest/utils/formDataApacRequest';
-import { fakeRequestForm } from '@/app/solicitar/apacRequest/utils/dataFakes';
 import IdentifyRequestDate from './apacRequest/components/forms/identifyRequestDate';
 
 export default function PageApacRequest() {

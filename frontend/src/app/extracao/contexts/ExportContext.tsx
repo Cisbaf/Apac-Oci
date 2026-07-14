@@ -12,7 +12,7 @@ interface ExportContextType {
 }
 
 interface ExportContextProps {
-    children: any;
+    children: React.ReactNode;
 }
 
 const ExportContext = React.createContext<ExportContextType | null>(null);
@@ -29,7 +29,7 @@ export function ExportContextProvider({ children }: ExportContextProps) {
         try {
             const response = await GetExtractFile(form);
             if (response.content) {
-                var fileName;
+                let fileName;
                 const extension = form.production.toLocaleString("pt-BR", { month: "short" }).toUpperCase();
                 const establishmentShortName = form.establishmentName;
                 if (!extension || !establishmentShortName) {

@@ -130,4 +130,6 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
   }
 );
 
+IdentifyCidForm.displayName = "IdentifyCidForm";
+
 export default IdentifyCidForm;

@@ -102,4 +102,6 @@ const IdentifyEstablishmentForm = React.forwardRef<FormRepository, FormProps>((p
     )
 });
 
+IdentifyEstablishmentForm.displayName = "IdentifyEstablishmentForm";
+
 export default IdentifyEstablishmentForm;

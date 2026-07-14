@@ -9,6 +9,10 @@ import { useGlobalLayout } from '../hooks/useGlobalLayout';
 interface GlobalComponentsContextType {
   showAlert: (props: AlertProps & { message: string }) => void;
   showBackdrop: (show: boolean, message?: string) => void;
+  // Repassa o JSON de vários endpoints com formatos distintos (paciente,
+  // criação/aprovação de APAC etc.) — tipar cada resposta é um refactor à
+  // parte, fora do escopo de débito de lint.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   showResponseApi: (response: Response) => Promise<any>;
   hookLayout: ReturnType<typeof useGlobalLayout>;
 }

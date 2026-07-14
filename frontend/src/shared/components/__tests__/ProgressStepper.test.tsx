@@ -13,6 +13,7 @@ const FakeForm = React.forwardRef<FormRepository, FormProps & { label: string }>
         return <div>{label}</div>;
     }
 );
+FakeForm.displayName = 'FakeForm';
 
 function renderStepper(onBeforeNext?: (stepIndex: number) => Promise<boolean>) {
     render(

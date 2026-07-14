@@ -53,7 +53,7 @@ export default function CnsInput(props: CnsInputProps) {
                 }
            
                 
-            } catch (e) {
+            } catch {
                 showAlert({ color: "error", message: "Erro ao tentar preencher dados automáticos, por favor preencha manualmente!"})
             }
 

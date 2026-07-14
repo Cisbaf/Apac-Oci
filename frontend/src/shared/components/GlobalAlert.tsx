@@ -1,11 +1,9 @@
 // src/components/GlobalAlert.tsx
 'use client'
 
-import { Alert, AlertProps, Snackbar, SnackbarCloseReason, SnackbarOrigin } from '@mui/material'
-import { Grow, GrowProps } from '@mui/material'
+import { Alert, AlertProps, Snackbar, SnackbarCloseReason, SnackbarOrigin, SnackbarProps } from '@mui/material'
+import { Grow } from '@mui/material'
 import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
-
-type SnackbarTransitionProps = GrowProps & { children: React.ReactElement<any, any> }
 
 interface GlobalAlertProps extends AlertProps {
   open: boolean
@@ -13,8 +11,8 @@ interface GlobalAlertProps extends AlertProps {
   onClose?: (event?: Event | SyntheticEvent, reason?: SnackbarCloseReason) => void
   autoHideDuration?: number
   anchorOrigin?: SnackbarOrigin
-  TransitionComponent?: React.ComponentType<SnackbarTransitionProps>
-  TransitionProps?: SnackbarTransitionProps
+  TransitionComponent?: SnackbarProps['TransitionComponent']
+  TransitionProps?: SnackbarProps['TransitionProps']
   snackbarKey?: string | number
 }
 
@@ -49,6 +47,8 @@ export default function GlobalAlert({
       autoHideDuration={autoHideDuration}
       onClose={handleClose}
       anchorOrigin={anchorOrigin}
+      TransitionComponent={TransitionComponent}
+      TransitionProps={TransitionProps}
       sx={{ maxWidth: '90vw' }}
       ClickAwayListenerProps={{
         mouseEvent: false,

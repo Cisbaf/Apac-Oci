@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import { useGlobalComponents } from "../context/GlobalUIContext";
-import { Paper, Typography, Alert, Box, TextField, Button } from "@mui/material";
+import { Paper, Typography, Box, TextField, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useMask } from "@react-input/mask";
@@ -32,7 +32,7 @@ export default function Login() {
             } else {
                 showAlert({color: "error", message: "Credenciais invalidas!"});
             }
-        } catch (e) {
+        } catch {
             showAlert({color: "error", message: "Não foi possivel realizar a conexão com o servidor!"})
         }
         showBackdrop(false);

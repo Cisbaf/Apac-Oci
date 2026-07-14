@@ -30,7 +30,7 @@ export default function CpfInput( props : { disabled?: boolean }) {
                 
                 const response_json = await showResponseApi(response);
                 fillRequestFormFromPatient(response_json, setValue);
-            } catch (e) {
+            } catch {
                 showAlert({ color: "error", message: "Erro ao tentar preencher dados automáticos, por favor preencha manualmente!"})
             }
 

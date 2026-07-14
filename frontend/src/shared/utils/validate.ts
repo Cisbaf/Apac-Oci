@@ -1,6 +1,6 @@
-import { generatePattern } from '@react-input/mask';
+import { generatePattern, Replacement } from '@react-input/mask';
 
-export function validateMask(mask: any, value: string) {
+export function validateMask(mask: { mask: string; replacement: string | Replacement }, value: string) {
     const pattern = generatePattern('full', mask);
     const regex = new RegExp(pattern);
     return regex.test(value)

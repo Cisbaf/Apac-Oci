@@ -9,7 +9,6 @@ import {
   Box,
   StepConnector,
   styled,
-  Button,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';

@@ -69,4 +69,6 @@ const IdentifyMedicSupervisingForm = React.forwardRef<FormRepository, FormProps>
     )
 });
 
+IdentifyMedicSupervisingForm.displayName = "IdentifyMedicSupervisingForm";
+
 export default IdentifyMedicSupervisingForm;
