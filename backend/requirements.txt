@@ -1,5 +1,5 @@
 annotated-types==0.7.0
--e /app/core
+-e ./core
 asgiref==3.8.1
 Django==5.2.1
 django-adminlte-3==0.1.6
