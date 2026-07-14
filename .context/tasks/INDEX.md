@@ -11,7 +11,7 @@
 | T-002 | Golden file / teste de caracterização do export | done | T-001 | `refactor/T-002-golden-export` |
 | T-003 | Autenticação em `ExportApacBatch` | done | T-002 | `refactor/T-003-auth-export` |
 | T-004 | Corrigir bug regex em `formatCns` | done | T-001 | `refactor/T-004-formatcns` |
-| T-005 | Limpeza de arquivos temporários + `.gitignore` | todo | — | `refactor/T-005-limpeza-repo` |
+| T-005 | Limpeza de arquivos temporários + `.gitignore` | done | — | `refactor/T-005-limpeza-repo` |
 | T-006 | Alinhar action de status do admin ao use case | todo | T-002 | `refactor/T-006-admin-status-usecase` |
 | T-007 | Corrigir testes quebrados em `backend/core` (fixture `ApacRequestFakeRepository`) | todo | T-001 | `refactor/T-007-fix-core-tests` |
 | T-008 | Corrigir teste quebrado em `backend/src` (403 em aprovação com faixa) | todo | T-001 | `refactor/T-008-fix-src-tests` |
@@ -62,3 +62,4 @@ _(preencher ao concluir: `T-XXX — feito em AAAA-MM-DD — PR #NN — resumo de
 - T-002 — feito em 2026-07-14 — golden file do export (3 cenários: simples, com subprocedimentos, Duque de Caxias) em `backend/core/tests/domain/services/export/`, byte a byte, com data mockada e determinismo confirmado.
 - T-003 — feito em 2026-07-14 — `ExportApacBatch` agora exige `IsAuthenticated` (`SessionAuthentication`/`JWTAuthentication`, mesmo padrão de `ApacBatchsAvailable`); antes qualquer um com a URL exportava dados sensíveis de pacientes sem login. Frontend já enviava `Authorization: Bearer` via proxy (`/api/proxy`), não precisou de ajuste. Teste novo cobre POST sem credencial → 401/403. Golden file (T-002) inalterado. Gates hoje vermelhos só por débito pré-existente (T-007–T-010).
 - T-004 — feito em 2026-07-14 — `formatCns` (`PatientInfoService.ts`) usava `cns.replace('/\D/g', '')` (string literal, não regex) e não limpava CNS com espaços/traços/pontos; corrigido para `/\D/g`. `formatCpf`/`formatCep` já usavam regex correta, nenhuma outra ocorrência do bug no frontend. Teste Jest novo (`PatientInfoService.test.tsx`, 9 casos) cobre os três formatadores. Gates hoje vermelhos só por débito pré-existente (T-007–T-010).
+- T-005 — feito em 2026-07-14 — escopo original (gitignore + remoção de `data.json`/`faixas_*.txt`/scripts soltos) já estava resolvido manualmente antes de eu começar (arquivos movidos para a branch local `tools`; `db.sqlite3`/`logs/`/`.pytest_cache` já cobertos pelo `.gitignore` genérico). Único item real restante: `backend/src/tools/README.md` (novo) documentando `audit_street_type.py`, o único script que sobrou rastreado em `tools/`. `manage.py check` ok. Gates vermelhos por débito pré-existente (T-007–T-010), inalterados por esta mudança.
