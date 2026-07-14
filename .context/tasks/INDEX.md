@@ -8,7 +8,7 @@
 | ID | Tarefa | Status | Dep | Branch |
 |---|---|---|---|---|
 | T-001 | Infra de gates (`scripts/verify.sh`, rodar pytest+jest) | done | — | `refactor/T-001-gates` |
-| T-002 | Golden file / teste de caracterização do export | todo | T-001 | `refactor/T-002-golden-export` |
+| T-002 | Golden file / teste de caracterização do export | done | T-001 | `refactor/T-002-golden-export` |
 | T-003 | Autenticação em `ExportApacBatch` | todo | T-002 | `refactor/T-003-auth-export` |
 | T-004 | Corrigir bug regex em `formatCns` | todo | T-001 | `refactor/T-004-formatcns` |
 | T-005 | Limpeza de arquivos temporários + `.gitignore` | todo | — | `refactor/T-005-limpeza-repo` |
@@ -18,6 +18,9 @@
 | T-009 | Corrigir testes quebrados no frontend (import stale + URL sem barra) | todo | T-001 | `refactor/T-009-fix-frontend-tests` |
 | T-010 | Débito de lint do frontend (~81 erros pré-existentes, ESLint recém-configurado) | todo | T-001 | `refactor/T-010-lint-debt` |
 | T-011 | Atualizar Next.js (vulnerabilidade de segurança reportada pelo npm) | todo | — | `refactor/T-011-upgrade-nextjs` |
+| T-012 | Campo de controle do export hardcoded (`cbc-smt-vrf` = "1810" fixo) | todo | T-002 | `refactor/T-012-campo-controle-export` |
+| T-013 | `apa_munpcnte` usa cidade do estabelecimento, não do paciente | todo | T-002 | `refactor/T-013-municipio-paciente-export` |
+| T-014 | `apa_tipapac`/`apa_motsaida` hardcoded (sempre "Única"/"12") | todo | T-002 | `refactor/T-014-tipo-apac-motivo-saida-hardcoded` |
 
 ## Fase 1 — Fronteiras
 | ID | Tarefa | Status | Dep | Branch |
@@ -55,4 +58,4 @@ Fases 2–4 têm stubs (`T-201-*.md` etc.) que devem ser **expandidos com `/tare
 _(preencher ao concluir: `T-XXX — feito em AAAA-MM-DD — PR #NN — resumo de uma linha`)_
 
 - T-001 — feito em 2026-07-14 — `scripts/verify.sh` funcional (ativa venv, usa `manage.py test` em `backend/src`) e ESLint configurado no frontend; gates hoje vermelhos por débito pré-existente, registrado em T-007–T-010.
-- fix/ci-editable-install-paths — feito em 2026-07-14 — CI (T-001) quebrava 100% das PRs: `backend/requirements.txt` e `backend/core/requirements.txt` tinham `-e` com caminho absoluto específico de máquina/container (`/app/core`, `/home/daniel/...`). Trocado para caminhos relativos (`-e ./core`, `-e .`) + ajuste de `cd` no workflow e no `scripts/verify.sh`; validado com venv nova do zero e com `docker build` do backend.
+- T-002 — feito em 2026-07-14 — golden file do export (3 cenários: simples, com subprocedimentos, Duque de Caxias) em `backend/core/tests/domain/services/export/`, byte a byte, com data mockada e determinismo confirmado.
