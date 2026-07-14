@@ -44,9 +44,9 @@ Políticas que hoje estão copiadas em vários lugares passam a ter uma implemen
 | Ferramenta | Hoje | Alvo |
 |---|---|---|
 | Solicitar APAC | React `/solicitar` → use case ✅ | mantém |
-| Aprovar/Rejeitar | React `/responder` → use case ✅ **e** Admin action ❌ (diverge) | só via use case; Admin chama o mesmo |
+| Aprovar/Rejeitar | React `/responder` → use case ✅ (único caminho). Admin: `status`/`authorizer`/`review_date` são sempre readonly (mesmo para superuser) — T-006 fechou a edição direta que pulava o use case e não associava faixa. | Admin ganhar action própria que chame o mesmo use case, se necessário no futuro |
 | Gestão de faixas | Admin inline | React (API v2) |
-| Mudança de status em lote | Admin action (ORM direto) | React (use case) |
+| Mudança de status em lote | Não existe hoje (a action antiga era código morto — nunca registrada em `actions`, template inexistente; removida na T-006) | React (use case), se vier a ser necessário |
 | Dashboard | Django template | React (API) |
 | Exportação | React `/extracao` → use case | mantém + evolui (validação/diagnóstico) |
 

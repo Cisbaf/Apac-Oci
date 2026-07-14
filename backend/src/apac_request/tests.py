@@ -1,10 +1,13 @@
 from datetime import date
 from random import random
 from django.urls import reverse
+from django.test import TestCase, RequestFactory
+from django.contrib.admin.sites import AdminSite
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from apac_request.models import ApacRequestModel
+from apac_request.admin import ApacRequestAdmin
 from apac_batch.models import ApacBatchModel
 from city.models import CityModel
 from customuser.models import CustomUser, UserRole
@@ -387,3 +390,40 @@ class EdgeCaseTests(BaseApacTest):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assert_apac_status(apac.pk, ApacStatus.APPROVED)
+
+
+class ApacRequestAdminStatusLockTests(TestCase):
+    """T-006: status/authorizer/review_date representam transição de estado
+    (aprovar/rejeitar) e só podem mudar pelo use case, que associa faixa.
+    Edição direta no admin bypassa isso — precisa ficar sempre readonly,
+    mesmo para superuser."""
+
+    def setUp(self):
+        self.city = CityModel.objects.create(
+            name=random_str(), ibge_code=random_str(), agency_name=random_str()
+        )
+        self.superuser = CustomUser.objects.create_superuser(
+            username=random_str(), email=None, password="pass1234", city=self.city
+        )
+        self.admin_user = CustomUser.objects.create(
+            username=random_str(), role=UserRole.ADMIN, city=self.city, is_staff=True
+        )
+        self.admin_instance = ApacRequestAdmin(ApacRequestModel, AdminSite())
+        self.factory = RequestFactory()
+
+    def _request_for(self, user):
+        request = self.factory.get("/admin/apac_request/apacrequestmodel/1/change/")
+        request.user = user
+        return request
+
+    def test_superuser_nao_edita_campos_de_transicao_de_estado(self):
+        readonly = self.admin_instance.get_readonly_fields(self._request_for(self.superuser))
+        self.assertIn("status", readonly)
+        self.assertIn("authorizer", readonly)
+        self.assertIn("review_date", readonly)
+
+    def test_usuario_admin_comum_tambem_nao_edita(self):
+        readonly = self.admin_instance.get_readonly_fields(self._request_for(self.admin_user))
+        self.assertIn("status", readonly)
+        self.assertIn("authorizer", readonly)
+        self.assertIn("review_date", readonly)
