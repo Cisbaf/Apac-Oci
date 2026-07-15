@@ -1,18 +1,25 @@
-# T-011 — Atualizar Next.js (vulnerabilidade de segurança) — STUB
+# T-011 — Atualizar Next.js (vulnerabilidade de segurança)
 
-- **Fase:** 0 · **Status:** todo · **Depende de:** —
+- **Fase:** 0 · **Status:** doing · **Depende de:** —
 - **Branch:** `refactor/T-011-upgrade-nextjs`
 
-> Stub. `npm install` (T-001) reportou: "next@15.3.6: This version has a security vulnerability. Please upgrade to a patched version." Expandir com `/tarefa T-011`.
+## Contexto
+`npm install` (T-001) reportou: "next@15.3.6: This version has a security vulnerability. Please upgrade to a patched version."
+`npm audit` lista múltiplos GHSA para `next` no range `15.3.6`, o mais relevante sendo **GHSA-mg66-mrh9-m8jx** (DoS via exaustão de conexão em Cache Components).
 
-## Objetivo (rascunho)
-Atualizar `next` (`frontend/package.json`, hoje `15.3.6`) para uma versão corrigida, sem quebrar build/testes.
+## Investigação
+- Advisory oficial: afetados `>=15.0.0, <15.5.16` (linha 15.x) e `>=16.0.0, <16.2.5` (linha 16.x).
+- **Não é preciso pular para o major 16** — a linha 15.x tem backport corrigido a partir de `15.5.16`.
+- `npm audit fix --force` sugeriu `next@15.5.20` (dist-tag `backport`, última patch estável da linha 15.5.x, > mínimo corrigido).
+- `eslint-config-next` segue a mesma versão do `next` por convenção do próprio pacote — bump junto para `15.5.20`.
 
-## Direção
-- Conferir o boletim oficial do Next.js referenciado pelo aviso do npm para saber o alcance da vulnerabilidade e a versão mínima segura.
-- Atualizar `next` (e dependências relacionadas, se exigido) e rodar `bash scripts/verify.sh` + build (`npm run build`) antes de considerar concluído.
-- Ficar atento a breaking changes entre minor/major.
+## Escopo (confirmado com o usuário)
+- Atualizar **apenas** `next` (15.3.6 → 15.5.20) e `eslint-config-next` (15.3.6 → 15.5.20) em `frontend/package.json`.
+- **Fora de escopo:** as outras ~14 vulnerabilidades do `npm audit` (`form-data` crítico, `next-auth` moderado, `babel/core`, `lodash`, `ws`, `js-yaml`, `minimatch`, `picomatch`, `postcss`, `yaml` etc.) — são transitivas de devDependencies/`next-auth`, não do Next.js em si. Registradas como **T-016**.
 
-## Aceite (rascunho)
-- [ ] `next` em versão sem a vulnerabilidade reportada.
-- [ ] `npm run build`, testes e lint verdes (ou sem regressão em relação ao estado pré-tarefa).
+## Aceite
+- [x] `next` em `15.5.20` (fora do range afetado pelo GHSA-mg66-mrh9-m8jx e demais advisories da linha 15.x).
+- [x] `npm audit` não lista mais `next` entre os pacotes vulneráveis.
+- [x] `npm run build` (build de produção) limpo — só os warnings pré-existentes de `react-hooks/exhaustive-deps` (fora do escopo desde T-010).
+- [x] `bash scripts/verify.sh` — todos os 4 gates verdes (backend/core, backend/src, frontend jest, frontend lint).
+- [x] Nenhuma mudança em código de backend — golden file do export inalterado.
