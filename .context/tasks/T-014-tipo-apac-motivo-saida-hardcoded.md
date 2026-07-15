@@ -1,6 +1,6 @@
-# T-014 — `apa_tipapac` e `apa_motsaida` hardcoded — STUB
+# T-014 — `apa_tipapac` e `apa_motsaida` hardcoded
 
-- **Fase:** 0 · **Status:** todo · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-014-tipo-apac-motivo-saida-hardcoded`
 
 > Stub. Achado ao comparar o export com o documento oficial do layout
@@ -30,7 +30,19 @@ independente do histórico/estado real da solicitação.
 - Se decidir corrigir, é mudança de conteúdo do export — exige tarefa
   explícita e golden file atualizado de propósito.
 
-## Aceite (rascunho)
-- [ ] Decisão documentada: os hardcodes são aceitáveis para o escopo atual
-      do produto, ou são bugs a corrigir?
-- [ ] Se corrigido: golden atualizado de propósito, com justificativa no PR.
+## Decisão do usuário (confirmada em sessão, 2026-07-15)
+O sistema hoje só lida com APACs Únicas (`tipo_apac="3"`) — não distingue
+Inicial de Continuidade no domínio, então não é bug, é o escopo atual real do
+produto. Mesma lógica para `motivo_saida="12"`: é o único motivo de saída que
+o sistema trata hoje. **Hardcode aceitável, mantido como está.** Sem mudança
+de código — golden file (T-002) inalterado.
+
+Se o produto passar a suportar Inicial/Continuidade ou outros motivos de
+saída no futuro, essa decisão deve ser revisitada (o `controller.py` precisaria
+derivar `tipo_apac`/`motivo_saida` do estado real da `ApacRequest`/`ApacBatch`,
+o que exigiria também modelar essa distinção no domínio — hoje não existe).
+
+## Aceite
+- [x] Decisão documentada: os hardcodes são aceitáveis para o escopo atual
+      do produto (sistema só lida com APAC Única e um motivo de saída).
+- [x] Nenhuma mudança de código — golden file inalterado.
