@@ -17,8 +17,6 @@ import {
   MenuItem,
   useMediaQuery,
   useTheme,
-  CircularProgress,
-  Skeleton
 } from '@mui/material';
 import {
   ExpandLess,
@@ -57,7 +55,7 @@ export default function Sidebar() {
     setOpenItems((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
-  const handleAvatarClick = (event: any) => {
+  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 

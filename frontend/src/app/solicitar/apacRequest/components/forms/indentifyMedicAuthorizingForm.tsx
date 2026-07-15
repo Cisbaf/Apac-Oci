@@ -69,4 +69,6 @@ const IdentifyMedicAuthorizingForm = React.forwardRef<FormRepository, FormProps>
     )
 });
 
+IdentifyMedicAuthorizingForm.displayName = "IdentifyMedicAuthorizingForm";
+
 export default IdentifyMedicAuthorizingForm;

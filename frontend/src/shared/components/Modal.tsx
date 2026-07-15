@@ -144,4 +144,6 @@ const CustomModal = forwardRef<ModalHandles, ModalProps>(
   }
 );
 
+CustomModal.displayName = "CustomModal";
+
 export default CustomModal;

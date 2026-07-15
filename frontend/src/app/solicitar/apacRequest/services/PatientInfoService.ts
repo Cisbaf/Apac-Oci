@@ -11,11 +11,6 @@ function formatDate(dateStr?: string | null): string {
   return `${day}/${month}/${year}`;
 }
 
-// Utilitário para converter sexo
-function formatGender(gender?: string | null): string {
-  return gender === 'M' ? 'masculino' : gender === 'F' ? 'feminino' : '';
-}
-
 export function formatCpf(cpf: string | null | undefined): string {
   if (!cpf) return '';
   const digits = cpf.replace(/\D/g, '');
@@ -82,10 +77,4 @@ export function fillRequestFormFromPatient(
     // setValue('apacData.patientAddressCity', getCityNameByCode(address.city_code) || '');
     setValue('apacData.patientAddressState', address.state || '');
   }
-}
-
-// Função auxiliar para converter código IBGE em nome da cidade
-function getCityNameByCode(cityCode?: string | null): string {
-  // Implementação real precisaria de um dicionário ou API de consulta
-  return cityCode ? 'Nome da Cidade' : '';
 }

@@ -1,17 +1,14 @@
 'use client';
-import { usePathname } from "next/navigation";
-import { GlobalComponentsProvider, useGlobalComponents } from "../context/GlobalUIContext";
-import { AppBar, useMediaQuery, useTheme } from "@mui/material";
+import { ReactNode } from "react";
+import { useGlobalComponents } from "../context/GlobalUIContext";
 import { UserContextProvider } from "../context/UserContext";
 import { Box } from "@mui/material";
 import AppBarMobile from "./AppBarMobile";
 import BreadCumbs from "./BreadCumbs";
 import Sidebar from "./SideBar";
 
-const PAGES_WITHOUT_LAYOUT = ['/login', '/logout'];
-
 interface LayoutProps {
-    children: any;
+    children: ReactNode;
 }
 
 export default function LayoutSystem({children}: LayoutProps) {

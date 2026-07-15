@@ -55,4 +55,6 @@ const StepForm = React.forwardRef<StepFormValidate, StepFormProps>((props, ref) 
 });
 
 
+StepForm.displayName = "StepForm";
+
 export default StepForm;

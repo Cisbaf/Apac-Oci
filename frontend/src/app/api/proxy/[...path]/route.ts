@@ -45,10 +45,11 @@ async function proxyHandler(request: NextRequest) {
 
         const data = await res.json();
         return NextResponse.json(data, { status: res.status });
-    } catch (error: any) {
+    } catch (error) {
         console.error(`Proxy ${request.method} error:`, error);
+        const details = error instanceof Error ? error.message : String(error);
         return NextResponse.json(
-            { error: "Erro ao comunicar com a API externa", details: error.message },
+            { error: "Erro ao comunicar com a API externa", details },
             { status: 500 }
         );
     }

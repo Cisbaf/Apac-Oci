@@ -257,4 +257,6 @@ const IdentifyMainProcedure = React.forwardRef<FormRepository, FormProps>(
   }
 );
 
+IdentifyMainProcedure.displayName = "IdentifyMainProcedure";
+
 export default IdentifyMainProcedure;

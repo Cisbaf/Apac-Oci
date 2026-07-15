@@ -3,8 +3,6 @@ import {
   Home,
   PlaylistAddCheck,
   FileDownload,
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
   AppRegistration,
   HowToReg,
 } from '@mui/icons-material';

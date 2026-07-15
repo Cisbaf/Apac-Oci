@@ -16,7 +16,7 @@ import ProcedureItem from "./subProcedureItem";
 const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props, ref) => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const { form, disabled: disabledForm } = useFormRequest();
-  const { control, register, getValues } = form;
+  const { control, getValues } = form;
   const subProceduresField = useWatch({
     control,
     name: "apacData.subProcedures"
@@ -70,5 +70,7 @@ const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props
     </CardForm>
   );
 });
+
+IdentifySubProcedures.displayName = "IdentifySubProcedures";
 
 export default IdentifySubProcedures;

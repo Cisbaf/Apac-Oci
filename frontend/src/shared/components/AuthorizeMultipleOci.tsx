@@ -22,7 +22,7 @@ import HealingIcon from "@mui/icons-material/Healing";
 
 export default function AuthorizeMultipleOci() {
   const { selected, removeOne } = useAutorizeMultiplesApac();
-  const { listApac, getApacById, removeApac } = useApacViewContext();
+  const { getApacById, removeApac } = useApacViewContext();
   const { showBackdrop, showAlert } = useGlobalComponents();
   const { id: userID } = useContextUser();
 

@@ -4,7 +4,7 @@ import ApacFilter from "@/shared/components/ApacFilter";
 import ApacTable from "@/shared/components/ApacTable";
 import ApacViewProvider from "@/shared/context/ApacViewContext";
 import { AuthorizationProvider } from "../responder/apacAuthorization/context/authorizationContext";
-import { Box, Typography, Divider } from "@mui/material";
+import { Box } from "@mui/material";
 import { RouteGuard } from "@/shared/components/RouteGuard";
 import { UserRole } from "@/shared/schemas/user";
 import AutorizeMultiplesApacProvider from "@/shared/context/AutorizeMultiplesApac";

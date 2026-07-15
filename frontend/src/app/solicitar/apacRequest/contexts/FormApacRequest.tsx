@@ -5,7 +5,7 @@ import { useRequestData } from "./ApacRequestContext";
 import { useContextUser } from "@/shared/context/UserContext";
 
 interface RequestFormType {
-  form: UseFormReturn<RequestForm, any, RequestForm>;
+  form: UseFormReturn<RequestForm>;
   disabled?: boolean; // Adiciona a propriedade disabled
   textMode?: boolean;
 }

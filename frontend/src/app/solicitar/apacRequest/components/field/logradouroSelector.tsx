@@ -3,7 +3,7 @@ import {
   TextField,
   Autocomplete
 } from "@mui/material";
-import { Controller, useWatch } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useFormRequest } from "@/app/solicitar/apacRequest/contexts/FormApacRequest";
 import {
   FormRepository,
@@ -20,7 +20,7 @@ import { LOGRADOUROS } from "../../utils/logradouros";
 const FormLogradouro = React.forwardRef<FormRepository, FormProps>(
   (props, ref) => {
     const formRef = React.useRef<HTMLFormElement>(null);
-    const { form, disabled: disabledForm } = useFormRequest();
+    const { form } = useFormRequest();
     const { control, getValues } = form;
 
     React.useImperativeHandle(ref, () => ({
@@ -38,12 +38,6 @@ const FormLogradouro = React.forwardRef<FormRepository, FormProps>(
         return { success: true, message: "Formulário correto!" };
       }
     }));
-
-    const getLogradouroLabel = () => {
-      const code = getValues("apacData.patientAddressStreetType");
-      const l = LOGRADOUROS.find((item) => item.code === code);
-      return l ? `${l.code} - ${l.name}` : "";
-    };
 
     return (
         <Controller
@@ -80,5 +74,7 @@ const FormLogradouro = React.forwardRef<FormRepository, FormProps>(
     );
   }
 );
+
+FormLogradouro.displayName = "FormLogradouro";
 
 export default FormLogradouro;

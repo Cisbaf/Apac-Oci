@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { TextField } from "@mui/material";
+import React from "react";
 import { useExportContext } from "@/app/extracao/contexts/ExportContext";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

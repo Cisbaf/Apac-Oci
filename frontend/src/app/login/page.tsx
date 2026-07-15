@@ -30,7 +30,7 @@ export default function SignIn() {
       const form = event.currentTarget;
       const formData = new FormData(form);
 
-      var username = formData.get("username")?.toString() ?? "";
+      let username = formData.get("username")?.toString() ?? "";
       const password = formData.get("password")?.toString() ?? "";
 
       if (!isValidCPF(username)) {

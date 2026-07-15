@@ -1,10 +1,11 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { jwtDecode } from "jwt-decode";
+import { JWT } from "next-auth/jwt"
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 const BACKEND = process.env.DJANGO_API_URL;
 
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const res = await fetch(BACKEND + "/auth/refresh/", {
       method: "POST",
@@ -17,11 +18,11 @@ async function refreshAccessToken(token: any) {
     }
 
     const refreshed = await res.json();
-    const decoded: any = jwtDecode(refreshed.access);
+    const decoded: JwtPayload = jwtDecode(refreshed.access);
     return {
       ...token,
       accessToken: refreshed.access,
-      accessTokenExpires: decoded.exp * 1000,
+      accessTokenExpires: decoded.exp! * 1000,
       // refreshToken: refreshed.refresh ?? token.refreshToken, // se o backend retornar um novo refresh
     };
   } catch (error) {
@@ -73,11 +74,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 async jwt({ token, user }) {
   // Quando o usuário loga pela primeira vez
   if (user) {
-    const decoded: any = jwtDecode(String(user.accessToken));
+    const decoded: JwtPayload = jwtDecode(String(user.accessToken));
     token.accessToken = user.accessToken;
     token.refreshToken = user.refreshToken;
     token.user = user;
-    token.accessTokenExpires = decoded.exp * 1000; // exp vem em segundos, guardamos em ms
+    token.accessTokenExpires = decoded.exp! * 1000; // exp vem em segundos, guardamos em ms
     return token;
   }
 
@@ -92,7 +93,7 @@ async jwt({ token, user }) {
 
 async session({ session, token }) {
   session.accessToken = token.accessToken as string;
-  session.user = token.user as any;
+  session.user = token.user as typeof session.user;
   return session;
 },
   },

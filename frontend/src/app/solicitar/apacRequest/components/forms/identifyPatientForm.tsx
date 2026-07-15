@@ -214,4 +214,6 @@ const IdentifyPatientForm = React.forwardRef<FormRepository, FormProps>((props, 
     )
 });
 
+IdentifyPatientForm.displayName = "IdentifyPatientForm";
+
 export default IdentifyPatientForm;

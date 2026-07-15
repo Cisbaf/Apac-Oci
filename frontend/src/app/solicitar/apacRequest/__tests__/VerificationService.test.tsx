@@ -14,7 +14,7 @@ describe('checkCepValidity', () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: async () => ({ logradouro: 'Rua X' }),
-        }) as any;
+        }) as unknown as typeof fetch;
 
         const result = await checkCepValidity('22221036');
         expect(result).toEqual({ available: true, valid: true });
@@ -24,14 +24,14 @@ describe('checkCepValidity', () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: async () => ({ erro: true }),
-        }) as any;
+        }) as unknown as typeof fetch;
 
         const result = await checkCepValidity('00000000');
         expect(result).toEqual({ available: true, valid: false });
     });
 
     test('falha de rede marca indisponível e não bloqueia o formulário', async () => {
-        global.fetch = jest.fn().mockRejectedValue(new Error('network error')) as any;
+        global.fetch = jest.fn().mockRejectedValue(new Error('network error')) as unknown as typeof fetch;
 
         const result = await checkCepValidity('22221036');
         expect(result.available).toBe(false);
@@ -39,7 +39,7 @@ describe('checkCepValidity', () => {
     });
 
     test('resposta HTTP não ok marca indisponível', async () => {
-        global.fetch = jest.fn().mockResolvedValue({ ok: false }) as any;
+        global.fetch = jest.fn().mockResolvedValue({ ok: false }) as unknown as typeof fetch;
 
         const result = await checkCepValidity('22221036');
         expect(result.available).toBe(false);
@@ -65,7 +65,7 @@ describe('checkAgeProcedureAlert', () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: async () => ({ alert: true, message: 'Procedimento restrito por idade' }),
-        }) as any;
+        }) as unknown as typeof fetch;
 
         const result = await checkAgeProcedureAlert('12/03/2015', 5);
 
@@ -83,7 +83,7 @@ describe('checkAgeProcedureAlert', () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: async () => ({ alert: false }),
-        }) as any;
+        }) as unknown as typeof fetch;
 
         const result = await checkAgeProcedureAlert('12/03/1999', 5);
         expect(result.alert).toBe(false);
@@ -91,14 +91,14 @@ describe('checkAgeProcedureAlert', () => {
     });
 
     test('indisponibilidade da API (erro de rede) não bloqueia o formulário', async () => {
-        global.fetch = jest.fn().mockRejectedValue(new Error('timeout')) as any;
+        global.fetch = jest.fn().mockRejectedValue(new Error('timeout')) as unknown as typeof fetch;
 
         const result = await checkAgeProcedureAlert('12/03/1999', 5);
         expect(result).toEqual({ available: false, alert: false });
     });
 
     test('resposta HTTP não ok marca indisponível', async () => {
-        global.fetch = jest.fn().mockResolvedValue({ ok: false }) as any;
+        global.fetch = jest.fn().mockResolvedValue({ ok: false }) as unknown as typeof fetch;
 
         const result = await checkAgeProcedureAlert('12/03/1999', 5);
         expect(result.available).toBe(false);

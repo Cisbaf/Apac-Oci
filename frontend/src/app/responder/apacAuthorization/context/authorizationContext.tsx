@@ -16,7 +16,7 @@ const AuthorizationContext = React.createContext<AuthorizationType | null>(null)
 
 export function AuthorizationProvider({children}: {children: React.ReactNode}) {
     const { listApac, removeApac } = useApacViewContext();
-    const { showBackdrop, showAlert, showResponseApi } = useGlobalComponents();
+    const { showBackdrop, showResponseApi } = useGlobalComponents();
     const [apacRequest, setApacRequest] = React.useState<ApacRequest>();
     const [status, setStatus] = React.useState<"approved"|"reject"|null>(null);
     const modalRef = React.useRef<ModalHandles>(null);
