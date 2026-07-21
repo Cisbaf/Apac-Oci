@@ -1,6 +1,8 @@
 from datetime import date
 from random import random
+from unittest.mock import patch
 from django.urls import reverse
+from django.db.models.query import QuerySet
 from django.test import TestCase, RequestFactory
 from django.contrib.admin.sites import AdminSite
 from rest_framework.test import APITestCase
@@ -285,6 +287,54 @@ class ApacApprovalTests(BaseApacTest):
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assert_apac_status(self.apac.pk, ApacStatus.PENDING)
+
+
+class ApacApprovalConcurrencyTests(BaseApacTest):
+    """
+    Regressão T-018 — corrida de aprovação.
+
+    Duas aprovações simultâneas na mesma cidade/competência liam a MESMA faixa
+    livre (SELECT sem lock) e ambas gravavam o vínculo; a segunda sobrescrevia a
+    primeira, deixando uma APAC "aprovada" porém sem faixa — invisível ao export.
+    A correção trava a linha da faixa na seleção (select_for_update), dentro da
+    transação atômica da view. Como o SQLite dos testes não implementa lock real,
+    este teste verifica de forma backend-agnóstica que o caminho de aprovação
+    de fato adquire o lock de linha na faixa (o projeto não possui nenhum outro
+    select_for_update) e que o vínculo é criado.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.apac = self.create_apac_request()
+        self.create_batch(self.requester.city)
+        self.authenticate(self.authorizer)
+
+    def test_aprovacao_trava_a_linha_da_faixa(self):
+        original = QuerySet.select_for_update
+        locked_models = []
+
+        def spy(self, *args, **kwargs):
+            locked_models.append(self.model)
+            return original(self, *args, **kwargs)
+
+        with patch.object(QuerySet, "select_for_update", spy):
+            response = self.client.post(
+                self.approve_url,
+                {
+                    "apac_request_id": self.apac.pk,
+                    "authorizer_id": self.authorizer.pk,
+                },
+                format='json'
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assert_apac_status(self.apac.pk, ApacStatus.APPROVED)
+        # a faixa foi travada (select_for_update) durante a aprovação
+        self.assertIn(ApacBatchModel, locked_models)
+        # e o vínculo foi criado — a APAC não ficou órfã de faixa
+        self.assertTrue(
+            ApacBatchModel.objects.filter(apac_request=self.apac).exists()
+        )
 
 
 class ApacRejectionTests(BaseApacTest):

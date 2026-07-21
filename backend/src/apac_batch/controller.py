@@ -18,8 +18,18 @@ class ApacBatchController(ApacBatchRepository):
         year_2_digits = competence.year % 100
         year_str = f"{year_2_digits:02d}"      # garante 2 dígitos
 
+        # select_for_update() trava a linha da faixa escolhida até o fim da
+        # transação (a view de aprovação roda sob @transaction.atomic). Sem
+        # isso, duas aprovações simultâneas na mesma cidade/competência liam a
+        # MESMA faixa como livre (SELECT sem lock, snapshot REPEATABLE READ),
+        # ambas gravavam o vínculo, e a segunda sobrescrevia a primeira — que
+        # ficava "aprovada" porém órfã de faixa, invisível ao export.
+        # order_by('id') garante ordem determinística de varredura (FIFO da
+        # faixa mais antiga, evita deadlock por ordens de lock divergentes).
+        # No MySQL (produção) o lock é real; no SQLite dos testes é no-op.
         apac_batch = (
             ApacBatchModel.objects
+            .select_for_update()
             .annotate(year_part=Substr('batch_number', 3, 2))  # começa em 1, então 3 = 3º caractere
             .filter(
                 apac_request=None,
@@ -27,6 +37,7 @@ class ApacBatchController(ApacBatchRepository):
                 expire_in__gte=date.today(),
                 year_part=year_str
             )
+            .order_by('id')
         )
 
         if apac_batch:
