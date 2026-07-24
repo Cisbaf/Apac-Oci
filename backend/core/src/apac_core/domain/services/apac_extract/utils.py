@@ -64,3 +64,22 @@ def get_end_of_next_month(d: date) -> date:
     # Descobre o último dia do mês seguinte
     last_day = calendar.monthrange(year, month)[1]
     return date(year, month, last_day)
+
+def get_end_of_month_offset(d: date, months_ahead: int) -> date:
+    """
+    Retorna o último dia do mês que fica `months_ahead` meses à frente do mês de `d`.
+
+    months_ahead=1 replica o comportamento antigo de `get_end_of_next_month`
+    (regra extinta do atributo complementar 054 — 2 competências).
+    months_ahead=2 dá o último dia do 3º mês, ou seja, a validade normal de uma
+    APAC (3 meses/competências) vigente desde a Portaria SAES/MS Nº 3.958/2026
+    (competência 04/2026 em diante).
+    """
+    year = d.year
+    month = d.month + months_ahead
+    while month > 12:
+        month -= 12
+        year += 1
+
+    last_day = calendar.monthrange(year, month)[1]
+    return date(year, month, last_day)

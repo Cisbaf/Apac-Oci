@@ -1,6 +1,6 @@
 # T-024 — Validade da APAC OCI usa regra extinta (2 competências → 3 meses)
 
-- **Fase:** 0 · **Status:** todo · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-024-validade-oci-regra-antiga`
 
 > Detalhado a partir de `ANALISE_VERSAO_PROGRAMA_SIA_APAC.md` (raiz do repo), seção 2.3
@@ -11,9 +11,10 @@
 > **Nota de reconciliação (2026-07-23):** esta tarefa nasceu como "T-019" numa branch
 > de documentação (`docs/registra-T-018-a-T-022`) que colidiu com o T-019 já em uso
 > pela linha de correção da faixa (`refactor/T-019-admin-lock-vinculo-faixa`).
-> Renumerada para T-024. Já existe uma implementação candidata deste patch no branch
-> local `t019-patch-ready` (commit `ff6f43b`) — precisa rebase em cima da `master`
-> atual e renomeação para `refactor/T-024-validade-oci-regra-antiga` antes de virar PR.
+> Renumerada para T-024. A implementação, feita numa sessão anterior em sandbox
+> (branch provisória `t019-patch-ready`), foi rebaseada na `master` atual e renomeada
+> para `refactor/T-024-validade-oci-regra-antiga`; gates completos rodados agora
+> (25/25 em `backend/core`, `bash scripts/verify.sh` verde nos 4 gates).
 
 ## Objetivo
 Trocar o cálculo de `data_fim_validade` de "fim do mês seguinte" (2 competências, regra
@@ -75,11 +76,13 @@ Essa é uma mudança de conteúdo **intencional** do golden — documentar no PR
 esta tarefa e a Portaria SAES/MS Nº 3.958/2026).
 
 ## Escopo (o que fazer)
-- [ ] Aplicar o patch acima (utils.py, controller.py, adapter.py).
-- [ ] Atualizar os 3 golden files.
-- [ ] Rodar `cd backend/core && python -m pytest` — os 3 testes de golden file e o de
-      determinismo devem passar com os novos valores.
-- [ ] Testar manualmente (ver seção abaixo).
+- [x] Aplicar o patch acima (utils.py, controller.py, adapter.py).
+- [x] Atualizar os 3 golden files.
+- [x] Rodar `cd backend/core && python -m pytest` — os 3 testes de golden file e o de
+      determinismo devem passar com os novos valores. **25/25 verde**, `bash
+      scripts/verify.sh` completo também verde (os 4 gates).
+- [x] Testar manualmente (ver seção abaixo) — **confirmado pelo usuário em 2026-07-24,
+      export importado corretamente no APAC Magnético local.**
 
 ## Fora de escopo
 - Tornar a validade condicional por atributo do procedimento (ex.: algum procedimento
@@ -102,11 +105,12 @@ esta tarefa e a Portaria SAES/MS Nº 3.958/2026).
    da Portaria SAES/MS Nº 3.958/2026 para confirmar).
 
 ## Critério de aceite
-- [ ] `data_fim_validade` reflete 3 meses (fim do mês `produção + 2`) em vez de 2.
-- [ ] Golden files atualizados de propósito, PR explica o motivo.
-- [ ] Gates: `bash scripts/verify.sh` verde.
-- [ ] Validação manual no APAC Magnético local feita e documentada no PR (aceitou o
-      arquivo, vigência exibida bate com o esperado).
+- [x] `data_fim_validade` reflete 3 meses (fim do mês `produção + 2`) em vez de 2.
+- [x] Golden files atualizados de propósito, PR explica o motivo.
+- [x] Gates: `bash scripts/verify.sh` verde.
+- [x] Validação manual no APAC Magnético local feita e documentada no PR (aceitou o
+      arquivo, vigência exibida bate com o esperado). Confirmado pelo usuário em
+      2026-07-24: exporta corretamente.
 
 ## Ao concluir
 - Atualizar status em `INDEX.md` e no log de conclusão.
