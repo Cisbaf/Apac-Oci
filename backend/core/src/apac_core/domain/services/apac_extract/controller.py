@@ -10,7 +10,7 @@ from apac_core.domain.services.apac_extract.apac_procedure import ApacProcedure
 from apac_core.domain.services.apac_extract.apac_info import ApacInfo
 from apac_core.domain.services.apac_extract.apac_variavel import ApacVariavel
 from apac_core.domain.services.apac_extract.utils import (
-    format_with_zeros, get_end_of_next_month
+    format_with_zeros, get_end_of_month_offset
 )
 from apac_core.domain.services.apac_extract.adapter import adaptar_oci
 
@@ -39,7 +39,7 @@ class ExportApacBatchController:
         for apac_batch in self.apac_batchs:
             apac_request = apac_batch.apac_request
             apac_data = apac_request.apac_data
-            data_fim = get_end_of_next_month(self.date_production)
+            data_fim = get_end_of_month_offset(self.date_production, 2)  # 3 meses (T-019)
             bodys.append(ApacBody(
                 apac_model=adaptar_oci( # essa nova linha está adaptando o apac model para o caso de duque de caxias
                     apac_model=ApacModel(
@@ -90,7 +90,10 @@ class ExportApacBatchController:
                         cns_medico_executante=apac_data.supervising_physician_data.cns.value,
                         cpf_paciente=apac_data.patient_data.cpf.value,
                         id_nacional_equipe="",
-                        situacao_rua="N"
+                        situacao_rua="N",
+                        fonte_orcamentaria="",
+                        emendas_parlamentares="",
+                        pessoa_sem_cpf="N"
                     )
                 ),
                 apac_info=ApacVariavel(

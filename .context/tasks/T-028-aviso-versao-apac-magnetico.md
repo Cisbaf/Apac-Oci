@@ -1,7 +1,7 @@
 # T-028 — Aviso na tela de exportação sobre versão do APAC Magnético
 
 - **Fase:** 0
-- **Status:** todo
+- **Status:** done
 - **Depende de:** —
 - **Branch:** `refactor/T-028-aviso-versao-apac-magnetico`
 
@@ -45,10 +45,10 @@ completo das versões/competências.
 - `frontend/src/app/extracao/page.tsx` — inclui o componente
 
 ## Critério de aceite
-- [ ] Aviso visível ao entrar em `/extracao`, com o texto explicando os campos novos e
-      a necessidade de atualizar o APAC Magnético local.
-- [ ] Dispensável (fecha com o `x`, não bloqueia o uso da tela).
-- [ ] Gates: `bash scripts/verify.sh` verde (frontend jest + lint, sem impacto em
+- [x] Aviso visível ao entrar em `/extracao`, com o texto explicando os campos novos e
+      a necessidade de atualizar o APAC Magnético local. Confirmado pelo usuário.
+- [x] Dispensável (fecha com o `x`, não bloqueia o uso da tela).
+- [x] Gates: `bash scripts/verify.sh` verde (frontend jest + lint, sem impacto em
       backend).
 
 ## Verificação
