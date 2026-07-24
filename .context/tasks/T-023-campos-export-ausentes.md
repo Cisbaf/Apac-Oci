@@ -1,6 +1,6 @@
 # T-023 — Campos novos do export (Fonte Orçamentária, Emendas Parlamentares, Pessoa sem CPF)
 
-- **Fase:** 0 · **Status:** todo · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-023-campos-export-ausentes`
 
 > Especificação **confirmada pelo layout oficial** (`layout_Exportacao_APAC.pdf`,
@@ -131,12 +131,13 @@ esquerda — **não** passar o código cru, senão o valor sai errado (ex.: `"1 
    3 como "NÃO obrigatório").
 
 ## Critério de aceite
-- [ ] 3 campos novos implementados, na ordem e tamanho exatos da tabela acima.
-- [ ] Golden files atualizados de propósito (`N` → `N   N` no fim da linha "14"), PR
+- [x] 3 campos novos implementados, na ordem e tamanho exatos da tabela acima.
+- [x] Golden files atualizados de propósito (`N` → `N   N` no fim da linha "14"), PR
       explica o motivo.
-- [ ] Gates: `bash scripts/verify.sh` verde.
-- [ ] Validação manual no APAC Magnético local: arquivo aceito, campo "Pessoa sem
-      CPF/Registro Civil" exibido corretamente como "Não".
+- [x] Gates: `bash scripts/verify.sh` verde.
+- [x] Validação manual no APAC Magnético local: arquivo aceito, campo "Pessoa sem
+      CPF/Registro Civil" exibido corretamente como "Não". Confirmado pelo usuário
+      em 2026-07-24.
 
 ## Ao concluir
 - Atualizar status em `INDEX.md` e no log de conclusão.
