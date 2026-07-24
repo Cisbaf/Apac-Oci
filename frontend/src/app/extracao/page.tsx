@@ -3,6 +3,7 @@ import { Box } from "@mui/material"
 import { ExportContextProvider } from "./contexts/ExportContext";
 import BatchTable from "./components/BatchTable";
 import FilterApacForExtract from "./components/FilterApac";
+import ExportVersionNotice from "./components/ExportVersionNotice";
 
 
 export default function ExtracaoPage() {
@@ -15,6 +16,7 @@ export default function ExtracaoPage() {
                 gap: 2,
                 pt: 1
             }}>
+                <ExportVersionNotice/>
                 <FilterApacForExtract/>
                 <BatchTable/>
             </Box>
