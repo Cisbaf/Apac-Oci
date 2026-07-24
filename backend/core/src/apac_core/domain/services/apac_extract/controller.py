@@ -31,7 +31,7 @@ class ExportApacBatchController:
             nome_destino=self.establishment.city.agency_name,
             indicador_destino="M",
             data_geracao=date.today().strftime("%Y%m%d"),
-            versao_layout="Versao 03.15"
+            versao_layout="Versao 04.00"
         )
     
     def body(self) -> List[ApacBody]:
