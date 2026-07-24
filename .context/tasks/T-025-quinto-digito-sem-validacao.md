@@ -1,6 +1,6 @@
 # T-025 — Bloquear importação de faixa com quinto dígito fora do esperado para OCI (ATE)
 
-- **Fase:** 0 · **Status:** todo · **Depende de:** —
+- **Fase:** 0 · **Status:** done · **Depende de:** —
 - **Branch:** `refactor/T-025-quinto-digito-sem-validacao`
 
 > Detalhado a partir de `ANALISE_VERSAO_PROGRAMA_SIA_APAC.md` (raiz do repo), seção 2.4,
@@ -93,14 +93,14 @@ deveria acontecer após o regex de 13 dígitos, mas a guarda é barata e deixa a
 robusta a mudanças futuras no regex).
 
 ## Escopo (o que fazer)
-- [ ] Aplicar o patch acima em `forms.py`.
-- [ ] Teste novo (`backend/src/apac_batch/tests.py`): `ImportFaixasForm` com uma faixa
+- [x] Aplicar o patch acima em `forms.py`.
+- [x] Teste novo (`backend/src/apac_batch/tests.py`): `ImportFaixasForm` com uma faixa
       de 13 dígitos e 5º dígito `"9"` → `is_valid()` `False`, erro menciona o dígito
       esperado; mesma faixa com `"7"` (padrão real) → válida (dado o resto do input
-      correto).
-- [ ] Teste cobrindo que a faixa com dígito errado **não é inserida no banco** (não
+      correto). Cobertos: dígito "9" (componente errado) e "0" (banido).
+- [x] Teste cobrindo que a faixa com dígito errado **não é inserida no banco** (não
       chama `salvar()`/`bulk_create` quando o form é inválido — já é o comportamento
-      do fluxo existente, só confirmar que continua valendo com a nova validação).
+      do fluxo existente, confirmado que continua valendo com a nova validação).
 
 ## Fora de escopo
 - Validar contra atributo complementar do procedimento via SIGTAP — precisa de fonte de
@@ -118,10 +118,11 @@ robusta a mudanças futuras no regex).
   sem inserir nada no banco.
 
 ## Critério de aceite
-- [ ] Importação de faixa com 5º dígito diferente de "7" é rejeitada pelo formulário,
+- [x] Importação de faixa com 5º dígito diferente de "7" é rejeitada pelo formulário,
       com mensagem clara.
-- [ ] Faixas com 5º dígito "7" continuam sendo importadas normalmente.
-- [ ] Gates: `bash scripts/verify.sh` verde.
+- [x] Faixas com 5º dígito "7" continuam sendo importadas normalmente (24/24 testes
+      de `apac_batch` verdes, incluindo os já existentes).
+- [x] Gates: `bash scripts/verify.sh` verde (4/4).
 
 ## Ao concluir
 - Atualizar status em `INDEX.md` e no log de conclusão.

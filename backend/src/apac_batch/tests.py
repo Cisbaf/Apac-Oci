@@ -183,6 +183,35 @@ class ImportFaixasFormTests(TestCase):
             " ".join(form.non_field_errors())
         )
 
+    def test_quinto_digito_diferente_de_7_gera_erro(self):
+        """T-025: componente Ambulatorial/OCI usa 5º dígito "7" (Nota Técnica
+        CISBAF nº 04/2026). Faixa de outro componente não deve ser importada."""
+        data = self.valid_data(
+            quantidade_esperada=1,
+            faixas_raw='"332690917467-5'  # 5º dígito "9" (Créditos Financeiros/Ressarcimento)
+        )
+        form = ImportFaixasForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "5º dígito diferente de '7'",
+            " ".join(form.non_field_errors())
+        )
+        self.assertEqual(ApacBatchModel.objects.count(), 0)
+
+    def test_quinto_digito_0_banido_gera_erro(self):
+        """"0" foi banido pelo DATASUS desde 12/2025 (changelog v03.19) —
+        continua coberto pela mesma validação (dígito != "7")."""
+        data = self.valid_data(
+            quantidade_esperada=1,
+            faixas_raw='"332600197469-5'  # 5º dígito "0"
+        )
+        form = ImportFaixasForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "5º dígito diferente de '7'",
+            " ".join(form.non_field_errors())
+        )
+
 
 class ImportarFaixasViewTests(TestCase):
 

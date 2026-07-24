@@ -6,6 +6,7 @@ from city.models import CityModel
 from .models import ApacBatchModel
 
 FORMATO_FAIXA = re.compile(r'^\d{13}$')
+QUINTO_DIGITO_OCI = "7"  # Ambulatorial/OCI — Nota Técnica CISBAF nº 04/2026 v1.3
 
 
 def parse_faixas(raw: str) -> list[str]:
@@ -119,6 +120,19 @@ class ImportFaixasForm(forms.Form):
             lista = ', '.join(duplicados_input)
             erros.append(
                 f"As seguintes faixas aparecem mais de uma vez no texto colado: {lista}"
+            )
+
+        # 5. Validação do quinto dígito (componente Ambulatorial/OCI = "7")
+        digito_errado = [
+            n for n in numeros
+            if FORMATO_FAIXA.match(n) and n[4] != QUINTO_DIGITO_OCI
+        ]
+        if digito_errado:
+            lista = ', '.join(digito_errado)
+            erros.append(
+                f"As seguintes faixas têm o 5º dígito diferente de '{QUINTO_DIGITO_OCI}' "
+                f"(esperado para o componente Ambulatorial/OCI, Nota Técnica CISBAF nº "
+                f"04/2026): {lista}"
             )
 
         if erros:
