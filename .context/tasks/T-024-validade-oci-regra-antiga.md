@@ -1,6 +1,6 @@
 # T-024 — Validade da APAC OCI usa regra extinta (2 competências → 3 meses)
 
-- **Fase:** 0 · **Status:** doing (patch pronto, gates verdes; falta validação manual no APAC Magnético) · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-024-validade-oci-regra-antiga`
 
 > Detalhado a partir de `ANALISE_VERSAO_PROGRAMA_SIA_APAC.md` (raiz do repo), seção 2.3
@@ -81,8 +81,8 @@ esta tarefa e a Portaria SAES/MS Nº 3.958/2026).
 - [x] Rodar `cd backend/core && python -m pytest` — os 3 testes de golden file e o de
       determinismo devem passar com os novos valores. **25/25 verde**, `bash
       scripts/verify.sh` completo também verde (os 4 gates).
-- [ ] Testar manualmente (ver seção abaixo) — **pendente, aguardando validação do
-      usuário no APAC Magnético local**.
+- [x] Testar manualmente (ver seção abaixo) — **confirmado pelo usuário em 2026-07-24,
+      export importado corretamente no APAC Magnético local.**
 
 ## Fora de escopo
 - Tornar a validade condicional por atributo do procedimento (ex.: algum procedimento
@@ -108,9 +108,9 @@ esta tarefa e a Portaria SAES/MS Nº 3.958/2026).
 - [x] `data_fim_validade` reflete 3 meses (fim do mês `produção + 2`) em vez de 2.
 - [x] Golden files atualizados de propósito, PR explica o motivo.
 - [x] Gates: `bash scripts/verify.sh` verde.
-- [ ] Validação manual no APAC Magnético local feita e documentada no PR (aceitou o
-      arquivo, vigência exibida bate com o esperado). **Pendente — só o usuário tem o
-      APAC Magnético local para testar a importação.**
+- [x] Validação manual no APAC Magnético local feita e documentada no PR (aceitou o
+      arquivo, vigência exibida bate com o esperado). Confirmado pelo usuário em
+      2026-07-24: exporta corretamente.
 
 ## Ao concluir
 - Atualizar status em `INDEX.md` e no log de conclusão.
