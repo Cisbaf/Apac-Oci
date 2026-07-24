@@ -2,7 +2,7 @@ from apac_core.domain.entities.establishment import Establishment
 from apac_core.domain.entities.procedure import Procedure
 from apac_core.domain.services.apac_extract.apac_model import ApacModel
 from datetime import datetime
-from apac_core.domain.services.apac_extract.utils import get_end_of_next_month
+from apac_core.domain.services.apac_extract.utils import get_end_of_month_offset
 
 
 def adaptar_oci(apac_model: ApacModel):
@@ -11,6 +11,6 @@ def adaptar_oci(apac_model: ApacModel):
     procedure_date =  datetime.strptime(apac_model.data_autorizacao, "%Y%m%d")
 
     apac_model.data_inicio_validade = procedure_date.strftime("%Y%m%d")
-    apac_model.data_fim_validade = get_end_of_next_month(procedure_date).strftime("%Y%m%d")
+    apac_model.data_fim_validade = get_end_of_month_offset(procedure_date, 2).strftime("%Y%m%d")  # 3 meses (T-019)
 
     return apac_model
