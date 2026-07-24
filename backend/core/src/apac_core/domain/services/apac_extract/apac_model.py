@@ -56,6 +56,9 @@ class ApacModel(FixedWidthBaseModel):
         "cpf_paciente": 11,
         "id_nacional_equipe": 10,
         "situacao_rua": 1,
+        "fonte_orcamentaria": 2,
+        "emendas_parlamentares": 1,
+        "pessoa_sem_cpf": 1,
     }
 
     identificador: Optional[str] = Field(default="14")
@@ -106,6 +109,9 @@ class ApacModel(FixedWidthBaseModel):
     cpf_paciente: Optional[str] = ""
     id_nacional_equipe: Optional[str] = ""
     situacao_rua: Optional[str] = Field(default="N")
+    fonte_orcamentaria: Optional[str] = ""
+    emendas_parlamentares: Optional[str] = ""
+    pessoa_sem_cpf: Optional[str] = Field(default="N")
 
     @field_validator("*", mode="before")
     @classmethod

@@ -90,7 +90,10 @@ class ExportApacBatchController:
                         cns_medico_executante=apac_data.supervising_physician_data.cns.value,
                         cpf_paciente=apac_data.patient_data.cpf.value,
                         id_nacional_equipe="",
-                        situacao_rua="N"
+                        situacao_rua="N",
+                        fonte_orcamentaria="",
+                        emendas_parlamentares="",
+                        pessoa_sem_cpf="N"
                     )
                 ),
                 apac_info=ApacVariavel(
