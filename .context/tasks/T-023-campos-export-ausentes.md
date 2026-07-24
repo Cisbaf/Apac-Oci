@@ -1,6 +1,6 @@
 # T-023 — Campos novos do export (Fonte Orçamentária, Emendas Parlamentares, Pessoa sem CPF)
 
-- **Fase:** 0 · **Status:** doing (patch pronto, gates verdes; falta validação manual no APAC Magnético) · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-023-campos-export-ausentes`
 
 > Especificação **confirmada pelo layout oficial** (`layout_Exportacao_APAC.pdf`,
@@ -135,9 +135,9 @@ esquerda — **não** passar o código cru, senão o valor sai errado (ex.: `"1 
 - [x] Golden files atualizados de propósito (`N` → `N   N` no fim da linha "14"), PR
       explica o motivo.
 - [x] Gates: `bash scripts/verify.sh` verde.
-- [ ] Validação manual no APAC Magnético local: arquivo aceito, campo "Pessoa sem
-      CPF/Registro Civil" exibido corretamente como "Não". **Pendente — aguardando
-      teste do usuário.**
+- [x] Validação manual no APAC Magnético local: arquivo aceito, campo "Pessoa sem
+      CPF/Registro Civil" exibido corretamente como "Não". Confirmado pelo usuário
+      em 2026-07-24.
 
 ## Ao concluir
 - Atualizar status em `INDEX.md` e no log de conclusão.
