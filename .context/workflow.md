@@ -29,12 +29,17 @@ master  ●────────────●──────────
 | Gate | Comando | Falha significa |
 |---|---|---|
 | Testes de domínio/use cases | `cd backend/core && python -m pytest` | regra de negócio quebrou |
-| Testes de integração | `cd backend/src && python -m pytest` | fluxo Django quebrou |
+| Testes de integração | `cd backend/src && python manage.py test` | fluxo Django quebrou |
 | Testes frontend | `cd frontend && npm test` | UI/serviço quebrou |
 | **Golden file do export** | incluído nos testes (T-002) | **o arquivo do APAC Magnético mudou — risco de glosa** |
 | Lint | `cd frontend && npm run lint` | estilo/erros estáticos |
 
 Atalho: `bash scripts/verify.sh` roda todos e falha se qualquer um falhar.
+
+> ⚠️ No gate de integração é `manage.py test`, **não** `pytest`. Não há
+> `pytest-django` configurado, então `cd backend/src && python -m pytest`
+> coleta `0 items` e **sai com código 0** — parece verde e não roda teste
+> nenhum. Ver T-030.
 
 ## Princípios de segurança para não quebrar produção
 
