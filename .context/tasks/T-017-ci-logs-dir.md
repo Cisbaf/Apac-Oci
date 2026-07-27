@@ -72,8 +72,10 @@ Gate completo (`bash scripts/verify.sh`), rodado 2x com resultado consistente:
 ## Aceite
 - [x] `backend/src (manage.py test)` passa em checkout limpa (validado removendo
       `backend/src/logs/` e rodando o gate).
-- [ ] **Pendente de você** — confirmado no Actions do GitHub que o check fica
-      verde. Não verificável nesta sessão: `gh` não está instalado no ambiente e
-      o PR ainda não existe. Só se fecha após abrir o PR.
+- [x] Confirmado no Actions do GitHub que o check fica verde — **PR #27**,
+      check `CI / verify (pull_request)` successful em 1m
+      ([run 30296433542](https://github.com/Cisbaf/Apac-Oci/actions/runs/30296433542/job/90078538961?pr=27)).
+      Primeira vez que os 4 gates passam em CI desde que o gate existe (T-001).
+      Mergeado em 2026-07-27 (merge commit `b587efc`).
 - [x] Nenhuma mudança de comportamento de negócio — só infra de logging/testes.
 - [x] Golden file do export inalterado.
