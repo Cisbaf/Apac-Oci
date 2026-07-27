@@ -215,6 +215,13 @@ CSRF_TRUSTED_ORIGINS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# `logging.FileHandler` cria o arquivo de log, mas não o diretório pai. Como
+# `logs/` está no `.gitignore`, em qualquer checkout limpa (CI, clone novo,
+# container sem volume montado) a pasta não existe e `django.setup()` falha com
+# FileNotFoundError antes de rodar qualquer coisa. Garantir o diretório aqui.
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -222,7 +229,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/django.log'),
+            'filename': os.path.join(LOG_DIR, 'django.log'),
         },
     },
     'loggers': {
