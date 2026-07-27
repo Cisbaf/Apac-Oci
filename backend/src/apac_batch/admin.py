@@ -195,7 +195,18 @@ class ApacBatchAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
 
+        # O vínculo faixa↔APAC (`apac_request`) só pode ser criado pelo
+        # ApprovedApacRequestUseCase, no momento da aprovação. Editá-lo aqui
+        # permite limpar o vínculo — deixando uma APAC "aprovada" sem faixa,
+        # invisível ao export — ou reapontá-lo para outra APAC, orfanando a
+        # anterior. É o mesmo sintoma da T-018 (corrida na aprovação) por outro
+        # vetor: a UI do admin. Readonly para todos, inclusive superuser, na
+        # mesma linha do que a T-006 fez com status/authorizer/review_date.
+        # A reatribuição legítima de faixa órfã vem na T-020, por caminho
+        # controlável (comando/use case), não por edição livre de FK. Ver T-019.
+        link_fields = ['apac_request']
+
         if request.user.is_superuser:
-            return []
+            return link_fields
 
         return [field.name for field in self.model._meta.fields]
