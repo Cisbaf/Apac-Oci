@@ -1,11 +1,16 @@
 from datetime import date
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import Permission
+from django.forms.models import InlineForeignKeyField
 from rest_framework.test import APITestCase
 from rest_framework import status
+from apac_request.admin import ApacBatchInline
+from apac_request.models import ApacRequestModel
 from city.models import CityModel
 from customuser.models import CustomUser, UserRole
+from .admin import ApacBatchAdmin
 from .models import ApacBatchModel
 from .forms import parse_faixas, ImportFaixasForm
 
@@ -347,3 +352,81 @@ class ExportApacBatchAuthTests(APITestCase):
             response.status_code,
             (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN)
         )
+
+
+class ApacBatchAdminLinkLockTests(TestCase):
+    """T-019: o vínculo faixa↔APAC (`apac_request`) só pode ser criado pelo
+    ApprovedApacRequestUseCase, na aprovação. Editá-lo pela tela avulsa de
+    faixas permite limpar o vínculo (APAC "aprovada" sem faixa, invisível ao
+    export) ou reapontá-lo para outra APAC, orfanando a anterior — mesmo
+    sintoma da T-018, por outro vetor. Precisa ficar readonly para todos,
+    inclusive superuser, como já vale para status/authorizer/review_date
+    (T-006)."""
+
+    def setUp(self):
+        self.city = CityModel.objects.create(
+            name=random_str(), ibge_code=random_str(), agency_name=random_str()
+        )
+        self.superuser = CustomUser.objects.create_superuser(
+            username=random_str(), email=None, password="pass1234", city=self.city
+        )
+        self.admin_user = CustomUser.objects.create(
+            username=random_str(), role=UserRole.ADMIN, city=self.city, is_staff=True
+        )
+        self.admin_instance = ApacBatchAdmin(ApacBatchModel, AdminSite())
+        self.factory = RequestFactory()
+
+    def _request_for(self, user):
+        request = self.factory.get("/admin/apac_batch/apacbatchmodel/1/change/")
+        request.user = user
+        return request
+
+    def test_superuser_nao_edita_o_vinculo_com_a_apac(self):
+        readonly = self.admin_instance.get_readonly_fields(
+            self._request_for(self.superuser)
+        )
+        self.assertIn("apac_request", readonly)
+
+    def test_usuario_admin_comum_tambem_nao_edita_o_vinculo(self):
+        readonly = self.admin_instance.get_readonly_fields(
+            self._request_for(self.admin_user)
+        )
+        self.assertIn("apac_request", readonly)
+
+    def test_vinculo_fora_do_formulario_de_edicao_do_superuser(self):
+        """Garante o efeito prático, não só a lista: o campo não chega a ser
+        renderizado como editável no form do admin."""
+        form = self.admin_instance.get_form(self._request_for(self.superuser))
+        self.assertNotIn("apac_request", form.base_fields)
+
+
+class ApacBatchInlineLinkLockTests(TestCase):
+    """T-019: complemento do teste acima no inline da tela da APAC. Aqui a
+    proteção vem do próprio Django (a FK para o pai é trocada por um
+    `InlineForeignKeyField` oculto, e `max_num` é forçado a 1 porque
+    `apac_request` é OneToOne). Estes testes fixam essa invariante para que
+    uma mudança futura no inline — ou no tipo do campo — não reabra o vetor
+    sem ninguém perceber."""
+
+    def setUp(self):
+        self.superuser = CustomUser.objects.create_superuser(
+            username=random_str(), email=None, password="pass1234",
+            city=CityModel.objects.create(
+                name=random_str(), ibge_code=random_str(), agency_name=random_str()
+            )
+        )
+        self.factory = RequestFactory()
+
+    def _formset(self):
+        request = self.factory.get("/admin/apac_request/apacrequestmodel/1/change/")
+        request.user = self.superuser
+        inline = ApacBatchInline(ApacRequestModel, AdminSite())
+        return inline.get_formset(request)(instance=ApacRequestModel())
+
+    def test_vinculo_no_inline_nao_e_escolhivel(self):
+        field = self._formset().empty_form.fields["apac_request"]
+        self.assertIsInstance(field, InlineForeignKeyField)
+        self.assertTrue(field.widget.is_hidden)
+
+    def test_inline_aceita_no_maximo_uma_faixa(self):
+        self.assertEqual(self._formset().max_num, 1)

@@ -172,6 +172,15 @@ class ApacBatchInline(admin.StackedInline):
     extra = 0
     can_delete = False  # impede remoção de faixas no admin
 
+    # T-019: o vínculo faixa↔APAC **não** é editável por aqui, e isso não
+    # depende deste arquivo — o Django troca a FK para o pai por um
+    # `InlineForeignKeyField` oculto, amarrado à APAC da tela. Como
+    # `apac_request` é OneToOne, ele também já força `max_num=1`.
+    # Explicitado abaixo para a invariante ficar visível no código e não
+    # depender só desse detalhe do framework. O vetor real de orfanamento
+    # estava na tela avulsa de faixas (`ApacBatchAdmin`), não aqui.
+    max_num = 1
+
     def get_readonly_fields(self, request, obj=None):
         """
         Usuários comuns não podem editar nenhum campo da faixa.

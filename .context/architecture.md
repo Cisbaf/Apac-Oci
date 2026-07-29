@@ -45,7 +45,7 @@ Políticas que hoje estão copiadas em vários lugares passam a ter uma implemen
 |---|---|---|
 | Solicitar APAC | React `/solicitar` → use case ✅ | mantém |
 | Aprovar/Rejeitar | React `/responder` → use case ✅ (único caminho). Admin: `status`/`authorizer`/`review_date` são sempre readonly (mesmo para superuser) — T-006 fechou a edição direta que pulava o use case e não associava faixa. | Admin ganhar action própria que chame o mesmo use case, se necessário no futuro |
-| Gestão de faixas | Admin inline | React (API v2) |
+| Gestão de faixas | Admin (tela avulsa + inline). O vínculo `apac_request` é readonly para todos, inclusive superuser — T-019 fechou a edição direta que orfanava APAC aprovada (mesmo sintoma da T-018, outro vetor). Criar vínculo só pelo `ApprovedApacRequestUseCase`. | React (API v2) |
 | Mudança de status em lote | Não existe hoje (a action antiga era código morto — nunca registrada em `actions`, template inexistente; removida na T-006) | React (use case), se vier a ser necessário |
 | Dashboard | Django template | React (API) |
 | Exportação | React `/extracao` → use case | mantém + evolui (validação/diagnóstico) |
