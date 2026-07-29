@@ -14,6 +14,15 @@ class ProcedureModel(models.Model):
         blank=True
     )
     mandatory = models.BooleanField(verbose_name="Obrigatório", default=False)
+    # Atributo complementar SIGTAP 054. Ver T-034: a validade padrão da APAC é de
+    # 3 competências (Portaria SAES/MS Nº 3.958/2026), mas procedimentos que ainda
+    # carregam o 054 são rejeitados pelo APAC Magnético com o erro 010087 se
+    # exportados com validade diferente de 2 competências.
+    fixed_validity_two_competences = models.BooleanField(
+        verbose_name="Validade fixa de 2 competências",
+        help_text="Atributo SIGTAP 054. Marque se o APAC Magnético exigir validade de 2 competências para este procedimento (erro 010087). Sem marcar, a validade exportada é a padrão de 3 competências.",
+        default=False
+    )
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -34,6 +43,7 @@ class ProcedureModel(models.Model):
             code=self.code,
             description=self.description,
             is_active=self.is_active,
+            fixed_validity_two_competences=self.fixed_validity_two_competences,
             sub_procedures=sub_procedures,
             created_at=self.created_at,
             updated_at=self.updated_at,

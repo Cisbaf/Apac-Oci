@@ -5,12 +5,14 @@ from datetime import datetime
 from apac_core.domain.services.apac_extract.utils import get_end_of_month_offset
 
 
-def adaptar_oci(apac_model: ApacModel):
+def adaptar_oci(apac_model: ApacModel, months_ahead: int = 2):
 
     # data_autorizacao == procedure_date de apac data (adaptando)
     procedure_date =  datetime.strptime(apac_model.data_autorizacao, "%Y%m%d")
 
     apac_model.data_inicio_validade = procedure_date.strftime("%Y%m%d")
-    apac_model.data_fim_validade = get_end_of_month_offset(procedure_date, 2).strftime("%Y%m%d")  # 3 meses (T-019)
+    # months_ahead vem do procedimento principal (T-034): 2 = validade padrão de
+    # 3 competências; 1 = procedimento com o atributo SIGTAP 054 (2 competências).
+    apac_model.data_fim_validade = get_end_of_month_offset(procedure_date, months_ahead).strftime("%Y%m%d")
 
     return apac_model
