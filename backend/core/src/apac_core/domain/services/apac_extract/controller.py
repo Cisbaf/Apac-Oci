@@ -41,7 +41,7 @@ class ExportApacBatchController:
             apac_data = apac_request.apac_data
             # Validade padrão: 3 competências (T-024). Procedimentos que ainda carregam
             # o atributo SIGTAP 054 exigem 2 competências, senão o APAC Magnético
-            # rejeita o arquivo com o erro 010087 (T-032).
+            # rejeita o arquivo com o erro 010087 (T-034).
             months_ahead = 1 if apac_data.main_procedure.fixed_validity_two_competences else 2
             data_fim = get_end_of_month_offset(self.date_production, months_ahead)
             bodys.append(ApacBody(

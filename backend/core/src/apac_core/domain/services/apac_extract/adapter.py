@@ -11,7 +11,7 @@ def adaptar_oci(apac_model: ApacModel, months_ahead: int = 2):
     procedure_date =  datetime.strptime(apac_model.data_autorizacao, "%Y%m%d")
 
     apac_model.data_inicio_validade = procedure_date.strftime("%Y%m%d")
-    # months_ahead vem do procedimento principal (T-032): 2 = validade padrão de
+    # months_ahead vem do procedimento principal (T-034): 2 = validade padrão de
     # 3 competências; 1 = procedimento com o atributo SIGTAP 054 (2 competências).
     apac_model.data_fim_validade = get_end_of_month_offset(procedure_date, months_ahead).strftime("%Y%m%d")
 

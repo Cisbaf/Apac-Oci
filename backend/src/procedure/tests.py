@@ -77,7 +77,7 @@ class ProcedureAgeAlertApiViewTests(APITestCase):
 
 class ProcedureFixedValidityFlagTests(APITestCase):
     """
-    T-032 — a flag do atributo SIGTAP 054 precisa atravessar o `to_entity`, senão o
+    T-034 — a flag do atributo SIGTAP 054 precisa atravessar o `to_entity`, senão o
     export continua calculando 3 competências e o APAC Magnético rejeita com 010087.
     """
 

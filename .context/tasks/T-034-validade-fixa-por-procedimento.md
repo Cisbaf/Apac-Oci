@@ -1,7 +1,16 @@
-# T-032 — Validade fixa de 2 competências por procedimento (regressão da T-024)
+# T-034 — Validade fixa de 2 competências por procedimento (regressão da T-024)
 
 - **Fase:** 0 · **Status:** done · **Depende de:** T-002, T-024
-- **Branch:** `refactor/T-032-validade-fixa-por-procedimento`
+- **Branch:** `refactor/T-032-validade-fixa-por-procedimento` (nome antigo — ver nota de
+  reconciliação abaixo)
+
+> **Nota de reconciliação (2026-07-29):** esta tarefa nasceu como **T-032**. Enquanto ela
+> estava em revisão, o PR #30 (T-015) foi mergeado na `master` registrando uma T-032
+> **diferente** (`T-032-dev-autofill-fake-data.md`, botão de auto-preenchimento) e uma
+> T-033. Como a `master` é a fonte da verdade e já estava mergeada, esta foi renumerada
+> para **T-034** — mesmo critério da reconciliação T-018–T-022. O nome da branch e o
+> título do PR #31 mantiveram o `T-032` original para não fechar o PR já aberto; só o ID
+> da tarefa mudou.
 
 ## Origem — erro real em produção
 

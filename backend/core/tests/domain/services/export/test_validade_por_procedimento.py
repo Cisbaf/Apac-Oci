@@ -1,5 +1,5 @@
 """
-Validade da APAC exportada, condicionada ao procedimento principal (T-032).
+Validade da APAC exportada, condicionada ao procedimento principal (T-034).
 
 Contexto: a T-024 trocou a validade de 2 para 3 competências para *toda* APAC,
 apoiada no changelog v03.22 (Portaria SAES/MS Nº 3.958/2026 exclui o atributo

@@ -14,7 +14,7 @@ class ProcedureModel(models.Model):
         blank=True
     )
     mandatory = models.BooleanField(verbose_name="Obrigatório", default=False)
-    # Atributo complementar SIGTAP 054. Ver T-032: a validade padrão da APAC é de
+    # Atributo complementar SIGTAP 054. Ver T-034: a validade padrão da APAC é de
     # 3 competências (Portaria SAES/MS Nº 3.958/2026), mas procedimentos que ainda
     # carregam o 054 são rejeitados pelo APAC Magnético com o erro 010087 se
     # exportados com validade diferente de 2 competências.
