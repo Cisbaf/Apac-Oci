@@ -73,3 +73,25 @@ class ProcedureAgeAlertApiViewTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response.data["alert"])
+
+
+class ProcedureFixedValidityFlagTests(APITestCase):
+    """
+    T-032 — a flag do atributo SIGTAP 054 precisa atravessar o `to_entity`, senão o
+    export continua calculando 3 competências e o APAC Magnético rejeita com 010087.
+    """
+
+    def test_default_is_false(self):
+        procedure = ProcedureModel.objects.create(code="0902010026", name="OCI sem 054")
+
+        self.assertFalse(procedure.fixed_validity_two_competences)
+        self.assertFalse(procedure.to_entity().fixed_validity_two_competences)
+
+    def test_flag_is_propagated_to_entity(self):
+        procedure = ProcedureModel.objects.create(
+            code="0902010034",
+            name="OCI com 054",
+            fixed_validity_two_competences=True,
+        )
+
+        self.assertTrue(procedure.to_entity().fixed_validity_two_competences)

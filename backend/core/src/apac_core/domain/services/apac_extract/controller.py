@@ -39,7 +39,11 @@ class ExportApacBatchController:
         for apac_batch in self.apac_batchs:
             apac_request = apac_batch.apac_request
             apac_data = apac_request.apac_data
-            data_fim = get_end_of_month_offset(self.date_production, 2)  # 3 meses (T-019)
+            # Validade padrão: 3 competências (T-024). Procedimentos que ainda carregam
+            # o atributo SIGTAP 054 exigem 2 competências, senão o APAC Magnético
+            # rejeita o arquivo com o erro 010087 (T-032).
+            months_ahead = 1 if apac_data.main_procedure.fixed_validity_two_competences else 2
+            data_fim = get_end_of_month_offset(self.date_production, months_ahead)
             bodys.append(ApacBody(
                 apac_model=adaptar_oci( # essa nova linha está adaptando o apac model para o caso de duque de caxias
                     apac_model=ApacModel(
@@ -94,7 +98,8 @@ class ExportApacBatchController:
                         fonte_orcamentaria="",
                         emendas_parlamentares="",
                         pessoa_sem_cpf="N"
-                    )
+                    ),
+                    months_ahead=months_ahead
                 ),
                 apac_info=ApacVariavel(
                     apa_cmp=self.date_production.strftime("%Y%m"),

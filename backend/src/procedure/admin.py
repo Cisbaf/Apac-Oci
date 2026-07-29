@@ -40,9 +40,9 @@ class CidFilter(admin.SimpleListFilter):
 
 @admin.register(ProcedureModel)
 class ProcedureAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name', 'description', 'get_parents', 'mandatory', 'is_active']
-    list_filter = [ParentFilter]
-    list_editable = ['mandatory']
+    list_display = ['code', 'name', 'description', 'get_parents', 'mandatory', 'fixed_validity_two_competences', 'is_active']
+    list_filter = [ParentFilter, 'fixed_validity_two_competences']
+    list_editable = ['mandatory', 'fixed_validity_two_competences']
     search_fields = ['code', 'name']
 
     def get_parents(self, obj):
