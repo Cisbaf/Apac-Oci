@@ -5,7 +5,7 @@ from customuser.models import CustomUser
 
 class EstablishmentModel(models.Model):
     name = models.CharField(verbose_name="Nome do Estabelecimento", max_length=100, unique=True)
-    cnes = models.CharField(verbose_name="Cnes Estabelecimento", max_length=15, unique=True)
+    cnes = models.CharField(verbose_name="Cnes Estabelecimento", max_length=15)
     city = models.ForeignKey(
         verbose_name="Cidade",
         to=CityModel,
