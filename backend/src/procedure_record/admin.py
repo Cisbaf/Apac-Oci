@@ -24,7 +24,7 @@ class ProcedureRecordAdmin(admin.ModelAdmin):
     
     def get_readonly_fields(self, request, obj=None):
         editable_fields = [
-            'apac_data', 'procedure'
+            'apac_data'
         ]
 
         if request.user.is_superuser:
