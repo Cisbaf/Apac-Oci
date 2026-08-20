@@ -11,7 +11,6 @@ import {
   Alert,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { isValidCPF, formatCPF } from "@/shared/utils/validate";
 import "./style.css"
 import logoImg from "../../../public/logo_cisbaf.png"
 import Image from "next/image";
@@ -30,14 +29,13 @@ export default function SignIn() {
       const form = event.currentTarget;
       const formData = new FormData(form);
 
-      let username = formData.get("username")?.toString() ?? "";
+      const username = formData.get("username")?.toString().trim() ?? "";
       const password = formData.get("password")?.toString() ?? "";
 
-      if (!isValidCPF(username)) {
-        return setErrorMsg("Cpf Invalido!")
+      if (!username) {
+        return setErrorMsg("Informe o usuário!")
       }
 
-      username = formatCPF(username);
       const result = await signIn("credentials", {
         redirect: false,
         username,

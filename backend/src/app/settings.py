@@ -57,6 +57,10 @@ CORS_ALLOW_HEADERS = [
 
 AUTH_USER_MODEL = 'customuser.CustomUser'
 
+AUTHENTICATION_BACKENDS = [
+    'customuser.backends.UsernameOrCpfBackend',
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
