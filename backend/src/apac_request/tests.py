@@ -397,6 +397,47 @@ class ApacRejectionTests(BaseApacTest):
         self.assert_apac_status(self.apac.pk, ApacStatus.PENDING)
 
 
+class ApacDuplicateCheckTests(BaseApacTest):
+    """Testes para a checagem de duplicidade (paciente, procedimento, estabelecimento, competência)"""
+
+    def setUp(self):
+        super().setUp()
+        self.apac = self.create_apac_request()
+
+    def test_duplicate_blocked_while_pending(self):
+        self.authenticate(self.requester)
+        response = self.client.post(
+            self.create_apac_url,
+            self.base_data.model_dump(),
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(ApacRequestModel.objects.count(), 1)
+
+    def test_duplicate_allowed_after_rejection(self):
+        self.authenticate(self.authorizer)
+        reject_response = self.client.post(
+            self.reject_url,
+            {
+                "apac_request_id": self.apac.pk,
+                "authorizer_id": self.authorizer.pk,
+                "justification": "Procedimento incompatível com a OCI"
+            },
+            format='json'
+        )
+        self.assertEqual(reject_response.status_code, status.HTTP_200_OK)
+        self.assert_apac_status(self.apac.pk, ApacStatus.REJECTED)
+
+        self.authenticate(self.requester)
+        response = self.client.post(
+            self.create_apac_url,
+            self.base_data.model_dump(),
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(ApacRequestModel.objects.count(), 2)
+
+
 class EdgeCaseTests(BaseApacTest):
     """Testes para casos extremos e validações"""
     

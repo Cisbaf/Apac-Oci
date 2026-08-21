@@ -1,5 +1,6 @@
 import pytest
 from apac_core.application.use_cases.apac_request_cases.create_apac_request_case import CreateApacRequestUseCase, CreateApacRequestDTO
+from apac_core.application.use_cases.apac_request_cases.authorize_apac_request_case import RejectApacRequestUseCase, RejectApacRequestDTO
 from apac_core.application.use_cases.create_apac_data_case import CreateApacDataDTO
 from apac_core.application.use_cases.create_city_case import CreateCityUseCase
 from apac_core.application.use_cases.establishment_cases.create_establishment_case import CreateEstablishmentUseCase
@@ -201,3 +202,51 @@ def test_discharge_date_cannot_be_before_procedure_date(repos, requester, establ
 
     with pytest.raises(DomainException):
         create_apac_request(repos, dto)
+
+
+def test_duplicate_request_same_patient_procedure_establishment_competence_is_blocked(
+    repos, requester, establishment, cid, medical_procedures
+):
+    """
+    Não deve permitir uma segunda solicitação para o mesmo paciente, procedimento,
+    estabelecimento e competência enquanto a primeira permanecer pendente/aprovada.
+    """
+    create_apac_request(
+        repos,
+        generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+    )
+
+    with pytest.raises(DomainException):
+        create_apac_request(
+            repos,
+            generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+        )
+
+
+def test_duplicate_request_allowed_after_rejection(
+    repos, requester, authorizer, establishment, cid, medical_procedures
+):
+    """
+    Se a solicitação anterior foi REJEITADA, deve ser possível registrar uma nova
+    solicitação para o mesmo paciente, procedimento, estabelecimento e competência.
+    """
+    first_request = create_apac_request(
+        repos,
+        generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+    )
+
+    RejectApacRequestUseCase(
+        repos["apac_request"],
+        repos["user"],
+    ).execute(RejectApacRequestDTO(
+        apac_request_id=first_request.id,
+        authorizer_id=authorizer.id,
+        justification="Procedimento incompatível"
+    ))
+
+    second_request = create_apac_request(
+        repos,
+        generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+    )
+
+    assert second_request.status == ApacStatus.PENDING

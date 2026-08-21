@@ -28,7 +28,7 @@ class ApacRequestController(ApacRequestRepository):
             apac_data__main_procedure_id=main_procedure,
             request_date__year=request_date.year,
             request_date__month=request_date.month,
-        ).exists()
+        ).exclude(status=ApacRequestModel.Status.REJECTED).exists()
     
     def save(self, apac_request):
         if apac_request.id:
