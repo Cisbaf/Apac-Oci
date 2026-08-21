@@ -3,6 +3,7 @@ from typing import List
 from apac_core.domain.exceptions import NotFoundException
 from apac_core.domain.repositories.apac_request_repository import ApacRequestRepository
 from apac_core.domain.entities.apac_request import ApacRequest
+from apac_core.domain.entities.apac_status import ApacStatus
 
 
 class ApacRequestFakeRepository(ApacRequestRepository):
@@ -38,5 +39,6 @@ class ApacRequestFakeRepository(ApacRequestRepository):
             and apac_request.apac_data.main_procedure.id == main_procedure
             and apac_request.request_date.year == request_date.year
             and apac_request.request_date.month == request_date.month
+            and apac_request.status != ApacStatus.REJECTED
             for apac_request in self.apac_requests
         )
