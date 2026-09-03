@@ -52,5 +52,35 @@ transcrever portaria — dá para ler a fonte.
 - Gates: `bash scripts/verify.sh` verde.
 - Auditoria idempotente: 171 divergências → 0 → 0.
 
+## Reteste no APAC Magnetico (03/09/2026, tabela 202608a)
+
+Arquivo de teste regerado a partir do extrato do SIGTAP (CID principal aceito,
+todos os secundarios obrigatorios, CBO valido por procedimento) e submetido ao
+programa oficial.
+
+| Critica | Antes (02/09) | Depois (03/09) |
+|---|---|---|
+| `PROC.(...) INCOMPATIVEL COM CID (...)` | 8 | **0** |
+| `PMAE EXIGE PELO MENOS 2 PROC.SEC.` | 8 | **0** |
+| `EXIGE PELO MENOS (00N) PROC. SECUNDARIO OBRIGATORIO` | 2 | **0** |
+| `EXIGE AO MENOS 1 PROC.SEC. (... OU ...)` | 2 | **0** |
+| `PROC.(...) CBO (...) INCOMPATIVEIS` | 5 | **0** |
+| `EXIGE CID CAUSAS ASSOC.` (T-036) | 8 | 8 |
+| `DIGITO VERIFICADOR INVALIDO` (numero fabricado) | 9 | 9 |
+| `CNS INVALIDO` (dado de teste) | 17 | 6 |
+| **Total** | **58** | **23** |
+
+Toda critica de **conteudo de cadastro** zerou. O que sobra nao e cadastro:
+
+- As 2 OCIs de **Saude Bucal** (`0907010016`, `0907010024`) ficaram **sem nenhuma
+  critica de conteudo** — so o digito verificador do numero fabricado. Estao
+  prontas para o municipio preencher e faturar.
+- As 8 OCIs de **Infectologia** ficaram so com `EXIGE CID CAUSAS ASSOC`, que e
+  exatamente a **T-036**. Confirma que aquele erro nao era dado de teste: e
+  lacuna de sistema, e e o unico bloqueio restante.
+- `DIGITO VERIFICADOR` e os 6 `CNS` restantes sao do gerador de teste (numeros
+  fabricados e o campo `cns_medico_executante`, que o gerador nao trocou), nao do
+  cadastro.
+
 ## Ao concluir
 - Marcar T-026 e T-027 como cobertas por esta ferramenta.
