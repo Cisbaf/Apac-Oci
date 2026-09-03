@@ -33,6 +33,9 @@ export  interface ApacData {
     authorizingPhysicianCns: string;
     authorizingPhysicianCbo: string;
     cidId: number;
+    // CID de causas associadas (atributo SIGTAP 043). 0/undefined quando o
+    // procedimento principal não exige — ver requiresSecondaryCid em Procedure.
+    secondaryCidId?: number;
     procedureDate: string;
     dischargeDate: string;
     diagnosticDate: string;

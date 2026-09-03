@@ -32,6 +32,9 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
     });
 
     const [cids, setCids] = React.useState<Cid[]>([]);
+    const [secondaryCids, setSecondaryCids] = React.useState<Cid[]>([]);
+    const requiresSecondaryCid =
+      procedures.find((p) => p.id === procedureId)?.requires_secondary_cid ?? false;
 
     React.useImperativeHandle(ref, () => ({
       validate(disableCheckValidate) {
@@ -45,6 +48,11 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
         }
         if (getValues("apacData.cidId") <= 0)
           return { success: false, message: "Selecione um CID válido!" };
+        if (requiresSecondaryCid && !getValues("apacData.secondaryCidId"))
+          return {
+            success: false,
+            message: "Este procedimento exige também o CID de causas associadas!"
+          };
         return { success: true, message: "Formulário correto!" };
       }
     }));
@@ -53,6 +61,7 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
       const procedure = procedures.find((p) => p.id === procedureId);
       if (!procedure) return;
       setCids(procedure.cid);
+      setSecondaryCids(procedure.secondary_cids);
     }, [procedureId]);
 
     const getCid = () => {
@@ -60,6 +69,15 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
       if (!procedure) return "";
       const cidId = getValues("apacData.cidId");
       const cid = procedure.cid.find((c) => c.id === cidId);
+      if (cid) return `${cid.code} - ${cid.name}`;
+      return "";
+    };
+
+    const getSecondaryCid = () => {
+      const procedure = procedures.find((p) => p.id === procedureId);
+      if (!procedure) return "";
+      const cidId = getValues("apacData.secondaryCidId");
+      const cid = procedure.secondary_cids.find((c) => c.id === cidId);
       if (cid) return `${cid.code} - ${cid.name}`;
       return "";
     };
@@ -123,6 +141,58 @@ const IdentifyCidForm = React.forwardRef<FormRepository, FormProps>(
                 />
               )}
             </Grid>
+            {requiresSecondaryCid && (
+              <Grid size={{xs:12}}>
+                {disabled ? (
+                  <Box
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      justifyContent: "center"
+                    }}
+                  >
+                    <Typography color="textDisabled" variant="h6">
+                      CID de Causas Associadas
+                    </Typography>
+                    <Typography color="textDisabled" variant="body1">
+                      {getSecondaryCid()}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Controller
+                    name="apacData.secondaryCidId"
+                    control={control}
+                    render={({ field }) => (
+                      <Autocomplete
+                        options={secondaryCids}
+                        getOptionLabel={(option) =>
+                          `${option.code} - ${option.name}`
+                        }
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                        value={secondaryCids.find((c) => c.id === field.value) || null}
+                        onChange={(_, newValue) =>
+                          field.onChange(newValue ? newValue.id : undefined)
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="CID de Causas Associadas"
+                            required
+                            fullWidth
+                            size="medium"
+                          />
+                        )}
+                        fullWidth
+                      />
+                    )}
+                  />
+                )}
+              </Grid>
+            )}
           </Grid>
         </Box>
       </CardForm>

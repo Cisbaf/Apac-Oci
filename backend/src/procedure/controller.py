@@ -1,4 +1,4 @@
-from .models import ProcedureModel, CidModel
+from .models import ProcedureModel, CidModel, ProcedureSecondary
 from apac_core.domain.repositories.procedure_repository import ProcedureRepository
 from apac_core.domain.repositories.cid_repository import CidRepository
 from apac_core.domain.exceptions import NotFoundException
@@ -21,10 +21,12 @@ class ProcedureController(ProcedureRepository):
             created_at=procedure.created_at,
             updated_at=procedure.updated_at
         )
-        # registrando 
+        # registrando
         if procedure.parent:
-            registered.parents.add(ProcedureModel.objects.get(pk=procedure.parent.id))
-            registered.save()
+            ProcedureSecondary.objects.create(
+                parent=ProcedureModel.objects.get(pk=procedure.parent.id),
+                child=registered
+            )
 
         return registered.to_entity()
     

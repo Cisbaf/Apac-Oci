@@ -29,6 +29,7 @@ export const emptyRequestForm: RequestForm = {
     authorizingPhysicianCns: "",
     authorizingPhysicianCbo: "",
     cidId: 0,
+    secondaryCidId: undefined,
     procedureDate: "",
     dischargeDate: "",
     diagnosticDate: "",

@@ -86,8 +86,23 @@ def build_cid():
     return Cid(code="Z848", name="História familiar de outras afecções especificadas", id=19)
 
 
+def build_secondary_cid():
+    """CID de causas associadas (atributo SIGTAP 043, T-036) — ex. das OCIs de Infectologia."""
+    return Cid(code="B20", name="Doenca pelo HIV resultando em doenca infecciosa", id=63)
+
+
 def build_main_procedure():
     return Procedure(name="OCI AVALIAÇÃO CARDIOLÓGICA", code="0902010026", id=244)
+
+
+def build_main_procedure_requiring_secondary_cid():
+    """Procedimento com o atributo SIGTAP 043 — ex.: as 8 OCIs de Infectologia (T-036)."""
+    return Procedure(
+        name="OCI AVALIACAO DIAGNOSTICA INICIAL DE SINDROME RESPIRATORIA",
+        code="0908010010",
+        requires_secondary_cid=True,
+        id=58,
+    )
 
 
 def build_sub_procedure_records():
@@ -107,6 +122,8 @@ def build_apac_batch(
     establishment: Establishment,
     production: date,
     sub_procedures=None,
+    main_procedure=None,
+    secondary_cid=None,
 ):
     """Monta um ApacBatch aprovado (pronto para export) para um cenário de teste."""
     apac_data = ApacData(
@@ -114,9 +131,10 @@ def build_apac_batch(
         supervising_physician_data=build_supervising_physician(),
         authorizing_physician_data=build_authorizing_physician(),
         cid=build_cid(),
+        secondary_cid=secondary_cid,
         procedure_date=date(production.year, production.month, 8),
         discharge_date=date(production.year, production.month, 12),
-        main_procedure=build_main_procedure(),
+        main_procedure=main_procedure or build_main_procedure(),
         sub_procedures=sub_procedures or [],
         id=5,
     )

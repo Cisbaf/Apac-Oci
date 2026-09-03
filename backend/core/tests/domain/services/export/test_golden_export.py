@@ -22,7 +22,10 @@ from apac_core.application.use_cases.apac_export_case import ApacExportCase, Apa
 from apac_core.application.implementations.apac_batch_fake_repository import ApacBatchFakeRepository
 from apac_core.application.implementations.establishment_fake_repository import EstablishmentFakeRepository
 
-from fixtures import build_apac_batch, build_city, build_establishment, build_sub_procedure_records
+from fixtures import (
+    build_apac_batch, build_city, build_establishment, build_sub_procedure_records,
+    build_main_procedure_requiring_secondary_cid, build_secondary_cid,
+)
 
 GOLDEN_DIR = Path(__file__).parent / "golden"
 FIXED_TODAY = date(2025, 6, 10)
@@ -124,6 +127,31 @@ def test_golden_apac_duque_de_caxias():
     output = _export(city, establishment, batch)
 
     _assert_matches_golden(output, "apac_duque_de_caxias.txt")
+
+
+def test_golden_apac_com_cid_causas_associadas():
+    """
+    OCI de Infectologia (atributo SIGTAP 043, T-036): a APAC carrega o CID
+    principal de sempre (Z848, fixture padrão) e também um CID de causas
+    associadas (B20). Fixa que os três campos do layout que antes saíam
+    sempre "" (cid_causas_associadas, apa_cidsec, cid_secundario em toda
+    linha "13") passam a carregar o código do CID secundário.
+    """
+    city = build_city()
+    establishment = build_establishment(city)
+    batch = build_apac_batch(
+        batch_number="3325700278401",
+        city=city,
+        establishment=establishment,
+        production=PRODUCTION,
+        sub_procedures=[],
+        main_procedure=build_main_procedure_requiring_secondary_cid(),
+        secondary_cid=build_secondary_cid(),
+    )
+
+    output = _export(city, establishment, batch)
+
+    _assert_matches_golden(output, "apac_com_cid_causas_associadas.txt")
 
 
 def test_determinismo_roda_duas_vezes_com_mesmo_resultado():
