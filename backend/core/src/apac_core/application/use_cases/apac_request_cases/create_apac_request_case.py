@@ -10,9 +10,9 @@ from apac_core.domain.repositories.cid_repository import CidRepository
 from apac_core.domain.repositories.procedure_repository import ProcedureRepository
 from apac_core.domain.repositories.procedure_record_repository import ProcedureRecordRepository
 from apac_core.domain.exceptions import DomainException
+from apac_core.domain.services.apac_extract.utils import get_end_of_month_offset
 from dataclasses import dataclass
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 class CreateApacRequestDTO(BaseModel):
     requester_id: int
@@ -47,11 +47,18 @@ class CreateApacRequestUseCase:
         if request_date > discharge_date:
             raise DomainException("A data de solicitação não pode ser posterior à data de alta.")
 
-        # 4. Regra dos 2 meses
-        limit_date = (procedure_date + relativedelta(months=2)).replace(day=1) - relativedelta(days=1)
+        # 4. Regra da janela de validade da APAC (T-024/T-034): validade normal é de
+        # 3 competências desde a Portaria SAES/MS Nº 3.958/2026; procedimentos com o
+        # atributo SIGTAP 054 (fixed_validity_two_competences) ainda exigem 2
+        # competências. Precisa espelhar o cálculo do export (controller.py), senão a
+        # solicitação é bloqueada com uma janela que o próprio sistema não usa mais.
+        main_procedure = self.repo_procedure.get_by_id(data.apac_data.main_procedure_id)
+        months_ahead = 1 if main_procedure.fixed_validity_two_competences else 2
+        limit_date = get_end_of_month_offset(procedure_date.date(), months_ahead)
 
-        if discharge_date > limit_date:
-            raise DomainException("A data de alta excede o limite de 2 meses da APAC.")
+        if discharge_date.date() > limit_date:
+            competences = 2 if months_ahead == 1 else 3
+            raise DomainException(f"A data de alta excede o limite de {competences} competências da APAC.")
             
         # Obtém o requester pelo ID 
         requester = GetUserRequesterOrAdministratorUseCase(self.repo_user).execute(data.requester_id)

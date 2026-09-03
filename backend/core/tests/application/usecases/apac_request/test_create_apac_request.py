@@ -204,6 +204,59 @@ def test_discharge_date_cannot_be_before_procedure_date(repos, requester, establ
         create_apac_request(repos, dto)
 
 
+def test_discharge_up_to_3rd_month_is_allowed_for_normal_procedure(
+    repos, requester, establishment, cid, medical_procedures
+):
+    """
+    Regressão: procedimento sem o atributo SIGTAP 054 tem validade normal de 3
+    competências (Portaria SAES/MS Nº 3.958/2026, T-024/T-034). Uma alta no 3º mês
+    após o procedimento não pode ser bloqueada pela regra extinta de 2 competências.
+    """
+    dto = generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+
+    dto.request_date = "2026-07-07"
+    dto.apac_data.procedure_date = "2026-07-07"
+    dto.apac_data.discharge_date = "2026-09-02"  # 3ª competência, dentro do limite (30/09)
+
+    request = create_apac_request(repos, dto)
+    assert request.id is not None
+
+
+def test_discharge_beyond_3rd_month_is_blocked_for_normal_procedure(
+    repos, requester, establishment, cid, medical_procedures
+):
+    """Alta depois do fim da 3ª competência continua bloqueada."""
+    dto = generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+
+    dto.request_date = "2026-07-07"
+    dto.apac_data.procedure_date = "2026-07-07"
+    dto.apac_data.discharge_date = "2026-10-01"  # depois de 30/09
+
+    with pytest.raises(DomainException):
+        create_apac_request(repos, dto)
+
+
+def test_discharge_beyond_2nd_month_is_blocked_for_fixed_validity_procedure(
+    repos, requester, establishment, cid, medical_procedures
+):
+    """
+    Procedimento com o atributo SIGTAP 054 (fixed_validity_two_competences) mantém a
+    janela de 2 competências mesmo após a T-024/T-034.
+    """
+    main_procedure, _ = medical_procedures
+    procedure = repos["procedure"].get_by_id(main_procedure.id)
+    procedure.fixed_validity_two_competences = True
+    repos["procedure"].save(procedure)
+
+    dto = generate_apac_request_dto(requester, establishment, medical_procedures, cid)
+    dto.request_date = "2026-07-07"
+    dto.apac_data.procedure_date = "2026-07-07"
+    dto.apac_data.discharge_date = "2026-09-02"  # 3ª competência: acima do limite de 2
+
+    with pytest.raises(DomainException):
+        create_apac_request(repos, dto)
+
+
 def test_duplicate_request_same_patient_procedure_establishment_competence_is_blocked(
     repos, requester, establishment, cid, medical_procedures
 ):
