@@ -87,19 +87,35 @@ def extrair(ambiente, codigos):
             print(f"AVISO: {codigo} não existe nesta competência", file=sys.stderr)
             continue
 
-        secundarios = {"obrigatorios": [], "compativeis": []}
+        # Agrupa por par antes de separar em obrigatório/compatível: o SIGTAP
+        # às vezes lista o MESMO par (principal, secundário) duas vezes, uma
+        # com TRAT=01 e outra com TRAT=95 (confirmado em 090801002 x
+        # 020208025, competência 202608 — não é erro de extração, são duas
+        # linhas reais em S_PAPA). Tratar cada linha isoladamente faz o par
+        # aparecer nas duas listas; quem processasse "compativeis" por último
+        # apagaria o "obrigatório" da primeira. Obrigatório vence: um falso
+        # "compatível" é a crítica EXIGE PELO MENOS (00N) que este extrator
+        # existe para evitar.
+        pares = {}
         for r in t["papa"]:
             if r["PAPA_PRINC"] != codigo or r["PAPA_TRAT"] not in PAPEIS_SECUNDARIOS:
                 continue
-            destino = ("obrigatorios" if r["PAPA_TRAT"] == PAPEL_OBRIGATORIO
-                       else "compativeis")
             sec = r["PAPA_SECUN"]
-            secundarios[destino].append({
-                "codigo": sec,
-                "codigo_dv": sec + dv.get(sec, ""),
-                "nome": nome.get(sec, ""),
-                "quantidade_maxima": int(r["PAPA_QTMAX"]),
-            })
+            obrigatorio = r["PAPA_TRAT"] == PAPEL_OBRIGATORIO
+            atual = pares.get(sec)
+            if atual is None or obrigatorio:
+                pares[sec] = {
+                    "codigo": sec,
+                    "codigo_dv": sec + dv.get(sec, ""),
+                    "nome": nome.get(sec, ""),
+                    "quantidade_maxima": int(r["PAPA_QTMAX"]),
+                    "obrigatorio": obrigatorio or (atual or {}).get("obrigatorio", False),
+                }
+
+        secundarios = {"obrigatorios": [], "compativeis": []}
+        for s in pares.values():
+            destino = "obrigatorios" if s.pop("obrigatorio") else "compativeis"
+            secundarios[destino].append(s)
         for lista in secundarios.values():
             lista.sort(key=lambda s: s["codigo"])
 
