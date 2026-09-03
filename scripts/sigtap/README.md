@@ -59,13 +59,51 @@ Confundir `95` com `01` é o que produz a crítica
 `PROC.PRINC(...) EXIGE PELO MENOS (00N) PROC. SECUNDARIO OBRIGATORIO` — o `N` da
 mensagem é exatamente a contagem de linhas `TRAT=95` daquele principal.
 
-## Limites conhecidos do cadastro atual
+## CID de causas associadas (atributo 043) — resolvido na T-036
 
-Duas coisas que a ferramenta **lê do SIGTAP mas o sistema ainda não sabe guardar**
-— por isso o `sigtap_auditar` não as confere:
+O SIGTAP não lista quais CIDs valem como segundo CID — só marca, em `S_PADET`,
+que o procedimento exige um. A lista em si (128 CIDs, para as 8 OCIs de
+Infectologia) veio do texto da Portaria SAES/MS Nº 4.306/2026 e está preservada
+em `cids_causas_associadas.json`, indexado pelo código de **10 dígitos** (com
+DV). Para semear:
 
-- **Papel e quantidade máxima são do par, não do procedimento.**
-  `ProcedureModel.mandatory` é um booleano do procedimento, mas `020208003` é
-  compatível em `090801001` e obrigatório em `090801002`. São 6 secundários com
-  papel divergente e 5 com quantidade divergente entre as 10 OCIs novas. Ver `T-037`.
-- **CID de causas associadas (atributo 043).** Ver `T-036`.
+```bash
+cd backend/src && python manage.py sigtap_semear_cid_secundario \
+    --json ../../scripts/sigtap/cids_causas_associadas.json --aplicar
+```
+
+Mesmo padrão do `sigtap_auditar`: sem `--aplicar` só relata.
+
+## Reteste no APAC Magnético
+
+`gerar_apac_teste.py` monta um arquivo de remessa a partir do extrato do
+SIGTAP — CID principal, todos os secundários (obrigatórios e compatíveis) e,
+quando o atributo 043 se aplicar, o CID de causas associadas — para provar num
+arquivo real que um cadastro corrigido não toma mais crítica de conteúdo.
+
+```bash
+python3 scripts/sigtap/gerar_apac_teste.py \
+    --sigtap-json /tmp/ocis.json \
+    --cids-secundarios scripts/sigtap/cids_causas_associadas.json \
+    --modelo caminho/para/arquivo_modelo.AGO \
+    --tabela-cbo ../apac-magnetico-validador/ambientes/202608a/S_PACBO.DBF \
+    --competencia 202608 \
+    --saida /tmp/teste.AGO
+```
+
+`--modelo` é necessário porque o gerador não resolve dois problemas que são do
+arquivo de teste, não do cadastro: o dígito verificador do número da APAC
+(algoritmo oficial não identificado) e o CNS do médico executante (só
+paciente/responsável/diretor recebem CNS válido). O `--modelo` fornece
+cabeçalho e números de APAC de um arquivo que o ambiente de teste já
+reconhece; o gerador reescreve os campos de CID, CBO e CNS.
+
+Rodar o arquivo gerado: `apac-magnetico-validador/bin/validar.sh <saida>`.
+
+## Limite conhecido do cadastro atual
+
+**Papel e quantidade máxima são do par, não do procedimento.**
+`ProcedureModel.mandatory` é um booleano do procedimento, mas `020208003` é
+compatível em `090801001` e obrigatório em `090801002`. São 6 secundários com
+papel divergente e 5 com quantidade divergente entre as 10 OCIs novas. O
+`sigtap_auditar` não confere isso ainda — ver `T-037`.

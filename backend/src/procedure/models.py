@@ -24,6 +24,16 @@ class ProcedureModel(models.Model):
         default=False
     )
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)
+    # Atributo complementar SIGTAP 043. Ver T-036: procedimentos com este atributo
+    # (as 8 OCIs de Infectologia da Portaria SAES/MS Nº 4.306/2026) exigem, além do
+    # CID principal, um segundo CID — o da síndrome associada ao HIV/aids que
+    # motivou o atendimento. Sem ele o APAC Magnético rejeita a APAC com
+    # "EXIGE CID CAUSAS ASSOC.CONF.PT/GM 584 DE 15/5/15".
+    requires_secondary_cid = models.BooleanField(
+        verbose_name="Exige CID de causas associadas",
+        help_text="Atributo SIGTAP 043. Marque se o APAC Magnético exigir um segundo CID (causas associadas) para este procedimento.",
+        default=False
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -31,7 +41,7 @@ class ProcedureModel(models.Model):
         db_table = 'procedimentos'
         verbose_name = "Procedimento"
         verbose_name_plural = "Procedimentos"
-    
+
     def to_entity(self, **kwargs):
         exclude = kwargs.get("exclude_sub_procedures_for_main", None)
         sub_procedures = []
@@ -44,6 +54,7 @@ class ProcedureModel(models.Model):
             description=self.description,
             is_active=self.is_active,
             fixed_validity_two_competences=self.fixed_validity_two_competences,
+            requires_secondary_cid=self.requires_secondary_cid,
             sub_procedures=sub_procedures,
             created_at=self.created_at,
             updated_at=self.updated_at,
@@ -61,6 +72,17 @@ class CidModel(models.Model):
         to=ProcedureModel,
         symmetrical=False,
         related_name="cids",
+        blank=True
+    )
+    # CID de causas associadas (atributo SIGTAP 043, ver T-036): procedimentos
+    # cujo cadastro aceita este CID como o *segundo* CID (a síndrome associada),
+    # não como o principal. Vínculo separado do M2M acima de propósito — é
+    # exatamente misturar os dois papéis num só vínculo que fez o cadastro
+    # manual escolher um CID secundário como se fosse principal (ver T-035).
+    secondary_of_procedure = models.ManyToManyField(
+        to=ProcedureModel,
+        symmetrical=False,
+        related_name="secondary_cids",
         blank=True
     )
     is_active = models.BooleanField(verbose_name="Está ativo", default=True)

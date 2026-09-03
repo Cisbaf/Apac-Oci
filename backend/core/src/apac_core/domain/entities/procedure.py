@@ -14,6 +14,9 @@ class Procedure(BaseModel):
     # A validade normal (3 competências) é o default desde a Portaria SAES/MS
     # Nº 3.958/2026 (T-024); alguns procedimentos ainda mantêm o atributo (T-034).
     fixed_validity_two_competences: bool = False
+    # Atributo complementar SIGTAP 043 (T-036): exige um segundo CID, o de
+    # causas associadas, além do CID principal.
+    requires_secondary_cid: bool = False
     parent: Optional['Procedure'] = None
     sub_procedures: List['Procedure'] = Field(default_factory=list)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)

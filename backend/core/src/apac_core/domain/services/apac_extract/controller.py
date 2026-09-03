@@ -44,6 +44,11 @@ class ExportApacBatchController:
             # rejeita o arquivo com o erro 010087 (T-034).
             months_ahead = 1 if apac_data.main_procedure.fixed_validity_two_competences else 2
             data_fim = get_end_of_month_offset(self.date_production, months_ahead)
+            # CID de causas associadas (atributo SIGTAP 043, T-036). "" quando o
+            # procedimento não exige — mesmo default que os três campos já tinham
+            # antes desta tarefa, então uma APAC sem CID secundário exporta
+            # exatamente como hoje.
+            cid_causas_associadas = apac_data.secondary_cid.code if apac_data.secondary_cid else ""
             bodys.append(ApacBody(
                 apac_model=adaptar_oci( # essa nova linha está adaptando o apac model para o caso de duque de caxias
                     apac_model=ApacModel(
@@ -73,7 +78,7 @@ class ExportApacBatchController:
                         cns_paciente="000000000000000",
                         cns_responsavel=apac_data.supervising_physician_data.cns.value,
                         cns_diretor=apac_data.authorizing_physician_data.cns.value,
-                        cid_causas_associadas="",
+                        cid_causas_associadas=cid_causas_associadas,
                         numero_pronturario="",
                         cnes_solicitate=self.establishment.cnes,
                         data_solicitacao=self.date_production.strftime("%Y%m%d"), # Data da solicitação deverá ser igual a data de inicio da validade da APAC - Hoje a data de solicitação está replicando a data do procedimento   apac_request.apac_data.procedure_date.strftime("%Y%m%d")
@@ -105,7 +110,7 @@ class ExportApacBatchController:
                     apa_cmp=self.date_production.strftime("%Y%m"),
                     apa_num=apac_batch.batch_number,
                     apa_cidpri=apac_data.cid.code,
-                    apa_cidsec="",
+                    apa_cidsec=cid_causas_associadas,
                     apa_dtiden=apac_data.diagnostic_date.strftime("%Y%m%d") if apac_data.diagnostic_date else ""
                 ),
                 apac_procedures=[
@@ -116,7 +121,8 @@ class ExportApacBatchController:
                         cod_procedimento=apac_data.main_procedure.code,
                         cbo=apac_data.supervising_physician_data.cbo.value,
                         quantity=format_with_zeros(1, 7),
-                        cid_principal=apac_data.cid.code
+                        cid_principal=apac_data.cid.code,
+                        cid_secundario=cid_causas_associadas
                     )
                 ] + [
                     ApacProcedure(
@@ -126,7 +132,8 @@ class ExportApacBatchController:
                         cod_procedimento=sub_procedure.procedure.code,
                         cbo=sub_procedure.cbo.value if sub_procedure.cbo else apac_data.supervising_physician_data.cbo.value,
                         quantity=format_with_zeros(sub_procedure.quantity, 7),
-                        cid_principal=apac_data.cid.code
+                        cid_principal=apac_data.cid.code,
+                        cid_secundario=cid_causas_associadas
                     ) for sub_procedure in apac_data.sub_procedures
                 ]
             ))

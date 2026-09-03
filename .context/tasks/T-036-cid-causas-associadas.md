@@ -1,7 +1,7 @@
 # T-036 — CID de causas associadas (atributo SIGTAP 043) não tem onde ser guardado
 
 - **Fase:** 0
-- **Status:** todo
+- **Status:** done
 - **Depende de:** T-035
 - **Branch:** `refactor/T-036-cid-causas-associadas`
 
@@ -61,12 +61,58 @@ golden file só muda para APACs que de fato tenham o segundo CID preenchido.
 - `backend/core/tests/domain/services/export/golden/` — golden novo para o caso com 2 CIDs
 
 ## Critério de aceite
-- [ ] APAC de OCI de Infectologia com os dois CIDs exporta `apa_cidsec` preenchido
-- [ ] APAC sem o segundo CID exporta exatamente como hoje (golden atual intacto)
-- [ ] O formulário só cobra o segundo CID nos procedimentos com atributo 043
-- [ ] Validador não acusa mais `EXIGE CID CAUSAS ASSOC` nas 8 OCIs
+- [x] APAC de OCI de Infectologia com os dois CIDs exporta `apa_cidsec` preenchido
+- [x] APAC sem o segundo CID exporta exatamente como hoje (golden atual intacto)
+- [x] O formulário só cobra o segundo CID nos procedimentos com atributo 043
+- [x] Validador não acusa mais `EXIGE CID CAUSAS ASSOC` nas 8 OCIs
+
+## O que foi feito
+
+- `ApacDataModel.secondary_cid` — FK nullable para `CidModel` (`related_name="+"`,
+  já que não há caso de uso para navegar de CID até as APACs que o usam como
+  secundário).
+- `ProcedureModel.requires_secondary_cid` (atributo 043) e
+  `CidModel.secondary_of_procedure` (M2M **separado** do M2M `procedure` — é
+  exatamente misturar os dois papéis num só vínculo que fez o cadastro manual da
+  T-035 escolher `A16.2` como se fosse CID principal).
+- Entidades (`Procedure`, `ApacData`) e `CreateApacDataUseCase` propagam o campo;
+  o use case **valida**: procedimento com `requires_secondary_cid=True` e
+  `secondary_cid_id` ausente é rejeitado na criação, antes de chegar ao SIA.
+- Export: os três campos que já existiam no layout e saíam `""` fixo
+  (`cid_causas_associadas`, `apa_cidsec`, `cid_secundario` em toda linha `13`)
+  passam a carregar `apac_data.secondary_cid.code` quando presente.
+- Frontend: segundo `Autocomplete` em `identifyCidForm.tsx`, renderizado só
+  quando `procedure.requires_secondary_cid`, opções vindas de
+  `procedure.secondary_cids` (novo campo do `ProcedureSerializer`).
+- `manage.py sigtap_semear_cid_secundario` — semeia os 128 CIDs de
+  `scripts/sigtap/cids_causas_associadas.json` (preservados na T-035) nas 8
+  OCIs de Infectologia e marca `requires_secondary_cid=True`. Mesmo padrão do
+  `sigtap_auditar`: sem `--aplicar` só relata.
+- `scripts/sigtap/gerar_apac_teste.py` — generaliza o gerador de arquivo de
+  teste usado na T-035 para reaproveitar em qualquer rodada futura de cadastro.
+
+## Reteste no APAC Magnético (03/09/2026, tabela 202608a)
+
+Arquivo gerado com `gerar_apac_teste.py`, preenchendo o CID de causas
+associadas nas 8 OCIs de Infectologia (ex.: `A16.2` — tuberculose pulmonar —
+para `0908010010`).
+
+| Critica | Antes (retest T-035) | Depois (T-036) |
+|---|---|---|
+| `EXIGE CID CAUSAS ASSOC.CONF.PT/GM 584` | 8 | **0** |
+| `DIGITO VERIFICADOR` (numero fabricado, fora de escopo) | 9 | 9 |
+| `CNS INVALIDO` (cns_medico_executante, fora de escopo) | 6 | 6 |
+| **Total** | **23** | **15** |
+
+Zero críticas de conteúdo restantes em qualquer uma das 10 OCIs novas. O que
+sobra (dígito verificador e CNS do médico executante) é do gerador de teste,
+documentado como limite conhecido em `scripts/sigtap/README.md`, não do
+cadastro nem do sistema.
 
 ## Verificação
-- Gates: `bash scripts/verify.sh` verde.
-- Golden file atual **inalterado** (o campo novo entra vazio quando não usado).
-- Reteste no `apac-magnetico-validador` com a competência 202608a.
+- Gates: `bash scripts/verify.sh` verde (72 testes `backend/core`, suite completa
+  `backend/src`, 34 testes frontend, lint sem erros novos).
+- Golden file atuais **inalterados** (9 testes prévios continuam batendo byte a
+  byte); golden novo `apac_com_cid_causas_associadas.txt` fixa o caso com os
+  dois CIDs.
+- Reteste no `apac-magnetico-validador` com a competência 202608a: acima.

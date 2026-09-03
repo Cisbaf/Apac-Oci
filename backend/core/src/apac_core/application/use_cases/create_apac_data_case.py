@@ -43,6 +43,7 @@ class CreateApacDataDTO(BaseModel):
     authorizing_physician_cns: str
     authorizing_physician_cbo: str
     cid_id: int
+    secondary_cid_id: Optional[int] = None
     procedure_date: str
     discharge_date: str
     main_procedure_id: int
@@ -76,7 +77,18 @@ class CreateApacDataUseCase:
 
         # Obtém o CID pelo ID
         cid = self.repo_cid.get_by_id(data.cid_id)
-        
+
+        # CID de causas associadas (atributo SIGTAP 043, T-036). Procedimentos
+        # que o exigem rejeitam a APAC no APAC Magnético sem ele — validado aqui
+        # para não deixar passar uma solicitação que o SIA vai recusar.
+        secondary_cid = None
+        if data.secondary_cid_id:
+            secondary_cid = self.repo_cid.get_by_id(data.secondary_cid_id)
+        elif main_procedure.requires_secondary_cid:
+            raise DomainException(
+                "Este procedimento exige o CID de causas associadas, além do CID principal."
+            )
+
         # Registra todos os sub procedimentos usando o Use Case de ProcedureRecrod
         sub_procedures = [
             CreateProcedureRecordUseCase(
@@ -116,6 +128,7 @@ class CreateApacDataUseCase:
                 cbo=CboField(value=data.authorizing_physician_cbo),
             ),
             cid=cid,
+            secondary_cid=secondary_cid,
             procedure_date=data.procedure_date,
             discharge_date=data.discharge_date,
             diagnostic_date=data.diagnostic_date,

@@ -14,6 +14,9 @@ class ApacData(BaseModel):
     supervising_physician_data: MedicData
     authorizing_physician_data: MedicData
     cid: Cid
+    # CID de causas associadas (atributo SIGTAP 043, T-036). None na maioria
+    # das APACs; obrigatório quando main_procedure.requires_secondary_cid.
+    secondary_cid: Optional[Cid] = None
     procedure_date: date
     discharge_date: date
     main_procedure: Procedure
