@@ -97,6 +97,50 @@ class ProcedureSecondary(models.Model):
         return f"{self.parent.code} → {self.child.code}"
 
 
+class ProcedureRequirementGroup(models.Model):
+    """"Exige ao menos N destes M" (atributos SIGTAP complementares 057, 067,
+    068, 069, 070...) — ver T-040.
+
+    Não é redutível ao par simples de `ProcedureSecondary.mandatory`: não é UM
+    secundário obrigatório, é uma alternativa entre vários. Ex.: a OCI
+    `0908010036` (atributo 067) aceita Punção Lombar OU Tomografia de Crânio —
+    qualquer um dos dois satisfaz, nenhum dos dois é obrigatório sozinho.
+
+    Todo membro de todo grupo cadastrado até agora já existia como secundário
+    compatível da OCI antes desta tarefa (a portaria só amarra um subconjunto
+    do que já era aceito); por isso `members` aponta para `ProcedureModel` já
+    cadastrado, sem precisar criar procedimento novo.
+    """
+    principal = models.ForeignKey(
+        to=ProcedureModel, on_delete=models.CASCADE,
+        related_name="requirement_groups", verbose_name="Procedimento principal"
+    )
+    attribute_code = models.CharField(
+        verbose_name="Atributo complementar SIGTAP",
+        help_text="Código de rastreabilidade (057, 067, 068, 069, 070...), não usado em lógica.",
+        max_length=3
+    )
+    description = models.CharField(
+        verbose_name="Descrição da regra",
+        help_text="Texto oficial da portaria, mostrado ao usuário no formulário.",
+        max_length=255
+    )
+    minimum = models.PositiveIntegerField(verbose_name="Quantidade mínima", default=1)
+    members = models.ManyToManyField(
+        to=ProcedureModel,
+        related_name="requirement_group_memberships",
+        verbose_name="Procedimentos que satisfazem a exigência"
+    )
+
+    class Meta:
+        db_table = 'procedimentos_grupos_exigencia'
+        verbose_name = "Grupo de exigência alternativa"
+        verbose_name_plural = "Grupos de exigência alternativa"
+
+    def __str__(self):
+        return f"{self.principal.code} — {self.attribute_code}"
+
+
 class CidModel(models.Model):
     code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_cid')
     name = models.CharField(verbose_name="Nome CID", max_length=255)

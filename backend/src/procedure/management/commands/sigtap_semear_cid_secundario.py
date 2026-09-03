@@ -47,7 +47,9 @@ class Command(BaseCommand):
                 f"{self.mudancas} mudança(s) pendente(s). Rode com --aplicar para gravar."))
 
     def _semear(self, codigo, info, aplicar):
-        principal = ProcedureModel.objects.filter(code=codigo).first()
+        # order_by("id"): `code` não tem constraint de unicidade e a produção
+        # tem duplicatas reais — sem ordenação o `first()` é não-determinístico.
+        principal = ProcedureModel.objects.filter(code=codigo).order_by("id").first()
         if principal is None:
             self.stdout.write(self.style.WARNING(
                 f"  ! {codigo}: procedimento não cadastrado — rode sigtap_auditar antes"))
@@ -69,8 +71,9 @@ class Command(BaseCommand):
             self.mudancas += 1
             self.stdout.write(f"  ! CID de causas associadas ausente: {codigo_cid}")
             if aplicar:
-                cid, _ = CidModel.objects.get_or_create(
-                    code=codigo_cid, defaults={"name": oficiais[codigo_cid]})
+                cid = (CidModel.objects.filter(code=codigo_cid).order_by("id").first()
+                       or CidModel.objects.create(
+                           code=codigo_cid, name=oficiais[codigo_cid]))
                 cid.secondary_of_procedure.add(principal)
 
         for codigo_cid in sorted(atuais - set(oficiais)):
@@ -78,4 +81,5 @@ class Command(BaseCommand):
             self.stdout.write(
                 f"  ! CID de causas associadas cadastrado que a portaria não lista: {codigo_cid}")
             if aplicar:
-                CidModel.objects.get(code=codigo_cid).secondary_of_procedure.remove(principal)
+                for cid in CidModel.objects.filter(code=codigo_cid):
+                    cid.secondary_of_procedure.remove(principal)
