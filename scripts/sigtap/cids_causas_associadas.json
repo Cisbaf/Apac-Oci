@@ -1,0 +1,634 @@
+{
+  "0908010010": {
+    "nome": "OCI AVALIACAO DIAGNOSTICA INICIAL DE SiNDROMES RESPIRATORIAS",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A162",
+        "nome": "Tuberculose pulmonar sem confirmacao bacteriologica ou histologica"
+      },
+      {
+        "codigo": "B380",
+        "nome": "Coccidioidomicose pulmonar aguda"
+      },
+      {
+        "codigo": "B390",
+        "nome": "Histoplasmose pulmonar"
+      },
+      {
+        "codigo": "B419",
+        "nome": "Paracoccidioidomicose nao especificada"
+      },
+      {
+        "codigo": "B441",
+        "nome": "Outras aspergiloses pulmonares"
+      },
+      {
+        "codigo": "B450",
+        "nome": "Criptococose pulmonar"
+      },
+      {
+        "codigo": "B487",
+        "nome": "Micoses oportunistas"
+      },
+      {
+        "codigo": "J180",
+        "nome": "Broncopneumonia nao especificada"
+      },
+      {
+        "codigo": "J189",
+        "nome": "Pneumonia bacteriana nao especificada"
+      }
+    ]
+  },
+  "0908010028": {
+    "nome": "OCI PROGRESSAO DA AVALIACAO DIAGNOSTICA DE SiNDROMES RESPIRA",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A162",
+        "nome": "Tuberculose pulmonar sem confirmacao bacteriologica ou histologica"
+      },
+      {
+        "codigo": "B380",
+        "nome": "Coccidioidomicose pulmonar aguda"
+      },
+      {
+        "codigo": "B390",
+        "nome": "Histoplasmose pulmonar"
+      },
+      {
+        "codigo": "B419",
+        "nome": "Paracoccidioidomicose nao especificada"
+      },
+      {
+        "codigo": "B441",
+        "nome": "Outras aspergiloses pulmonares"
+      },
+      {
+        "codigo": "B450",
+        "nome": "Criptococose pulmonar"
+      },
+      {
+        "codigo": "B487",
+        "nome": "Micoses oportunistas"
+      },
+      {
+        "codigo": "J180",
+        "nome": "Broncopneumonia nao especificada"
+      },
+      {
+        "codigo": "J189",
+        "nome": "Pneumonia bacteriana nao especificada"
+      }
+    ]
+  },
+  "0908010036": {
+    "nome": "OCI AVALIACAO DIAGNOSTICA INICIAL DE SiNDROME NEUROLOGICA",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A170",
+        "nome": "Tuberculose das meninges"
+      },
+      {
+        "codigo": "A171",
+        "nome": "Tuberculoma intracraniano"
+      },
+      {
+        "codigo": "A812",
+        "nome": "Leucoencefalopatia multifocal progressiva"
+      },
+      {
+        "codigo": "B250",
+        "nome": "Citomegalovirose"
+      },
+      {
+        "codigo": "B259",
+        "nome": "Doenca por CMV nao especificada"
+      },
+      {
+        "codigo": "B384",
+        "nome": "Coccidioidomicose meningea"
+      },
+      {
+        "codigo": "B451",
+        "nome": "Criptococose cerebral"
+      },
+      {
+        "codigo": "B582",
+        "nome": "Toxoplasmose cerebral"
+      },
+      {
+        "codigo": "C859",
+        "nome": "Linfoma nao Hodgkin nao especificado"
+      },
+      {
+        "codigo": "G028",
+        "nome": "Meningite em outras doencas infecciosas e parasitarias classificadas em outra parte"
+      },
+      {
+        "codigo": "G049",
+        "nome": "Encefalite, mielite e encefalomielite nao especificadas"
+      }
+    ]
+  },
+  "0908010044": {
+    "nome": "OCI PROGRESSAO DA AVALIACAO DIAGNOSTICA DE SiNDROME NEUROLOG",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A170",
+        "nome": "Tuberculose das meninges"
+      },
+      {
+        "codigo": "A171",
+        "nome": "Tuberculoma intracraniano"
+      },
+      {
+        "codigo": "A812",
+        "nome": "Leucoencefalopatia multifocal progressiva"
+      },
+      {
+        "codigo": "B250",
+        "nome": "Citomegalovirose"
+      },
+      {
+        "codigo": "B259",
+        "nome": "Doenca por CMV nao especificada"
+      },
+      {
+        "codigo": "B384",
+        "nome": "Coccidioidomicose meningea"
+      },
+      {
+        "codigo": "B451",
+        "nome": "Criptococose cerebral"
+      },
+      {
+        "codigo": "B582",
+        "nome": "Toxoplasmose cerebral"
+      },
+      {
+        "codigo": "C859",
+        "nome": "Linfoma nao Hodgkin nao especificado"
+      },
+      {
+        "codigo": "G028",
+        "nome": "Meningite em outras doencas infecciosas e parasitarias classificadas em outra parte"
+      },
+      {
+        "codigo": "G049",
+        "nome": "Encefalite, mielite e encefalomielite nao especificadas"
+      }
+    ]
+  },
+  "0908010052": {
+    "nome": "OCI AVALIACAO DIAGNOSTICA INICIAL DE SiNDROME MUCOCUTANEA",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "B001",
+        "nome": "Dermatite vesicular por herpes simples"
+      },
+      {
+        "codigo": "B002",
+        "nome": "Estomatite gengivoestomatite herpetica"
+      },
+      {
+        "codigo": "B217",
+        "nome": "Doenca pelo HIV resultando em multiplas neoplasias malignas"
+      },
+      {
+        "codigo": "B259",
+        "nome": "Doenca por CMV nao especificada"
+      },
+      {
+        "codigo": "B370",
+        "nome": "Candidiase oral"
+      },
+      {
+        "codigo": "B378",
+        "nome": "Outras formas de candidiase"
+      },
+      {
+        "codigo": "B383",
+        "nome": "Coccidioidomicose cutanea"
+      },
+      {
+        "codigo": "B394",
+        "nome": "Histoplasmose disseminada"
+      },
+      {
+        "codigo": "B403",
+        "nome": "Blastomicose cutanea"
+      },
+      {
+        "codigo": "B417",
+        "nome": "Paracoccidioidomicose disseminada"
+      },
+      {
+        "codigo": "B418",
+        "nome": "Outras formas de paracoccidioidomicose"
+      },
+      {
+        "codigo": "B420",
+        "nome": "Esporotricose cutanea"
+      },
+      {
+        "codigo": "C210",
+        "nome": "Neoplasia maligna do anus nao especificada"
+      },
+      {
+        "codigo": "C211",
+        "nome": "Neoplasia maligna do canal anal"
+      },
+      {
+        "codigo": "C218",
+        "nome": "Neoplasia maligna com lesao invasiva do reto, anus e canal anal"
+      },
+      {
+        "codigo": "C445",
+        "nome": "Neoplasia maligna da pele do tronco (inclui margem do anus, mama, regiao perianal)"
+      },
+      {
+        "codigo": "C449",
+        "nome": "Neoplasia maligna da pele nao especificada"
+      },
+      {
+        "codigo": "C460",
+        "nome": "Sarcoma de Kaposi da pele"
+      },
+      {
+        "codigo": "C461",
+        "nome": "Sarcoma de Kaposi de partes moles"
+      },
+      {
+        "codigo": "C463",
+        "nome": "Sarcoma de Kaposi de linfonodos"
+      },
+      {
+        "codigo": "C469",
+        "nome": "Sarcoma de Kaposi nao especificado"
+      },
+      {
+        "codigo": "C837",
+        "nome": "Linfoma de Burkitt"
+      },
+      {
+        "codigo": "K133",
+        "nome": "Leucoplasia pilosa oral"
+      }
+    ]
+  },
+  "0908010060": {
+    "nome": "OCI PROGRESSAO DA AVALIACAO DIAGNOSTICA DE SiNDROME MUCOCUTA",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "B001",
+        "nome": "Dermatite vesicular por herpes simples"
+      },
+      {
+        "codigo": "B002",
+        "nome": "Estomatite gengivoestomatite herpetica"
+      },
+      {
+        "codigo": "B217",
+        "nome": "Doenca pelo HIV resultando em multiplas neoplasias malignas"
+      },
+      {
+        "codigo": "B259",
+        "nome": "Doenca por CMV nao especificada"
+      },
+      {
+        "codigo": "B370",
+        "nome": "Candidiase oral"
+      },
+      {
+        "codigo": "B378",
+        "nome": "Outras formas de candidiase"
+      },
+      {
+        "codigo": "B383",
+        "nome": "Coccidioidomicose cutanea"
+      },
+      {
+        "codigo": "B394",
+        "nome": "Histoplasmose disseminada"
+      },
+      {
+        "codigo": "B403",
+        "nome": "Blastomicose cutanea"
+      },
+      {
+        "codigo": "B417",
+        "nome": "Paracoccidioidomicose disseminada"
+      },
+      {
+        "codigo": "B418",
+        "nome": "Outras formas de paracoccidioidomicose"
+      },
+      {
+        "codigo": "B420",
+        "nome": "Esporotricose cutanea"
+      },
+      {
+        "codigo": "C210",
+        "nome": "Neoplasia maligna do anus nao especificada"
+      },
+      {
+        "codigo": "C211",
+        "nome": "Neoplasia maligna do canal anal"
+      },
+      {
+        "codigo": "C218",
+        "nome": "Neoplasia maligna com lesao invasiva do reto, anus e canal anal"
+      },
+      {
+        "codigo": "C445",
+        "nome": "Neoplasia maligna da pele do tronco (inclui margem do anus, mama, regiao perianal)"
+      },
+      {
+        "codigo": "C449",
+        "nome": "Neoplasia maligna da pele nao especificada"
+      },
+      {
+        "codigo": "C460",
+        "nome": "Sarcoma de Kaposi da pele"
+      },
+      {
+        "codigo": "C461",
+        "nome": "Sarcoma de Kaposi de partes moles"
+      },
+      {
+        "codigo": "C463",
+        "nome": "Sarcoma de Kaposi de linfonodos"
+      },
+      {
+        "codigo": "C469",
+        "nome": "Sarcoma de Kaposi nao especificado"
+      },
+      {
+        "codigo": "C837",
+        "nome": "Linfoma de Burkitt"
+      },
+      {
+        "codigo": "K133",
+        "nome": "Leucoplasia pilosa oral"
+      }
+    ]
+  },
+  "0908010079": {
+    "nome": "OCI AVALIACAO DIAGNOSTICA INICIAL DE SiNDROME CONSUMPTIVA",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A199",
+        "nome": "Tuberculose miliar nao especificada"
+      },
+      {
+        "codigo": "B211",
+        "nome": "Doenca pelo HIV resultando em linfoma de Burkitt"
+      },
+      {
+        "codigo": "B457",
+        "nome": "Criptococose disseminada"
+      },
+      {
+        "codigo": "C211",
+        "nome": "Neoplasia maligna do canal anal"
+      },
+      {
+        "codigo": "C218",
+        "nome": "Neoplasia maligna com lesao invasiva do reto, anus e canal anal"
+      },
+      {
+        "codigo": "C329",
+        "nome": "Neoplasia maligna da laringe nao especificada"
+      },
+      {
+        "codigo": "C349",
+        "nome": "Neoplasia maligna dos bronquios ou pulmao nao especificada"
+      },
+      {
+        "codigo": "C519",
+        "nome": "Neoplasia maligna da vulva nao especificada"
+      },
+      {
+        "codigo": "C530",
+        "nome": "Neoplasia maligna do colo do utero (endocervice)"
+      },
+      {
+        "codigo": "C531",
+        "nome": "Neoplasia maligna do colo do utero (exocervice)"
+      },
+      {
+        "codigo": "C539",
+        "nome": "Neoplasia maligna do colo do utero nao especificada"
+      },
+      {
+        "codigo": "C609",
+        "nome": "Neoplasia maligna do penis nao especificada"
+      },
+      {
+        "codigo": "C760",
+        "nome": "Neoplasia maligna de cabeca, face e pescoco"
+      },
+      {
+        "codigo": "C761",
+        "nome": "Neoplasia maligna do torax"
+      },
+      {
+        "codigo": "C762",
+        "nome": "Neoplasia maligna do abdome"
+      },
+      {
+        "codigo": "C80",
+        "nome": "Neoplasia maligna sem especificacao de localizacao"
+      },
+      {
+        "codigo": "C819",
+        "nome": "Linfoma de Hodgkin nao especificado"
+      },
+      {
+        "codigo": "C837",
+        "nome": "Linfoma de Burkitt"
+      },
+      {
+        "codigo": "E43",
+        "nome": "Desnutricao grave"
+      },
+      {
+        "codigo": "R634",
+        "nome": "Perda de peso anormal"
+      },
+      {
+        "codigo": "R64",
+        "nome": "Caquexia"
+      }
+    ]
+  },
+  "0908010087": {
+    "nome": "OCI PROGRESSAO DA AVALIACAO DIAGNOSTICA DE SiNDROME CONSUMPT",
+    "cids_principais": [
+      "B20",
+      "B21",
+      "B22",
+      "B23",
+      "B230",
+      "B231",
+      "B24",
+      "Z21"
+    ],
+    "cids_causas_associadas": [
+      {
+        "codigo": "A199",
+        "nome": "Tuberculose miliar nao especificada"
+      },
+      {
+        "codigo": "B211",
+        "nome": "Doenca pelo HIV resultando em linfoma de Burkitt"
+      },
+      {
+        "codigo": "B457",
+        "nome": "Criptococose disseminada"
+      },
+      {
+        "codigo": "C211",
+        "nome": "Neoplasia maligna do canal anal"
+      },
+      {
+        "codigo": "C218",
+        "nome": "Neoplasia maligna com lesao invasiva do reto, anus e canal anal"
+      },
+      {
+        "codigo": "C329",
+        "nome": "Neoplasia maligna da laringe nao especificada"
+      },
+      {
+        "codigo": "C349",
+        "nome": "Neoplasia maligna dos bronquios ou pulmao nao especificada"
+      },
+      {
+        "codigo": "C519",
+        "nome": "Neoplasia maligna da vulva nao especificada"
+      },
+      {
+        "codigo": "C530",
+        "nome": "Neoplasia maligna do colo do utero (endocervice)"
+      },
+      {
+        "codigo": "C531",
+        "nome": "Neoplasia maligna do colo do utero (exocervice)"
+      },
+      {
+        "codigo": "C539",
+        "nome": "Neoplasia maligna do colo do utero nao especificada"
+      },
+      {
+        "codigo": "C609",
+        "nome": "Neoplasia maligna do penis nao especificada"
+      },
+      {
+        "codigo": "C760",
+        "nome": "Neoplasia maligna de cabeca, face e pescoco"
+      },
+      {
+        "codigo": "C761",
+        "nome": "Neoplasia maligna do torax"
+      },
+      {
+        "codigo": "C762",
+        "nome": "Neoplasia maligna do abdome"
+      },
+      {
+        "codigo": "C80",
+        "nome": "Neoplasia maligna sem especificacao de localizacao"
+      },
+      {
+        "codigo": "C819",
+        "nome": "Linfoma de Hodgkin nao especificado"
+      },
+      {
+        "codigo": "C837",
+        "nome": "Linfoma de Burkitt"
+      },
+      {
+        "codigo": "E43",
+        "nome": "Desnutricao grave"
+      },
+      {
+        "codigo": "R634",
+        "nome": "Perda de peso anormal"
+      },
+      {
+        "codigo": "R64",
+        "nome": "Caquexia"
+      }
+    ]
+  }
+}
