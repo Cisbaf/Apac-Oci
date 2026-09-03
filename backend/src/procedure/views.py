@@ -9,7 +9,7 @@ from .serializers import ProcedureSerializer
 
 class ProcedureApiView(APIView):
     def get(self, request):
-        procedures = ProcedureModel.objects.filter(parents=None, is_active=True)
+        procedures = ProcedureModel.objects.filter(parent_links__isnull=True, is_active=True)
         serializer = ProcedureSerializer(procedures, many=True)
         return Response(serializer.data)
 

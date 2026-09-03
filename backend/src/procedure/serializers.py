@@ -30,8 +30,15 @@ class ProcedureSerializer(serializers.ModelSerializer):
         ]
 
     def get_children(self, obj):
-        if not obj.parents.all():
-            children = ProcedureModel.objects.filter(parents=obj).order_by("-mandatory")
-            sub_produces = [ProcedureSerializer(child, context=self.context).data for child in children]
-            return sub_produces
-        return []
+        if obj.parent_links.exists():
+            return []
+        sub_procedures = []
+        links = obj.secondary_links.select_related("child").order_by("-mandatory")
+        for link in links:
+            data = ProcedureSerializer(link.child, context=self.context).data
+            # `mandatory`/`max_quantity` são do par (T-037), não do procedimento
+            # em si — sobrescrevem aqui o que `fields = '__all__'` traria.
+            data["mandatory"] = link.mandatory
+            data["max_quantity"] = link.max_quantity
+            sub_procedures.append(data)
+        return sub_procedures

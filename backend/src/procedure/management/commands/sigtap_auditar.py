@@ -20,7 +20,7 @@ import json
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from procedure.models import CidModel, ProcedureModel
+from procedure.models import CidModel, ProcedureModel, ProcedureSecondary
 
 
 class Command(BaseCommand):
@@ -73,25 +73,59 @@ class Command(BaseCommand):
         self._auditar_cids(principal, d, aplicar)
 
     def _auditar_secundarios(self, principal, d, aplicar):
-        oficiais = {s["codigo_dv"]: s for grupo in d["secundarios"].values()
-                    for s in grupo}
-        atuais = {p.code: p for p in ProcedureModel.objects.filter(parents=principal)}
+        # oficiais: codigo_dv -> (obrigatório?, quantidade_maxima) — o par
+        # decide os dois (T-037), não o procedimento.
+        oficiais = {
+            s["codigo_dv"]: (grupo == "obrigatorios", s["quantidade_maxima"])
+            for grupo, lista in d["secundarios"].items()
+            for s in lista
+        }
+        atuais = {
+            link.child.code: link
+            for link in ProcedureSecondary.objects.filter(parent=principal).select_related("child")
+        }
 
         for codigo in sorted(set(oficiais) - set(atuais)):
-            self._divergir(f"secundário ausente: {codigo} {oficiais[codigo]['nome'][:44]}")
+            nome = next(
+                s["nome"] for grupo in d["secundarios"].values() for s in grupo
+                if s["codigo_dv"] == codigo
+            )
+            self._divergir(f"secundário ausente: {codigo} {nome[:44]}")
             if aplicar:
+                obrigatorio, qtd_maxima = oficiais[codigo]
                 sec, _ = ProcedureModel.objects.get_or_create(
-                    code=codigo, defaults={"name": oficiais[codigo]["nome"]})
-                sec.parents.add(principal)
+                    code=codigo, defaults={"name": nome})
+                ProcedureSecondary.objects.create(
+                    parent=principal, child=sec,
+                    mandatory=obrigatorio, max_quantity=qtd_maxima)
 
         for codigo in sorted(set(atuais) - set(oficiais)):
             self._divergir(
                 f"secundário que o SIGTAP não aceita para esta OCI: {codigo} "
-                f"{atuais[codigo].name[:44]}")
+                f"{atuais[codigo].child.name[:44]}")
             if aplicar:
-                # Desvincula do principal; o procedimento em si continua existindo
-                # porque pode ser secundário legítimo de outra OCI.
-                atuais[codigo].parents.remove(principal)
+                # Remove só o vínculo com o principal; o procedimento em si
+                # continua existindo — pode ser secundário legítimo de outra OCI.
+                atuais[codigo].delete()
+
+        for codigo in sorted(set(oficiais) & set(atuais)):
+            obrigatorio, qtd_maxima = oficiais[codigo]
+            link = atuais[codigo]
+            if link.mandatory != obrigatorio:
+                self._divergir(
+                    f"{codigo}: cadastrado como "
+                    f"{'obrigatório' if link.mandatory else 'compatível'}, "
+                    f"SIGTAP diz {'obrigatório' if obrigatorio else 'compatível'}")
+                if aplicar:
+                    link.mandatory = obrigatorio
+                    link.save()
+            if link.max_quantity != qtd_maxima:
+                self._divergir(
+                    f"{codigo}: quantidade máxima cadastrada "
+                    f"{link.max_quantity}, SIGTAP diz {qtd_maxima}")
+                if aplicar:
+                    link.max_quantity = qtd_maxima
+                    link.save()
 
     def _auditar_cids(self, principal, d, aplicar):
         oficiais = set(d["cids_principais"])

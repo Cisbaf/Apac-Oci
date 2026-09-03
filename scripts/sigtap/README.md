@@ -59,6 +59,14 @@ Confundir `95` com `01` é o que produz a crítica
 `PROC.PRINC(...) EXIGE PELO MENOS (00N) PROC. SECUNDARIO OBRIGATORIO` — o `N` da
 mensagem é exatamente a contagem de linhas `TRAT=95` daquele principal.
 
+## Papel e quantidade máxima são do par — resolvido na T-037
+
+`PAPA_TRAT`/`PAPA_QTMAX` são do **par** principal×secundário, não do
+procedimento: `020208003` é compatível em 5 das 10 OCIs novas e obrigatório na
+6ª. O modelo `ProcedureSecondary` (`backend/src/procedure/models.py`) guarda
+isso por par; `sigtap_auditar` confere e corrige os dois junto com
+presença/ausência do secundário.
+
 ## CID de causas associadas (atributo 043) — resolvido na T-036
 
 O SIGTAP não lista quais CIDs valem como segundo CID — só marca, em `S_PADET`,
@@ -99,11 +107,3 @@ cabeçalho e números de APAC de um arquivo que o ambiente de teste já
 reconhece; o gerador reescreve os campos de CID, CBO e CNS.
 
 Rodar o arquivo gerado: `apac-magnetico-validador/bin/validar.sh <saida>`.
-
-## Limite conhecido do cadastro atual
-
-**Papel e quantidade máxima são do par, não do procedimento.**
-`ProcedureModel.mandatory` é um booleano do procedimento, mas `020208003` é
-compatível em `090801001` e obrigatório em `090801002`. São 6 secundários com
-papel divergente e 5 com quantidade divergente entre as 10 OCIs novas. O
-`sigtap_auditar` não confere isso ainda — ver `T-037`.

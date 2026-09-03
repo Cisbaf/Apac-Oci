@@ -14,7 +14,7 @@ from apac_batch.models import ApacBatchModel
 from city.models import CityModel
 from customuser.models import CustomUser, UserRole
 from establishment.models import EstablishmentModel
-from procedure.models import ProcedureModel, CidModel
+from procedure.models import ProcedureModel, CidModel, ProcedureSecondary
 from apac_core.application.use_cases.apac_request_cases.create_apac_request_case import (
     CreateApacRequestDTO,
 )
@@ -127,12 +127,10 @@ class BaseApacTest(APITestCase):
             name="Main Procedure"
         )
         sub_procedure = ProcedureModel.objects.create(
-            code=random_str(), 
-            name="Sub Procedure",
-            mandatory=True
+            code=random_str(),
+            name="Sub Procedure"
         )
-        sub_procedure.parents.add(procedure)
-        sub_procedure.save()
+        ProcedureSecondary.objects.create(parent=procedure, child=sub_procedure, mandatory=True)
         return procedure, sub_procedure
     
     def build_apac_data(self):
