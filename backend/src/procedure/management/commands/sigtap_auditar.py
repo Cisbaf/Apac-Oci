@@ -56,9 +56,31 @@ class Command(BaseCommand):
 
     # ------------------------------------------------------------------
 
+    def _obter_ou_criar(self, model, codigo, nome, campo="code"):
+        """`get_or_create` tolerante a código duplicado.
+
+        `ProcedureModel.code` não tem constraint de unicidade e a produção tem
+        duplicatas reais (mesmo código, grafias diferentes do nome — ex.:
+        `0203020030` e `0301010307` em 03/09/2026). `get_or_create` levanta
+        `MultipleObjectsReturned` nesses casos e aborta a auditoria inteira.
+        Aqui a duplicata é avisada e resolvida pelo menor `id` — determinístico
+        e inofensivo para o export, que grava o código, não o nome.
+        """
+        existentes = list(model.objects.filter(**{campo: codigo}).order_by("id"))
+        if len(existentes) > 1:
+            self.stdout.write(self.style.WARNING(
+                f"    aviso: {codigo} está duplicado no cadastro "
+                f"({len(existentes)}x, ids {[o.id for o in existentes]}) — "
+                f"usando o id {existentes[0].id}. Vale limpar depois."))
+        if existentes:
+            return existentes[0]
+        return model.objects.create(**{campo: codigo, "name": nome})
+
     def _auditar(self, d, aplicar):
         codigo = d["codigo_dv"]
-        principal = ProcedureModel.objects.filter(code=codigo).first()
+        # order_by("id"): `code` não é único e a produção tem duplicatas — sem
+        # ordenação explícita o `first()` não é determinístico no MySQL.
+        principal = ProcedureModel.objects.filter(code=codigo).order_by("id").first()
 
         self.stdout.write(f"\n{codigo} {d['nome'][:56]}")
         if principal is None:
@@ -93,8 +115,7 @@ class Command(BaseCommand):
             self._divergir(f"secundário ausente: {codigo} {nome[:44]}")
             if aplicar:
                 obrigatorio, qtd_maxima = oficiais[codigo]
-                sec, _ = ProcedureModel.objects.get_or_create(
-                    code=codigo, defaults={"name": nome})
+                sec = self._obter_ou_criar(ProcedureModel, codigo, nome)
                 ProcedureSecondary.objects.create(
                     parent=principal, child=sec,
                     mandatory=obrigatorio, max_quantity=qtd_maxima)
@@ -134,8 +155,7 @@ class Command(BaseCommand):
         for codigo in sorted(oficiais - set(atuais)):
             self._divergir(f"CID principal ausente: {codigo}")
             if aplicar:
-                cid, _ = CidModel.objects.get_or_create(
-                    code=codigo, defaults={"name": codigo})
+                cid = self._obter_ou_criar(CidModel, codigo, codigo)
                 cid.procedure.add(principal)
 
         for codigo in sorted(set(atuais) - oficiais):

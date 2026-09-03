@@ -20,11 +20,27 @@ def copiar(apps, schema_editor):
 
 
 def reverter(apps, schema_editor):
+    """Restaura o M2M `parents` E o booleano `mandatory` do procedimento.
+
+    Restaurar só o vínculo perderia silenciosamente as marcações de
+    obrigatoriedade (em produção, 16 procedimentos com `mandatory=True`) — o
+    rollback ficaria verde mas com dado a menos. Como o `mandatory` do modelo
+    antigo era do procedimento e o novo é do par, a reconstrução possível é:
+    o filho volta a ser obrigatório se QUALQUER vínculo dele era obrigatório.
+    É exatamente o inverso do `copiar`, que propagou o valor do filho para
+    todos os pares dele.
+    """
     ProcedureModel = apps.get_model("procedure", "ProcedureModel")
     ProcedureSecondary = apps.get_model("procedure", "ProcedureSecondary")
 
-    for link in ProcedureSecondary.objects.all():
+    obrigatorios = set()
+    for link in ProcedureSecondary.objects.select_related("child", "parent"):
         link.child.parents.add(link.parent)
+        if link.mandatory:
+            obrigatorios.add(link.child_id)
+
+    if obrigatorios:
+        ProcedureModel.objects.filter(pk__in=obrigatorios).update(mandatory=True)
 
 
 class Migration(migrations.Migration):
