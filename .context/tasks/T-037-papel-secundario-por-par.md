@@ -92,19 +92,47 @@ contexto de principal, sem mudar o formato do JSON que já consumia
 
 **Decisão explicitamente NÃO tomada nesta tarefa:** o escopo original pedia
 avaliar se o formulário passa a *validar* (bloquear envio sem os obrigatórios)
-ou continua só *avisando* (comportamento atual: o checkbox do item obrigatório
-vem travado marcado, mas nada no backend impede enviar sem ele). Mantive o
-comportamento atual — nenhuma validação nova — porque mudar isso altera o que
-o município consegue fazer no formulário e é decisão do usuário, não uma
-correção de bug. `mandatory`/`max_quantity` por par já chegam corretos ao
-frontend; adicionar a validação em si fica como próximo passo, se decidido.
+ou continua só *avisando*. Perguntei ao usuário, que confirmou manter o
+comportamento atual — nenhuma validação nova no backend. Correção sobre o que
+esse "atual" realmente é (só descoberto testando no navegador, ver abaixo): o
+frontend **já bloqueia**, via `required` nativo do checkbox +
+`validateSubProcedures.ts` ("O procedimento obrigatório ... não foi
+selecionado!") — não é um aviso, é enforcement client-side. O que não existe é
+validação no **backend**; isso continua assim, por decisão do usuário.
+
+## Bug achado e corrigido testando em ambiente de dev real
+
+O golden test (fixture sintética) não pegou isto porque não reflete uma
+particularidade real do SIGTAP. Rodando o stack completo (`docker-dev`,
+`docker-compose.dev.yml`) e testando a OCI `0908010028` no navegador, um dos 6
+secundários obrigatórios (`020208025`, Exame Micológico Direto) apareceu como
+`required: false` — 5 obrigatórios, não 6.
+
+Causa raiz: `S_PAPA` às vezes lista o **mesmo par** (principal, secundário)
+**duas vezes** — uma `TRAT=01`, outra `TRAT=95` (confirmado: `090801002` ×
+`020208025`, mais dois pares em `090801008`). `extrair.py` tratava cada linha
+isoladamente; `sigtap_auditar.py` indexava por `codigo_dv` num dict — quem
+processasse "compativeis" por último apagava o "obrigatório" de "obrigatorios".
+Corrigido em `extrair.py` (commit `43aeb0b`): agrupa por par antes de separar,
+obrigatório vence. Teste de regressão em `scripts/sigtap/tests/test_extrair.py`
+(commit `2f8052b`) trava os dois sentidos de ordenação.
+
+Reaplicado no container de dev rodando: os 3 pares afetados corrigidos: agora
+6/6 obrigatórios com `required: true`. Confirmado ponta a ponta — formulário
+até o fim, POST 200, registro persistido com `secondary_cid=A162` e os 6
+secundários corretos.
 
 ## Verificação
 - Gates: `bash scripts/verify.sh` verde (72 testes `backend/core`, suite
-  completa `backend/src`, 34 testes frontend, lint sem erros novos).
+  completa `backend/src`, 34 testes frontend, lint sem erros novos) — antes e
+  depois da correção do bug do par duplicado.
 - Migração preserva os 173 vínculos existentes (173 → 173, contado antes/depois
   numa cópia gravável do banco).
 - `sigtap_auditar` nas 10 OCIs novas: 198 divergências de papel/quantidade
   (invisíveis antes desta tarefa) → 0, idempotente.
 - Golden files do export **inalterados** (`git diff` vazio) — o export nunca
   leu `mandatory`, só `ProcedureRecord`/`ApacData.sub_procedures`.
+- **Teste manual em ambiente real** (`docker-dev`, competência 202608):
+  solicitação completa da OCI `0908010028` — 6 secundários obrigatórios
+  corretos, CID de causas associadas exibido e persistido, POST 200,
+  `ApacDataModel` conferido direto no banco do container.
