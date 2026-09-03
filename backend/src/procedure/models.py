@@ -7,13 +7,6 @@ class ProcedureModel(models.Model):
     code = models.CharField(verbose_name="Código do Procedimento", max_length=20, db_column='cod_sig_tap')
     name = models.CharField(verbose_name="Nome do Procedimento", max_length=255)
     description = models.CharField(verbose_name="Descrição do Procedimento", max_length=255, null=True, blank=True)
-    parents = models.ManyToManyField(
-        "self",
-        symmetrical=False,
-        related_name="children_recovery",
-        blank=True
-    )
-    mandatory = models.BooleanField(verbose_name="Obrigatório", default=False)
     # Atributo complementar SIGTAP 054. Ver T-034: a validade padrão da APAC é de
     # 3 competências (Portaria SAES/MS Nº 3.958/2026), mas procedimentos que ainda
     # carregam o 054 são rejeitados pelo APAC Magnético com o erro 010087 se
@@ -46,7 +39,10 @@ class ProcedureModel(models.Model):
         exclude = kwargs.get("exclude_sub_procedures_for_main", None)
         sub_procedures = []
         if not exclude:
-            sub_procedures = [children.to_entity(**kwargs) for children in ProcedureModel.objects.filter(parents=self)]
+            sub_procedures = [
+                link.child.to_entity(**kwargs)
+                for link in self.secondary_links.select_related("child")
+            ]
 
         return Procedure (
             name=self.name,
@@ -63,6 +59,43 @@ class ProcedureModel(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProcedureSecondary(models.Model):
+    """Vínculo principal×secundário (T-037).
+
+    O SIGTAP guarda "obrigatório" e "quantidade máxima" no *par*
+    (`S_PAPA.PAPA_TRAT`/`PAPA_QTMAX`), não no procedimento — mas o cadastro
+    manual guardava `mandatory` como atributo do `ProcedureModel`, sem como
+    expressar que um secundário é obrigatório numa OCI e só compatível noutra
+    (achado da T-035: 6 secundários com papel divergente entre as 10 OCIs
+    novas, 5 com quantidade divergente). Este modelo substitui o M2M simples
+    `ProcedureModel.parents` para guardar essa informação por par.
+    """
+    parent = models.ForeignKey(
+        to="ProcedureModel", on_delete=models.CASCADE,
+        related_name="secondary_links", verbose_name="Procedimento principal"
+    )
+    child = models.ForeignKey(
+        to="ProcedureModel", on_delete=models.CASCADE,
+        related_name="parent_links", verbose_name="Procedimento secundário"
+    )
+    mandatory = models.BooleanField(verbose_name="Obrigatório", default=False)
+    max_quantity = models.PositiveIntegerField(
+        verbose_name="Quantidade máxima",
+        help_text="Atributo SIGTAP PAPA_QTMAX. Vazio = sem limite conhecido cadastrado.",
+        null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'procedimentos_secundarios'
+        unique_together = ("parent", "child")
+        verbose_name = "Procedimento secundário"
+        verbose_name_plural = "Procedimentos secundários"
+
+    def __str__(self):
+        return f"{self.parent.code} → {self.child.code}"
+
 
 class CidModel(models.Model):
     code = models.CharField(verbose_name="Código CID", max_length=20, db_column='cod_cid')

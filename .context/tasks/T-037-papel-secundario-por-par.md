@@ -1,7 +1,7 @@
 # T-037 — Papel e quantidade máxima do secundário são do par, não do procedimento
 
 - **Fase:** 0
-- **Status:** todo
+- **Status:** done
 - **Depende de:** T-035
 - **Branch:** `refactor/T-037-papel-secundario-por-par`
 
@@ -55,11 +55,56 @@ depois que o município já fechou a competência.
 - `backend/core/src/apac_core/domain/entities/procedure.py` — entidade
 
 ## Critério de aceite
-- [ ] `020208003` consta obrigatório em `090801002` e compatível nas outras 5
-- [ ] `030704011` consta com quantidade 2 em `090701001` e 1 em `090701002`
-- [ ] `sigtap_auditar` acusa divergência de papel e de quantidade
-- [ ] Golden file do export inalterado
+- [x] `020208003` consta obrigatório em `090801002` e compatível nas outras 5
+- [x] `030704011` consta com quantidade 2 em `090701001` e 1 em `090701002`
+- [x] `sigtap_auditar` acusa divergência de papel e de quantidade
+- [x] Golden file do export inalterado
+
+## O que foi feito
+
+Novo modelo `ProcedureSecondary` (`parent`, `child`, `mandatory`, `max_quantity`,
+`unique_together`), substituindo o M2M simples `ProcedureModel.parents` e o
+campo `ProcedureModel.mandatory`. Três migrações em sequência para não perder
+dado:
+1. `0027` — cria `ProcedureSecondary` (tabela nova, nada mexido ainda).
+2. `0028` — `RunPython` copia cada par do M2M antigo para o modelo novo,
+   herdando `mandatory` do antigo `ProcedureModel.mandatory` do filho (melhor
+   sinal disponível até o `sigtap_auditar` corrigir por par) e `max_quantity`
+   vazio (nunca existiu essa informação no cadastro manual). Reversível.
+3. `0029` — remove `mandatory` e `parents` de `ProcedureModel` (dropa a tabela
+   M2M antiga).
+
+Todos os consumidores do M2M antigo foram migrados para o modelo novo:
+`ProcedureModel.to_entity` (via `secondary_links`), `views.py` (lista de
+principais = `parent_links__isnull=True`), `controller.py` (`save`, dead code
+em produção — nenhuma view chama, confirmado por grep), `admin.py` (filtros +
+`ProcedureSecondaryInline` no lugar do widget M2M, que **não** funciona com
+through-model com campos extras — limitação conhecida do Django Admin),
+`sigtap_auditar.py` e `apac_request/tests.py`.
+
+`sigtap_auditar` estendido: além de ausência/sobra de secundário, agora compara
+`mandatory` e `max_quantity` do par contra o SIGTAP e corrige com `--aplicar`.
+
+`ProcedureSerializer.get_children` injeta `mandatory`/`max_quantity` do
+`ProcedureSecondary` em cada filho — o formulário recebe o valor certo por
+contexto de principal, sem mudar o formato do JSON que já consumia
+(`mandatory: boolean` por item de `children`); `max_quantity` é aditivo.
+
+**Decisão explicitamente NÃO tomada nesta tarefa:** o escopo original pedia
+avaliar se o formulário passa a *validar* (bloquear envio sem os obrigatórios)
+ou continua só *avisando* (comportamento atual: o checkbox do item obrigatório
+vem travado marcado, mas nada no backend impede enviar sem ele). Mantive o
+comportamento atual — nenhuma validação nova — porque mudar isso altera o que
+o município consegue fazer no formulário e é decisão do usuário, não uma
+correção de bug. `mandatory`/`max_quantity` por par já chegam corretos ao
+frontend; adicionar a validação em si fica como próximo passo, se decidido.
 
 ## Verificação
-- Gates: `bash scripts/verify.sh` verde.
-- Migration preserva todos os vínculos atuais (contar antes/depois).
+- Gates: `bash scripts/verify.sh` verde (72 testes `backend/core`, suite
+  completa `backend/src`, 34 testes frontend, lint sem erros novos).
+- Migração preserva os 173 vínculos existentes (173 → 173, contado antes/depois
+  numa cópia gravável do banco).
+- `sigtap_auditar` nas 10 OCIs novas: 198 divergências de papel/quantidade
+  (invisíveis antes desta tarefa) → 0, idempotente.
+- Golden files do export **inalterados** (`git diff` vazio) — o export nunca
+  leu `mandatory`, só `ProcedureRecord`/`ApacData.sub_procedures`.

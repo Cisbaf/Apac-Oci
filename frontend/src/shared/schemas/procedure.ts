@@ -3,7 +3,12 @@ import Cid from "./cid";
 export default interface Procedure {
     name: string;
     code: string;
-    mandatory: boolean;
+    // T-037: obrigatório e quantidade máxima são do par principal×secundário,
+    // não do procedimento — só vêm preenchidos quando este objeto aparece
+    // dentro de `children` (a API injeta os dois a partir do vínculo). Ausentes
+    // no procedimento principal do topo da lista.
+    mandatory?: boolean;
+    max_quantity?: number | null;
     is_active: boolean;
     cid: Cid[];
     // Atributo SIGTAP 043 (T-036): quando true, o formulário deve cobrar um
