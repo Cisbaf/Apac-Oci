@@ -1,6 +1,10 @@
+import { RequirementGroup } from "@/shared/schemas/procedure";
 import { SubProceduresForm } from "../../../schemas/requestForm";
 
-export function validateSubProcedures(subProcedures: SubProceduresForm[]) {
+export function validateSubProcedures(
+  subProcedures: SubProceduresForm[],
+  requirementGroups: RequirementGroup[] = []
+) {
   const mandatoryNotChecked = subProcedures.find(
     p => p.procedure.mandatory && !p.checked
   );
@@ -10,6 +14,20 @@ export function validateSubProcedures(subProcedures: SubProceduresForm[]) {
       success: false,
       message: `O procedimento obrigatório ${mandatoryNotChecked.procedure.name} não foi selecionado!`
     };
+  }
+
+  // "Exige ao menos N destes M" (atributos SIGTAP 057/067-070, T-040) — não é
+  // um item obrigatório sozinho, é uma alternativa entre vários.
+  for (const group of requirementGroups) {
+    const marcados = subProcedures.filter(
+      p => p.checked && group.member_ids.includes(p.procedure.id)
+    ).length;
+    if (marcados < group.minimum) {
+      return {
+        success: false,
+        message: `Este procedimento exige pelo menos ${group.minimum} de: ${group.description}`
+      };
+    }
   }
 
   const incorrectQuantity = subProcedures.find(

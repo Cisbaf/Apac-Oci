@@ -1,0 +1,43 @@
+{
+  "_fonte": "Portaria SAES/MS Nº 4.306/2026 (DOU 26/06/2026, Ed.118, Seção 1, p.101), Art. 3º e §§1º-4º — atributos 067/068/069/070. Atributo 057 é pré-existente do SIGTAP (não criado por esta portaria), confirmado via wiki.saude.gov.br/sigtap. Todos os códigos-membro já existiam como secundários compatíveis das respectivas OCIs antes desta tarefa (T-035/T-037) — nenhum procedimento novo precisou ser cadastrado, só a regra de grupo em cima do que já existe.",
+  "090801003": {
+    "codigo_dv": "0908010036",
+    "nome": "OCI Avaliação Diagnóstica Inicial de Síndrome Neurológica",
+    "attribute_code": "067",
+    "description": "Exige Procedimento de Punção Lombar e/ou Tomografia Computadorizada do Crânio",
+    "minimum": 1,
+    "members": ["0201010631", "0206010079"]
+  },
+  "090801004": {
+    "codigo_dv": "0908010044",
+    "nome": "OCI Progressão da Avaliação Diagnóstica de Síndrome Neurológica",
+    "attribute_code": "057",
+    "description": "Exige procedimento de ressonância magnética (subgrupo 02.07)",
+    "minimum": 1,
+    "subgroup_prefixes": ["0207"]
+  },
+  "090801005": {
+    "codigo_dv": "0908010052",
+    "nome": "OCI Avaliação Diagnóstica Inicial de Síndrome Mucocutânea",
+    "attribute_code": "068",
+    "description": "Exige Procedimentos Específicos dos subgrupos 02.02 e/ou 02.03 (Exame Micológico Direto e/ou Cultura para Identificação Morfológica de Fungos e/ou Exame anátomo-patológico)",
+    "minimum": 1,
+    "members": ["0202080250", "0202080137", "0203020030"]
+  },
+  "090801006": {
+    "codigo_dv": "0908010060",
+    "nome": "OCI Progressão da Avaliação Diagnóstica de Síndrome Mucocutânea",
+    "attribute_code": "069",
+    "description": "Exige Procedimentos dos subgrupos 02.06 e/ou 02.09",
+    "minimum": 1,
+    "subgroup_prefixes": ["0206", "0209"]
+  },
+  "090801007": {
+    "codigo_dv": "0908010079",
+    "nome": "OCI Avaliação Diagnóstica Inicial de Síndrome Consumptiva",
+    "attribute_code": "070",
+    "description": "Exige procedimento de tomografia e/ou biópsia (Tomografia computadorizada de pelve/bacia/abdômen inferior e/ou Biópsia de gânglio linfático)",
+    "minimum": 1,
+    "members": ["0206030037", "0201010224"]
+  }
+}
