@@ -63,6 +63,19 @@ class ApacDataModel(models.Model):
     discharge_date = models.DateField(verbose_name="Data da alta")
     diagnostic_date = models.DateField(verbose_name="Data do Diagonóstico", blank=True, null=True)
     cid = models.ForeignKey(to=CidModel, on_delete=models.DO_NOTHING, verbose_name="CID")
+    # CID de causas associadas (atributo SIGTAP 043, ver T-036). Nulo na maioria
+    # das APACs; obrigatório apenas quando main_procedure.requires_secondary_cid
+    # for True (hoje, as 8 OCIs de Infectologia). related_name="+": não existe
+    # caso de uso para navegar de CidModel até as APACs que o usam como
+    # secundário, e "+" evita colidir com o related_name "cids" do campo `cid`.
+    secondary_cid = models.ForeignKey(
+        to=CidModel,
+        on_delete=models.DO_NOTHING,
+        verbose_name="CID de causas associadas",
+        null=True,
+        blank=True,
+        related_name="+"
+    )
 
     class Meta:
         db_table = 'dados_apac'
@@ -107,6 +120,7 @@ class ApacDataModel(models.Model):
                 cbo=CboField(value=self.authorizing_physician_cbo),
             ),
             cid=self.cid.to_entity(**kwargs),
+            secondary_cid=self.secondary_cid.to_entity(**kwargs) if self.secondary_cid else None,
             procedure_date=self.procedure_date,
             discharge_date=self.discharge_date,
             main_procedure=self.main_procedure.to_entity(**kwargs),

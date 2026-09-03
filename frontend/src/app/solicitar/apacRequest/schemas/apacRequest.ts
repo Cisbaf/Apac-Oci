@@ -51,6 +51,7 @@ export interface ApacData {
   supervising_physician_data: MedicData;
   authorizing_physician_data: MedicData;
   cid: Cid;
+  secondary_cid?: Cid | null;
   procedure_date: string;
   discharge_date: string;
   diagnostic_date: string;

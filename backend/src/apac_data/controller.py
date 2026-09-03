@@ -38,6 +38,7 @@ class ApacDataController(ApacDataRepository):
             authorizing_physician_cns = apac_data.authorizing_physician_data.cns.value,
             authorizing_physician_cbo = apac_data.authorizing_physician_data.cbo.value,
             cid=CidModel.objects.get(pk=apac_data.cid.id),
+            secondary_cid=CidModel.objects.get(pk=apac_data.secondary_cid.id) if apac_data.secondary_cid else None,
             procedure_date=apac_data.procedure_date,
             discharge_date=apac_data.discharge_date,
             diagnostic_date=apac_data.diagnostic_date,
