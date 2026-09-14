@@ -24,6 +24,10 @@ export default interface Procedure {
     // Atributo SIGTAP 043 (T-036): quando true, o formulário deve cobrar um
     // segundo CID (causas associadas), escolhido entre `secondary_cids`.
     requires_secondary_cid: boolean;
+    // Atributo SIGTAP 053 (T-043): procedimento do PMAE. Quando true, o
+    // formulário exige no mínimo 2 secundários, sendo um deles consulta ou
+    // teleconsulta — ver `validateSubProcedures`.
+    pmae: boolean;
     secondary_cids: Cid[];
     requirement_groups: RequirementGroup[];
     children: Procedure[]; // se estiver populando o related_name

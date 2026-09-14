@@ -27,6 +27,16 @@ class ProcedureModel(models.Model):
         help_text="Atributo SIGTAP 043. Marque se o APAC Magnético exigir um segundo CID (causas associadas) para este procedimento.",
         default=False
     )
+    # Atributo complementar SIGTAP 053. Ver T-043: o APAC Magnético exige de
+    # todo procedimento do PMAE no mínimo 2 secundários, sendo um deles consulta
+    # (0301010072) ou teleconsulta (0301010307), sob pena da crítica
+    # "PMAE EXIGE PELO MENOS 2 PROC.SEC. SENDO UM OBRIG.(030101007 OU 030101030)".
+    # A regra não está em tabela nenhuma do SIGTAP — só o atributo está.
+    pmae = models.BooleanField(
+        verbose_name="Procedimento PMAE",
+        help_text="Atributo SIGTAP 053 (Agora Tem Especialistas). Marque para exigir no mínimo 2 secundários, sendo um deles consulta ou teleconsulta. Toda OCI tem este atributo.",
+        default=False
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -51,6 +61,7 @@ class ProcedureModel(models.Model):
             is_active=self.is_active,
             fixed_validity_two_competences=self.fixed_validity_two_competences,
             requires_secondary_cid=self.requires_secondary_cid,
+            pmae=self.pmae,
             sub_procedures=sub_procedures,
             created_at=self.created_at,
             updated_at=self.updated_at,

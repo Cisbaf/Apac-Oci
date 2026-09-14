@@ -12,7 +12,7 @@ import { useRequestData } from "../../contexts/ApacRequestContext";
 import { FormRepository, FormProps } from "@/shared/repositories/formRepository";
 import { MESSAGENOTCHECKVALIDITY } from "@/app/solicitar/apacRequest/utils/messages";
 import { useWatch } from "react-hook-form";
-import { validateSubProcedures } from "./validates/validateSubProcedures";
+import { validatePmae, validateSubProcedures } from "./validates/validateSubProcedures";
 import ProcedureItem from "./subProcedureItem";
 
 const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props, ref) => {
@@ -30,11 +30,15 @@ const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props
   });
   const disabled = props.disabled ?? disabledForm;
 
-  // "Exige ao menos N destes M" (atributos SIGTAP 057/067-070, T-040) — vem do
-  // procedimento principal, não do secundário; por isso não está em `procedure`
-  // de cada item da lista, precisa buscar separado.
-  const requirementGroups =
-    procedures.find(p => p.id === mainProcedureId)?.requirement_groups ?? [];
+  // "Exige ao menos N destes M" (atributos SIGTAP 057/067-070, T-040) e a regra
+  // PMAE (atributo 053, T-043) vêm do procedimento principal, não do
+  // secundário; por isso não estão em `procedure` de cada item da lista.
+  const mainProcedure = procedures.find(p => p.id === mainProcedureId);
+  const requirementGroups = mainProcedure?.requirement_groups ?? [];
+  const avisoPmae = validatePmae(
+    (subProceduresField ?? []).filter(p => p.checked),
+    mainProcedure
+  );
 
   React.useImperativeHandle(ref, () => ({
     validate() {
@@ -44,7 +48,7 @@ const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props
       }
 
       const subProcedures = getValues("apacData.subProcedures");
-      return validateSubProcedures(subProcedures, requirementGroups);
+      return validateSubProcedures(subProcedures, requirementGroups, mainProcedure);
     }
   }));
 
@@ -57,6 +61,12 @@ const IdentifySubProcedures = React.forwardRef<FormRepository, FormProps>((props
       }}
     >
       <Box ref={formRef} component="form" onSubmit={(e) => e.preventDefault()}>
+        {!disabled && mainProcedure?.pmae && (
+          <Alert severity={avisoPmae ? "warning" : "success"} sx={{ mb: 2 }}>
+            {avisoPmae ??
+              "Mínimo de procedimentos secundários da OCI atendido, com consulta ou teleconsulta."}
+          </Alert>
+        )}
         {!disabled && requirementGroups.map(group => {
           const marcados = (subProceduresField ?? []).filter(
             p => p.checked && group.member_ids.includes(p.procedure.id)

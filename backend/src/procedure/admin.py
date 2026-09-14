@@ -51,9 +51,9 @@ class ProcedureSecondaryInline(admin.TabularInline):
 
 @admin.register(ProcedureModel)
 class ProcedureAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name', 'description', 'get_parents', 'fixed_validity_two_competences', 'requires_secondary_cid', 'is_active']
-    list_filter = [ParentFilter, 'fixed_validity_two_competences', 'requires_secondary_cid']
-    list_editable = ['fixed_validity_two_competences', 'requires_secondary_cid']
+    list_display = ['code', 'name', 'description', 'get_parents', 'fixed_validity_two_competences', 'requires_secondary_cid', 'pmae', 'is_active']
+    list_filter = [ParentFilter, 'fixed_validity_two_competences', 'requires_secondary_cid', 'pmae']
+    list_editable = ['fixed_validity_two_competences', 'requires_secondary_cid', 'pmae']
     search_fields = ['code', 'name']
     inlines = [ProcedureSecondaryInline]
 

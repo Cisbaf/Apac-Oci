@@ -171,17 +171,85 @@ class SemearGrupoConsultaPmaeTests(TestCase):
         self.assertEqual(grupo.members.count(), 2)
         self.assertNotIn(pendurado.id, grupo.members.values_list("id", flat=True))
 
-    def test_json_oficial_cobre_as_oito_ocis_de_infectologia(self):
-        """Guarda do dado: sem entrada no JSON, o semeador não cria o grupo e a
-        regra da consulta some sem ninguém perceber."""
+    def test_json_oficial_nao_semeia_mais_grupo_de_consulta(self):
+        """T-043 inverteu esta guarda. A consulta deixou de ser grupo por
+        procedimento e virou regra derivada do atributo 053 (`ProcedureModel.
+        pmae`); a migration 0032 removeu os grupos `OCI` que existiam. Se
+        alguém reintroduzir a entrada aqui, o semeador recria o grupo e o
+        formulário volta a cobrar a mesma coisa duas vezes."""
         dados = json.loads(self.JSON_OFICIAL.read_text(encoding="utf-8"))
-        com_grupo_oci = {
+
+        com_grupo_oci = [
             info["codigo_dv"] for chave, info in dados.items()
             if not chave.startswith("_") and info["attribute_code"] == "OCI"
-        }
+        ]
 
-        esperadas = {
-            "0908010010", "0908010028", "0908010036", "0908010044",
-            "0908010052", "0908010060", "0908010079", "0908010087",
+        self.assertEqual(com_grupo_oci, [])
+
+
+class PmaeFlagTests(APITestCase):
+    """
+    T-043 — o atributo SIGTAP 053 precisa chegar à entidade de domínio: é lá que
+    o use case de criação decide se cobra os 2 secundários e a consulta.
+    """
+
+    def test_default_is_false(self):
+        procedure = ProcedureModel.objects.create(code="0206020031", name="Tomografia")
+
+        self.assertFalse(procedure.pmae)
+        self.assertFalse(procedure.to_entity().pmae)
+
+    def test_flag_is_propagated_to_entity(self):
+        procedure = ProcedureModel.objects.create(
+            code="0908010010", name="OCI de teste", pmae=True)
+
+        self.assertTrue(procedure.to_entity().pmae)
+
+
+class SigtapAuditarAtributoPmaeTests(TestCase):
+    """T-043 — quem manda no campo é o SIGTAP, não o cadastro manual."""
+
+    def setUp(self):
+        self.oci = ProcedureModel.objects.create(code="0908010010", name="OCI de teste")
+
+    def _auditar(self, atributos, aplicar=True):
+        conteudo = {
+            "090801001": {
+                "codigo_dv": "0908010010",
+                "nome": "OCI de teste",
+                "atributos": [{"codigo": c, "descricao": ""} for c in atributos],
+                "cids_principais": [],
+                "secundarios": {"obrigatorios": [], "compativeis": []},
+            }
         }
-        self.assertTrue(esperadas.issubset(com_grupo_oci))
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump(conteudo, f)
+            caminho = f.name
+        try:
+            saida = StringIO()
+            call_command("sigtap_auditar", "--json", caminho,
+                         *(["--aplicar"] if aplicar else []), stdout=saida)
+            return saida.getvalue()
+        finally:
+            os.unlink(caminho)
+
+    def test_marca_procedimento_que_tem_o_atributo_053(self):
+        self._auditar(["043", "053", "058"])
+
+        self.oci.refresh_from_db()
+        self.assertTrue(self.oci.pmae)
+
+    def test_desmarca_quando_o_sigtap_nao_tem_mais_o_atributo(self):
+        ProcedureModel.objects.filter(pk=self.oci.pk).update(pmae=True)
+
+        self._auditar(["043", "058"])
+
+        self.oci.refresh_from_db()
+        self.assertFalse(self.oci.pmae)
+
+    def test_sem_aplicar_apenas_relata(self):
+        saida = self._auditar(["053"], aplicar=False)
+
+        self.oci.refresh_from_db()
+        self.assertFalse(self.oci.pmae)
+        self.assertIn("053", saida)
