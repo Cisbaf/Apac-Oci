@@ -91,8 +91,26 @@ class Command(BaseCommand):
             else:
                 return
 
+        self._auditar_atributos(principal, d, aplicar)
         self._auditar_secundarios(principal, d, aplicar)
         self._auditar_cids(principal, d, aplicar)
+
+    def _auditar_atributos(self, principal, d, aplicar):
+        """Atributo complementar 053 — PMAE (T-043).
+
+        Só o 053 por ora. O 054 (`fixed_validity_two_competences`) também vem
+        em `S_PADET` e também está fora de sincronia em produção, mas mexer
+        nele muda a validade exportada — é tarefa própria, com validação no
+        APAC Magnético, não carona nesta.
+        """
+        pmae_oficial = any(a["codigo"] == "053" for a in d.get("atributos", []))
+        if principal.pmae != pmae_oficial:
+            self._divergir(
+                f"atributo 053 (PMAE): cadastrado {principal.pmae}, "
+                f"SIGTAP diz {pmae_oficial}")
+            if aplicar:
+                principal.pmae = pmae_oficial
+                principal.save(update_fields=["pmae"])
 
     def _auditar_secundarios(self, principal, d, aplicar):
         # oficiais: codigo_dv -> (obrigatório?, quantidade_maxima) — o par

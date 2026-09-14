@@ -11,6 +11,7 @@ from apac_core.domain.repositories.procedure_repository import ProcedureReposito
 from apac_core.domain.repositories.procedure_record_repository import ProcedureRecordRepository
 from apac_core.domain.exceptions import DomainException
 from apac_core.domain.services.apac_extract.utils import get_end_of_month_offset
+from apac_core.domain.services import pmae
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -60,6 +61,18 @@ class CreateApacRequestUseCase:
             competences = 2 if months_ahead == 1 else 3
             raise DomainException(f"A data de alta excede o limite de {competences} competências da APAC.")
             
+        # 5. Regra PMAE (atributo SIGTAP 053, T-043): OCI exige no mínimo 2
+        # secundários, sendo um deles consulta ou teleconsulta. Até a T-042 isso
+        # era cadastrado grupo a grupo e valia só no formulário — a API aceitava
+        # o que o APAC Magnético recusa depois, com a APAC já numerada.
+        codigos_marcados = [
+            self.repo_procedure.get_by_id(sub.procedure_id).code
+            for sub in data.apac_data.sub_procedures
+        ]
+        violacao = pmae.verificar(main_procedure, codigos_marcados)
+        if violacao:
+            raise DomainException(violacao.mensagem)
+
         # Obtém o requester pelo ID 
         requester = GetUserRequesterOrAdministratorUseCase(self.repo_user).execute(data.requester_id)
 

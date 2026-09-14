@@ -17,6 +17,10 @@ class Procedure(BaseModel):
     # Atributo complementar SIGTAP 043 (T-036): exige um segundo CID, o de
     # causas associadas, além do CID principal.
     requires_secondary_cid: bool = False
+    # Atributo complementar SIGTAP 053 (T-043): procedimento do PMAE (Agora Tem
+    # Especialistas). Exige no mínimo 2 secundários, sendo um deles consulta ou
+    # teleconsulta — ver `domain/services/pmae.py`.
+    pmae: bool = False
     parent: Optional['Procedure'] = None
     sub_procedures: List['Procedure'] = Field(default_factory=list)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
