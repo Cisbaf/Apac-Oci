@@ -103,13 +103,25 @@ class Command(BaseCommand):
 
     def _resolver_membros(self, principal, info):
         """Códigos fixos (`members`) ou por prefixo de subgrupo dentre os
-        secundários já compatíveis com este principal (`subgroup_prefixes`)."""
+        secundários já compatíveis com este principal (`subgroup_prefixes`).
+
+        Nos dois casos o candidato só entra se for secundário **deste**
+        principal. A produção tem procedimentos com o mesmo código duplicados
+        em ids diferentes (`0301010307` nos ids 243 e 269, `0203020030` nos
+        239 e 326) e um `code__in` cru traz os dois: o que não é secundário da
+        OCI vira membro pendurado e precisa de limpeza à mão depois — foi o
+        que aconteceu no grupo do GIN3 e no atributo 068 da 0908010052.
+        """
+        secundarios = [link.child for link in
+                       principal.secondary_links.select_related("child")]
+
         if "members" in info:
-            return list(ProcedureModel.objects.filter(code__in=info["members"]))
+            procurados = set(info["members"])
+            candidatos = [p for p in secundarios if p.code in procurados]
+            for code in sorted(procurados - {p.code for p in candidatos}):
+                self.stdout.write(self.style.WARNING(
+                    f"  ! {code} não é secundário deste principal — fora do grupo"))
+            return candidatos
 
         prefixos = tuple(info["subgroup_prefixes"])
-        candidatos = [
-            link.child for link in principal.secondary_links.select_related("child")
-            if link.child.code[:9][:4] in prefixos
-        ]
-        return candidatos
+        return [p for p in secundarios if p.code[:9][:4] in prefixos]
