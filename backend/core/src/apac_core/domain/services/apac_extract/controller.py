@@ -13,6 +13,20 @@ from apac_core.domain.services.apac_extract.utils import (
     format_with_zeros, get_end_of_month_offset
 )
 from apac_core.domain.services.apac_extract.adapter import adaptar_oci
+from apac_core.domain.entities.procedure_record import ProcedureRecord
+
+
+def ordered_sub_procedures(sub_procedures: List[ProcedureRecord]) -> List[ProcedureRecord]:
+    """Secundários em ordem crescente de código SIGTAP.
+
+    O APAC Magnético 04.01 só reconhece o exame que um secundário exige quando
+    ele vem *depois* na APAC: com o anatomopatológico `0203020081` antes da
+    biópsia `0201010666`, critica "PROC.SEC.(0201010666) EXIGE O 0203020081"
+    mesmo com os dois no arquivo (T-044). Na tabela SIGTAP a coleta (02.01) vem
+    antes do exame (02.03), então a ordem por código resolve. Antes disso a
+    ordem era a do banco, que não é garantida.
+    """
+    return sorted(sub_procedures, key=lambda sub: sub.procedure.code)
 
 @dataclass
 class ExportApacBatchController:
@@ -134,7 +148,7 @@ class ExportApacBatchController:
                         quantity=format_with_zeros(sub_procedure.quantity, 7),
                         cid_principal=apac_data.cid.code,
                         cid_secundario=cid_causas_associadas
-                    ) for sub_procedure in apac_data.sub_procedures
+                    ) for sub_procedure in ordered_sub_procedures(apac_data.sub_procedures)
                 ]
             ))
         return bodys
