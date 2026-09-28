@@ -1,6 +1,6 @@
 # T-044 — Ordem dos secundários no export (crítica nova do APAC Magnético 04.01)
 
-- **Fase:** 0 · **Status:** doing · **Depende de:** T-002
+- **Fase:** 0 · **Status:** done · **Depende de:** T-002
 - **Branch:** `refactor/T-044-ordem-secundarios-export`
 
 ## Origem — relato do usuário
